@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="main_green_001">#3F5E0F</color>
+    <color name="main_green_002">#658B1F</color>
+    <color name="main_green_003">#ADC156</color>
+    <color name="main_green_004">#9AAB7C</color>
+
+    <color name="main_beige_001">#BDBB9C</color>
+    <color name="main_beige_002">#E7E6D2</color>
+
+    <color name="sub_beige_000">#F3F3F3</color>
+
+    <color name="yellow_000">#ECD92A</color>
+
+    <color name="sub_grey_000">#99A1AA</color>
+    <color name="sub_grey_001">#4C4C4C</color>
+    <color name="sub_grey_002">#F2F4F6</color>
+    <color name="sub_grey_003">#333333</color>
+
+    <color name="high_red_000">#A72026</color>
+    <color name="high_red_001">#422A2B</color>
+    <color name="high_red_002">#FBF6F7</color>
+
+    <color name="high_blue_000">#110F54</color>
+    <color name="high_blue_001">#080723</color>
+    <color name="high_blue_002">#F8F8FD</color>
+
 
     <!--  blue 계열  -->
     <color name="base_blue">#FF2A53FF</color>
@@ -32,6 +55,7 @@
 
     <!--  achromatic 계열  -->
     <color name="base_gray">#FF5D6066</color>
+    <color name="white">#FFFFFFFF</color>
     <color name="base_gray_1">#FFF7F9FC</color>
     <color name="base_gray_2">#FFF2F5FA</color>
     <color name="base_gray_3">#FFD8E0EB</color>

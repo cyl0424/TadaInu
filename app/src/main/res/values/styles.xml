@@ -83,6 +83,12 @@
         <item name="android:textSize">10dp</item>
     </style>
 
+    <style name="BottomNavigationText">
+        <item name="android:textSize">10dp</item>
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
+    </style>
+
+
     <style name="SpinnerDivideStyle">
         <!--아이템을 나누는 선 색상-->
         <item name="android:divider">@color/base_gray_4</item>

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">다녀올개</string>
+
+    <string name="home_menu">홈</string>
+    <string name="my_pet_menu">마이펫</string>
+    <string name="community_menu">커뮤니티</string>
+    <string name="noti_menu">알림</string>
+    <string name="setting_menu">설정</string>
 </resources>
