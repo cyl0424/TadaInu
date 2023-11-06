@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTextViewStyle">
+        <!--        <item name="android:fontFamily">@font/font</item>-->
+        <!--        <item name="fontFamily">@font/font</item>-->
+
+    </style>
+
+    <style name="drawMenuStyle">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <style name="H1">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">32dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="H2">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">28dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="H3">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="H4">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">21dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="H5">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="Body1">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="Body2">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="Sub1">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="Sub2">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="NaviDrawerMenu">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/base_black</item>
+    </style>
+
+    <style name="NaviDrawerTitle">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColor">@color/base_black</item>
+    </style>
+
+    <style name="BottomNavigationView"
+        parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">10dp</item>
+    </style>
+
+    <style name="SpinnerDivideStyle">
+        <!--아이템을 나누는 선 색상-->
+        <item name="android:divider">@color/base_gray_4</item>
+        <!--선 높이-->
+        <item name="android:dividerHeight">1dp</item>
+        <item name="background">@color/white</item>
+        <item name="android:popupBackground">@color/white</item>
+    </style>
+
+    <style name="SpinnerTheme">
+        <!--spinnerDivideStyle을 먼저 만들어 줘야한다.-->
+        <item name="android:dialogTheme">@style/SpinnerDivideStyle</item>
+        <item name="background">@color/white</item>
+        <item name="android:textSize">12dp</item>
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textColor">@color/base_gray_4</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="background">@android:color/transparent</item>
+    </style>
+</resources>

@@ -2,4 +2,48 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--  blue 계열  -->
+    <color name="base_blue">#FF2A53FF</color>
+    <color name="base_blue_l_1">#8099FF</color>
+    <color name="base_blue_l_2">#6685FF</color>
+    <color name="base_blue_l_3">#4D7AFF</color>
+    <color name="blue005">#FFEDF0FF</color>
+    <color name="blue030">#FF94A9FF</color>
+    <color name="blue040">#FF708CFF</color>
+    <color name="blue050">#FF4D70FF</color>
+
+    <color name="blue_gray005">#F1F3F9</color>
+    <color name="blue_gray010">#E4E7E4</color>
+    <color name="blue_gray060">#606CA0</color>
+    <color name="blue_gray080">#303650</color>
+
+    <!--  green 계열  -->
+
+    <!--  yellow 계열  -->
+
+    <!--  red 계열  -->
+    <color name="base_red">#FFFF604D</color>
+
+    <color name="red005">#FFEFED</color>
+    <color name="red070">#99392E</color>
+    <color name="red080">#66261E</color>
+    <color name="red090">#33130F</color>
+
+    <!--  achromatic 계열  -->
+    <color name="base_gray">#FF5D6066</color>
+    <color name="base_gray_1">#FFF7F9FC</color>
+    <color name="base_gray_2">#FFF2F5FA</color>
+    <color name="base_gray_3">#FFD8E0EB</color>
+    <color name="base_gray_4">#FFA2AAB3</color>
+    <color name="base_black">#FF2E3033</color>
+
+    <color name="gray005">#FFF2F4F6</color>
+    <color name="gray010">#FFDDDFE2</color>
+    <color name="gray020">#FFBBC0C6</color>
+    <color name="gray030">#FF99A1AA</color>
+    <color name="gray040">#FF77828E</color>
+    <color name="gray050">#FF556372</color>
+    <color name="gray060">#FF444F5B</color>
+    <color name="gray080">#FF22272D</color>
 </resources>
