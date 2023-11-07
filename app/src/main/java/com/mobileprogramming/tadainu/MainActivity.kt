@@ -14,11 +14,11 @@ import com.mobileprogramming.tadainu.notiFeat.NotiFragment
 import com.mobileprogramming.tadainu.settingFeat.SettingFragment
 
 class MainActivity : AppCompatActivity() {
-    public val fragmentHome by lazy { HomeFragment() }
-    public val fragmentMyPet by lazy { MyPetFragment() }
-    public val fragmentCommunity by lazy { CommunityFragment() }
-    public val fragmentNoti by lazy { NotiFragment() }
-    public val fragmentSetting by lazy { SettingFragment() }
+    private val fragmentHome by lazy { HomeFragment() }
+    private val fragmentMyPet by lazy { MyPetFragment() }
+    private val fragmentCommunity by lazy { CommunityFragment() }
+    private val fragmentNoti by lazy { NotiFragment() }
+    private val fragmentSetting by lazy { SettingFragment() }
 
     private var mBinding: ActivityMainBinding? = null
     private val binding get() = mBinding!!
