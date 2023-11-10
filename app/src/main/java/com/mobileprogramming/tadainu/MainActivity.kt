@@ -13,6 +13,9 @@ import com.mobileprogramming.tadainu.myPetFeat.MyPetFragment
 import com.mobileprogramming.tadainu.notiFeat.NotiFragment
 import com.mobileprogramming.tadainu.settingFeat.SettingFragment
 
+import android.util.Log
+import com.kakao.sdk.common.util.Utility
+
 class MainActivity : AppCompatActivity() {
     private val fragmentHome by lazy { HomeFragment() }
     private val fragmentMyPet by lazy { MyPetFragment() }
@@ -41,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val keyHash = Utility.getKeyHash(this)
+        Log.d("Hash", keyHash)
 
         this.onBackPressedDispatcher.addCallback(this, callback)
 
