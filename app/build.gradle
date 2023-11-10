@@ -5,6 +5,10 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def KakaoNativeKey = properties.getProperty('kakao.native.key')
+
 android {
     namespace 'com.mobileprogramming.tadainu'
     compileSdk 34
@@ -17,6 +21,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "KAKAO_NATIVE_KEY", properties['kakao.native.key']
+        manifestPlaceholders = [KakaoNativeKey:KakaoNativeKey]
     }
 
     buildTypes {
@@ -28,6 +35,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 
     compileOptions {
