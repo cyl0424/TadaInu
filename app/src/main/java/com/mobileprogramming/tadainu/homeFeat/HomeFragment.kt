@@ -41,6 +41,8 @@ class HomeFragment : Fragment() {
                 Log.d("MP", "get failed with ", exception)
             }
 
+        binding.toolbar.phoneBtn.visibility = View.VISIBLE
+
         return view
     }
 
