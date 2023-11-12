@@ -6,7 +6,9 @@ Mobile Programming Project: 다녀올개
 ID/TaskName/IssueNum
 ```
 ```
-e.g. cyl0424/ImplementMainPage/2
+e.g.
+git branch cyl0424/ImplementMainPage/2
+git checkout cyl0424/ImplementMainPage/2
 ```
 
 ## The Management of Issue
