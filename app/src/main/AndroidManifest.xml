@@ -2,9 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- 추가 - 권한 설정(내 위치 찍기) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
-        android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TadaInu"
         tools:targetApi="31">
+        <!--추가 - 네이버 지도 API-->
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="ujfdwnmrr9" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -22,5 +32,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
