@@ -2,6 +2,7 @@ package com.mobileprogramming.tadainu.myPetFeat
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -71,6 +72,11 @@ class MyPetFragment : Fragment() {
 
         binding.mypetShotBackground.setOnClickListener {
             showAddShotDialog()
+        }
+
+        binding.mypetLocationBackground.setOnClickListener {
+            val intent = Intent(requireContext(), TrackLocation::class.java)
+            startActivity(intent)
         }
     }
 
