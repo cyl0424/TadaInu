@@ -41,7 +41,7 @@
         android:layout_height="25dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:background="@color/gray005"
+        android:background="@drawable/rounded_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/shotNameDialogText"
@@ -52,7 +52,9 @@
         android:layout_width="150dp"
         android:layout_height="25dp"
         android:layout_marginTop="10dp"
-        android:background="@color/gray005"
+        android:inputType="number"
+        android:paddingStart="8dp"
+        android:background="@drawable/rounded_background"
         app:layout_constraintStart_toEndOf="@+id/shotNumDialogText"
         app:layout_constraintTop_toBottomOf="@+id/shotSpinnerInput" />
 
@@ -81,15 +83,17 @@
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shotNumDialogText" />
+
     <TextView
         android:id="@+id/shotDateInput"
-        android:layout_width="171dp"
-        android:layout_height="25dp"
+        android:layout_width="135dp"
+        android:layout_height="27dp"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/pretendard_bold"
+        android:background="@drawable/rounded_background"
+        android:fontFamily="@font/pretendard_medium"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
         android:text="2023년 11월 13일"
-        android:textAlignment="center"
-        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/shotDateDialogText"

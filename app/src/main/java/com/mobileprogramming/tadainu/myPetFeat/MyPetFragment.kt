@@ -54,11 +54,8 @@ class MyPetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        loadPetDataFromFirestore()
-        loadPetImageFromStorage()
         clickEventHandler()
-        setupShotList()
+        refreshUI()
     }
 
     private fun clickEventHandler() {
@@ -82,7 +79,7 @@ class MyPetFragment : Fragment() {
             startActivity(intent)
         }
     }
-    private fun setupShotList() {
+    private fun refreshUI() {
         // Set up a snapshot listener to observe changes in the TB_MYPET document
         db.collection("TB_MYPET").document(PET_ID)
             .addSnapshotListener { snapshot, e ->
@@ -98,17 +95,26 @@ class MyPetFragment : Fragment() {
                         val beautyLastDate = snapshot.getTimestamp("beauty_last")
                         val healthDate = snapshot.getTimestamp("health")
                         val healthLastDate = snapshot.getTimestamp("health_last")
-                        // Update UI with beauty and health data
-                        updateUIWithPetData(beautyDate, beautyLastDate, healthDate, healthLastDate)
-                        // Update UI with shotItem data
-                        loadShotDataFromSnapshot(snapshot)
+                        val currentDate = Date()
+
+                        // 미용 UI 업데이트
+                        updateUIData("beauty", beautyDate, beautyLastDate, currentDate)
+                        // 정기검진 UI 업데이트
+                        updateUIData("health", healthDate, healthLastDate, currentDate)
+                        // 접종기록 UI 업데이트
+                        updateShotUI(snapshot)
+                        // 이미지 UI 업데이트
+                        petImageUpdate()
+                        // 이름 UI 업데이트
+                        petNameUpdate()
                     } else {
                         Log.d("ITM", "Current data: null")
                     }
                 }
             }
     }
-    private fun loadShotDataFromSnapshot(snapshot: DocumentSnapshot) {
+    // 접종History UI 업데이트
+    private fun updateShotUI(snapshot: DocumentSnapshot) {
         // Fetch shot data from SUBTB_VACCINE subcollection
         db.collection("TB_MYPET").document(PET_ID)
             .collection("SUBTB_VACCINE")
@@ -149,19 +155,7 @@ class MyPetFragment : Fragment() {
             }
     }
 
-
-    private fun updateUIWithPetData(
-        beautyDate: Timestamp?,
-        beautyLastDate: Timestamp?,
-        healthDate: Timestamp?,
-        healthLastDate: Timestamp?
-    ) {
-        val currentDate = Date()
-
-        updateUIData("beauty", beautyDate, beautyLastDate, currentDate)
-        updateUIData("health", healthDate, healthLastDate, currentDate)
-    }
-
+    // 미용이랑 정기검진 UI 업데이트
     private fun updateUIData(
         field: String,
         date: Timestamp?,
@@ -187,31 +181,7 @@ class MyPetFragment : Fragment() {
             "health" -> binding.mypetHealthDate.text = formattedDate
         }
     }
-
-
-
-    private fun updateFirebaseWithDate(field: String, timestamp: Long) {
-        val documentRef = db.collection("TB_MYPET").document(PET_ID)
-
-        val date = Date(timestamp)
-        val firebaseTimestamp = Timestamp(date)
-
-        Log.d("ITM", "Updating Firestore with timestamp: $firebaseTimestamp")
-
-        db.runTransaction { transaction ->
-            val documentSnapshot = transaction.get(documentRef)
-            val lastValue = documentSnapshot.getTimestamp(field)
-
-            Log.d("ITM", "Last $field value: $lastValue")
-
-            transaction.update(documentRef, "${field}_last", lastValue)
-            transaction.update(documentRef, field, firebaseTimestamp)
-            null
-        }.addOnFailureListener { exception ->
-            Log.e("Firebase", "Transaction failed: ${exception.message}")
-        }
-    }
-
+    // 미용, 정기검진에서 DatePicker띄우고 파이어베이스에 저장까지
     private fun showDatePicker(context: Context, field: String, shotDate: TextView?) {
         val currentDate = Calendar.getInstance()
         val year = currentDate.get(Calendar.YEAR)
@@ -231,35 +201,15 @@ class MyPetFragment : Fragment() {
                 shotDate?.text = formattedDate
 
                 val timestamp = selectedDate.timeInMillis
-                updateFirebaseWithDate(field, timestamp)
+                updateBeautyHealthDate(field, timestamp)
             },
             year, month, day
         )
         datePickerDialog.datePicker.minDate = currentDate.timeInMillis
         datePickerDialog.show()
     }
-    private fun saveShotDataToFirebase(shotItem: ShotItem) {
-        // Get reference to the pet document using the pet_id
-        val petRef = db.collection("TB_MYPET").document(PET_ID)
-        val vaccineCollection = petRef.collection("SUBTB_VACCINE")
-        Log.d("ITM","${shotItem.shotName},${shotItem.shotNum},${shotItem.date}")
-        // Create a new document for each shot in the SUBTB_VACCINE subcollection
-        vaccineCollection.add(
-            mapOf(
-                "shot_name" to shotItem.shotName,
-                "shot_num" to shotItem.shotNum,
-                "shot_date" to shotItem.date
-            )
-        )
-            .addOnSuccessListener { documentReference ->
-                Log.d("Firebase", "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { exception ->
-                Log.e("Firebase", "Error adding document", exception)
-            }
-    }
 
-
+    // showDatePicker()활용 - 추가 정보가 필요하기 때문이다.
     private fun showAddShotDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_shot, null)
         val dialogBinding = DialogAddShotBinding.bind(dialogView)
@@ -291,8 +241,57 @@ class MyPetFragment : Fragment() {
         }
         dialog.show()
     }
+    /***
+     *  showDatePicker에서 Date를 파이어베이스에 어떻게 저장하는지
+     *  최신 값을 field_last로 옮기고 최신 field값을 DatePicker에서 받은 값으로 함.
+     */
+    private fun updateBeautyHealthDate(field: String, timestamp: Long) {
+        val documentRef = db.collection("TB_MYPET").document(PET_ID)
 
-    private fun loadPetDataFromFirestore() {
+        val date = Date(timestamp)
+        val firebaseTimestamp = Timestamp(date)
+
+        Log.d("ITM", "Updating Firestore with timestamp: $firebaseTimestamp")
+
+        db.runTransaction { transaction ->
+            val documentSnapshot = transaction.get(documentRef)
+            val lastValue = documentSnapshot.getTimestamp(field)
+
+            Log.d("ITM", "Last $field value: $lastValue")
+
+            transaction.update(documentRef, "${field}_last", lastValue)
+            transaction.update(documentRef, field, firebaseTimestamp)
+            null
+        }.addOnFailureListener { exception ->
+            Log.e("Firebase", "Transaction failed: ${exception.message}")
+        }
+    }
+
+
+    // showAddShotDialog()에서 얻은 값을 파이어베이스에 저장하는 로직(sub table에 저장)
+    private fun saveShotDataToFirebase(shotItem: ShotItem) {
+        // Get reference to the pet document using the pet_id
+        val petRef = db.collection("TB_MYPET").document(PET_ID)
+        val vaccineCollection = petRef.collection("SUBTB_VACCINE")
+        Log.d("ITM","${shotItem.shotName},${shotItem.shotNum},${shotItem.date}")
+        // Create a new document for each shot in the SUBTB_VACCINE subcollection
+        vaccineCollection.add(
+            mapOf(
+                "shot_name" to shotItem.shotName,
+                "shot_num" to shotItem.shotNum,
+                "shot_date" to shotItem.date
+            )
+        )
+            .addOnSuccessListener { documentReference ->
+                Log.d("Firebase", "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Firebase", "Error adding document", exception)
+            }
+    }
+
+    // 상단 펫 이름 가져오기
+    private fun petNameUpdate() {
         db.collection("TB_PET").document(PET_ID)
             .get()
             .addOnCompleteListener { task ->
@@ -313,7 +312,8 @@ class MyPetFragment : Fragment() {
             }
     }
 
-    private fun loadPetImageFromStorage() {
+    // 상단 이미지 들고오기
+    private fun petImageUpdate() {
         val storageReference = storage.reference.child(PET_STORAGE_PATH)
 
         storageReference.downloadUrl.addOnCompleteListener { task ->

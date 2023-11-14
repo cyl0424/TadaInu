@@ -231,7 +231,7 @@
                 android:layout_width="76dp"
                 android:layout_height="23dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="15dp"
                 android:fontFamily="@font/pretendard_bold"
                 android:text="예방접종"
                 android:textColor="#083A4B"

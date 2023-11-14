@@ -6,10 +6,15 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityTrackLocationBinding
 import com.naver.maps.map.CameraUpdate
@@ -21,6 +26,8 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 
+
+private const val PET_ID = "Default_Value"
 class TrackLocation : AppCompatActivity(), OnMapReadyCallback {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
@@ -106,15 +113,33 @@ class TrackLocation : AppCompatActivity(), OnMapReadyCallback {
         val canvas = Canvas(redCircleBitmap)
         val paint = Paint()
 
-        paint.color = Color.RED
+        // 강아지 좌표 디자인
+        paint.color = Color.WHITE
         canvas.drawCircle(25f, 25f, 25f, paint)
-
+        paint.color = Color.RED
+        canvas.drawCircle(25f, 25f, 20f, paint)
         // Set the custom icon for the marker
         dogLocation.icon = OverlayImage.fromBitmap(redCircleBitmap)
-
         // Add the marker to the NaverMap
         dogLocation.map = naverMap
-        TODO("firebase에서 실시간으로 위치 데이터 받아와서 엡데이트 시켜야할것같음 ")
+
+//        val databaseReference = FirebaseDatabase.getInstance().getReference("PetLocation/4Jipcx2xHXmvcKNVc6cO")
+//        databaseReference.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                // Get the lat and lng values from the snapshot
+//                val lat = snapshot.child("lat").getValue(Double::class.java) ?: 0.0
+//                val lng = snapshot.child("lng").getValue(Double::class.java) ?: 0.0
+//
+//                dogLocation.position = com.naver.maps.geometry.LatLng(lat, lng)
+//                Log.d("ITM","lat:$lat, lng:$lng")
+//
+//                dogLocation.map = naverMap
+//            }
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.e("Firebase", "Error getting data", error.toException())
+//            }
+//        })
+
     }
 
 }
