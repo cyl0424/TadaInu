@@ -81,7 +81,6 @@ class MyPetFragment : Fragment() {
         }
     }
     private fun refreshUI() {
-        // Set up a snapshot listener to observe changes in the TB_MYPET document
         db.collection("TB_MYPET").document(PET_ID)
             .addSnapshotListener { snapshot, e ->
                 lifecycleScope.launch(Dispatchers.Main) {
@@ -91,7 +90,6 @@ class MyPetFragment : Fragment() {
                     }
 
                     if (snapshot != null && snapshot.exists()) {
-                        // Fetch beauty and health dates
                         val beautyDate = snapshot.getTimestamp("beauty")
                         val beautyLastDate = snapshot.getTimestamp("beauty_last")
                         val healthDate = snapshot.getTimestamp("health")
@@ -124,8 +122,6 @@ class MyPetFragment : Fragment() {
                     Log.e("ITM", "Error getting documents: ", error)
                     return@addSnapshotListener
                 }
-
-                // Clear the existing shotList
                 shotList.clear()
 
                 // Fetch the data from each document in the SUBTB_VACCINE subcollection
@@ -134,15 +130,12 @@ class MyPetFragment : Fragment() {
                     val shotNum = document.getString("shot_num") ?: ""
                     val shotDate = document.getString("shot_date") ?: ""
 
-                    // Add the data to the shotList
                     shotList.add(ShotItem(shotName, shotNum, shotDate))
                 }
 
-                // Set up the adapter if not initialized
                 if (!::shotAdapter.isInitialized) {
                     shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
 
-                    // Set the layout manager to horizontal
                     val layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                     binding.shotList.layoutManager = layoutManager
@@ -151,38 +144,67 @@ class MyPetFragment : Fragment() {
                     binding.shotList.adapter = shotAdapter
                 }
 
-                // Notify the adapter that the data set has changed
                 shotAdapter.notifyDataSetChanged()
             }
     }
 
-    // 미용이랑 정기검진 UI 업데이트
     private fun updateUIData(
         field: String,
         date: Timestamp?,
         lastDate: Timestamp?,
         currentDate: Date
     ) {
-        val dateMillis = date?.toDate()?.time ?: 0
-        val differenceInDays = max(0, ((dateMillis - currentDate.time) / (24 * 60 * 60 * 1000)).toInt())
+        val calendar = Calendar.getInstance()
+        val timeZone = TimeZone.getDefault()
+        calendar.timeZone = timeZone
+
+        // Set the current date
+        calendar.time = currentDate
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
+        val currentDateMillis = calendar.timeInMillis
+
+        // Set the selected date
+        date?.let {
+            calendar.time = it.toDate()
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+        }
+
+        val dateMillis = calendar.timeInMillis
+
+        val isSameDayAndBeforeMidnight = dateMillis == currentDateMillis ||
+                (dateMillis > currentDateMillis && dateMillis - currentDateMillis < 24 * 60 * 60 * 1000)
+
+        val differenceInDays = if (isSameDayAndBeforeMidnight) {
+            0
+        } else {
+            max(0, ((dateMillis - currentDateMillis) / (24 * 60 * 60 * 1000)).toInt())
+        }
 
         Log.d("ITM", "Days remaining ($field): $differenceInDays")
 
-        // Update the corresponding TextView with the calculated difference in days
         when (field) {
             "beauty" -> binding.mypetBeautyLeft.text = differenceInDays.toString()
             "health" -> binding.mypetHealthLeft.text = differenceInDays.toString()
         }
 
-        // Format the last date and update the corresponding TextView
         val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
-        val formattedDate = sdf.format(lastDate?.toDate())
+        val formattedDate = lastDate?.toDate()?.let { sdf.format(it) } ?: ""
         when (field) {
             "beauty" -> binding.mypetBeautyDate.text = formattedDate
             "health" -> binding.mypetHealthDate.text = formattedDate
         }
     }
-  //   미용, 정기검진에서 DatePicker띄우고 파이어베이스에 저장까지
+
+
+
+    //   미용, 정기검진에서 DatePicker띄우고 파이어베이스에 저장까지
     private fun showHbDialog(context: Context, field: String, shotDate: TextView?) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_update_bh, null)
         val dialogBinding = DialogUpdateBhBinding.bind(dialogView)
@@ -247,15 +269,12 @@ class MyPetFragment : Fragment() {
                 DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
                     val selectedDate = Calendar.getInstance()
                     selectedDate.set(selectedYear, selectedMonth, selectedDay)
-                    // Format the selected date
                     val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
                     val formattedDate = sdf.format(selectedDate.time)
 
-                    // Set the formatted date to the TextView
                     dialogBinding.shotDateInput.text = formattedDate
 
                     val timestamp = selectedDate.timeInMillis
-                    // Call the appropriate function for your logic
                     updateBeautyHealthDate("", timestamp)
                 },
                 year, month, day
