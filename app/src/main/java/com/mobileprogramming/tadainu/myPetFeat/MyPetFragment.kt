@@ -13,8 +13,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mobileprogramming.tadainu.R
@@ -24,6 +26,7 @@ import com.mobileprogramming.tadainu.myPetFeat.adapter.ShotListAdapter
 import com.mobileprogramming.tadainu.myPetFeat.model.ShotItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Integer.max
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,13 +55,13 @@ class MyPetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupUI()
         loadPetDataFromFirestore()
         loadPetImageFromStorage()
+        clickEventHandler()
         setupShotList()
     }
 
-    private fun setupUI() {
+    private fun clickEventHandler() {
         binding.mypetToolbar.toolbarTitle.text = "마이펫"
         binding.mypetToolbar.backBtn.visibility = View.INVISIBLE
 
@@ -79,47 +82,8 @@ class MyPetFragment : Fragment() {
             startActivity(intent)
         }
     }
-
-    private fun loadPetDataFromFirestore() {
-        db.collection("TB_PET").document(PET_ID)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document != null && document.exists()) {
-                        val petName = document.getString("pet_name")
-                        petName?.let {
-                            Log.d("ITM", "Pet Name: $it")
-                            binding.mypetDogName.text = it
-                        }
-                    } else {
-                        Log.d("ITM", "Document does not exist")
-                    }
-                } else {
-                    Log.e("ITM", "Error getting document", task.exception)
-                }
-            }
-    }
-
-    private fun loadPetImageFromStorage() {
-        val storageReference = storage.reference.child(PET_STORAGE_PATH)
-
-        storageReference.downloadUrl.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Glide.with(this)
-                    .load(task.result)
-                    .circleCrop()
-                    .into(binding.mypetDogPicture)
-            } else {
-                Log.e("ITM", "Error downloading image", task.exception)
-            }
-        }
-    }
-
     private fun setupShotList() {
-        shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
-        binding.shotList.adapter = shotAdapter
-
+        // Set up a snapshot listener to observe changes in the TB_MYPET document
         db.collection("TB_MYPET").document(PET_ID)
             .addSnapshotListener { snapshot, e ->
                 lifecycleScope.launch(Dispatchers.Main) {
@@ -129,34 +93,62 @@ class MyPetFragment : Fragment() {
                     }
 
                     if (snapshot != null && snapshot.exists()) {
+                        // Fetch beauty and health dates
                         val beautyDate = snapshot.getTimestamp("beauty")
                         val beautyLastDate = snapshot.getTimestamp("beauty_last")
                         val healthDate = snapshot.getTimestamp("health")
                         val healthLastDate = snapshot.getTimestamp("health_last")
-
+                        // Update UI with beauty and health data
                         updateUIWithPetData(beautyDate, beautyLastDate, healthDate, healthLastDate)
-
-                        val shotCount = snapshot.getLong("shot_count") ?: 0
-                        shotList.clear()
-                        for (i in 1..shotCount) {
-                            val shotField = "shot$i"
-                            val shotTimestamp = snapshot.getTimestamp(shotField)
-                            Log.d("ITM", "$shotField, $shotTimestamp")
-                            if (shotTimestamp != null) {
-                                val shotDate =
-                                    SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(
-                                        shotTimestamp.toDate()
-                                    )
-                                shotList.add(ShotItem("Shot $i", shotDate))
-                            }
-                        }
-                        shotAdapter.notifyDataSetChanged()
+                        // Update UI with shotItem data
+                        loadShotDataFromSnapshot(snapshot)
                     } else {
                         Log.d("ITM", "Current data: null")
                     }
                 }
             }
     }
+    private fun loadShotDataFromSnapshot(snapshot: DocumentSnapshot) {
+        // Fetch shot data from SUBTB_VACCINE subcollection
+        db.collection("TB_MYPET").document(PET_ID)
+            .collection("SUBTB_VACCINE")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e("ITM", "Error getting documents: ", error)
+                    return@addSnapshotListener
+                }
+
+                // Clear the existing shotList
+                shotList.clear()
+
+                // Fetch the data from each document in the SUBTB_VACCINE subcollection
+                for (document in value!!) {
+                    val shotName = document.getString("shot_name") ?: ""
+                    val shotNum = document.getString("shot_num") ?: ""
+                    val shotDate = document.getString("shot_date") ?: ""
+
+                    // Add the data to the shotList
+                    shotList.add(ShotItem(shotName, shotNum, shotDate))
+                }
+
+                // Set up the adapter if not initialized
+                if (!::shotAdapter.isInitialized) {
+                    shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
+
+                    // Set the layout manager to horizontal
+                    val layoutManager =
+                        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                    binding.shotList.layoutManager = layoutManager
+
+                    // Set the adapter to the RecyclerView
+                    binding.shotList.adapter = shotAdapter
+                }
+
+                // Notify the adapter that the data set has changed
+                shotAdapter.notifyDataSetChanged()
+            }
+    }
+
 
     private fun updateUIWithPetData(
         beautyDate: Timestamp?,
@@ -177,17 +169,17 @@ class MyPetFragment : Fragment() {
         currentDate: Date
     ) {
         val dateMillis = date?.toDate()?.time ?: 0
-        val differenceInMillis = dateMillis - currentDate.time
-        val differenceInDays = (differenceInMillis / (24 * 60 * 60 * 1000)) + 1
+        val differenceInDays = max(0, ((dateMillis - currentDate.time) / (24 * 60 * 60 * 1000)).toInt())
+
         Log.d("ITM", "Days remaining ($field): $differenceInDays")
 
-        val leftTextView = when (field) {
-            "beauty" -> binding.mypetBeautyLeft
-            "health" -> binding.mypetHealthLeft
-            else -> null
+        // Update the corresponding TextView with the calculated difference in days
+        when (field) {
+            "beauty" -> binding.mypetBeautyLeft.text = differenceInDays.toString()
+            "health" -> binding.mypetHealthLeft.text = differenceInDays.toString()
         }
-        leftTextView?.text = "$differenceInDays"
 
+        // Format the last date and update the corresponding TextView
         val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
         val formattedDate = sdf.format(lastDate?.toDate())
         when (field) {
@@ -195,6 +187,8 @@ class MyPetFragment : Fragment() {
             "health" -> binding.mypetHealthDate.text = formattedDate
         }
     }
+
+
 
     private fun updateFirebaseWithDate(field: String, timestamp: Long) {
         val documentRef = db.collection("TB_MYPET").document(PET_ID)
@@ -241,10 +235,30 @@ class MyPetFragment : Fragment() {
             },
             year, month, day
         )
-
         datePickerDialog.datePicker.minDate = currentDate.timeInMillis
         datePickerDialog.show()
     }
+    private fun saveShotDataToFirebase(shotItem: ShotItem) {
+        // Get reference to the pet document using the pet_id
+        val petRef = db.collection("TB_MYPET").document(PET_ID)
+        val vaccineCollection = petRef.collection("SUBTB_VACCINE")
+        Log.d("ITM","${shotItem.shotName},${shotItem.shotNum},${shotItem.date}")
+        // Create a new document for each shot in the SUBTB_VACCINE subcollection
+        vaccineCollection.add(
+            mapOf(
+                "shot_name" to shotItem.shotName,
+                "shot_num" to shotItem.shotNum,
+                "shot_date" to shotItem.date
+            )
+        )
+            .addOnSuccessListener { documentReference ->
+                Log.d("Firebase", "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Firebase", "Error adding document", exception)
+            }
+    }
+
 
     private fun showAddShotDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_shot, null)
@@ -258,18 +272,61 @@ class MyPetFragment : Fragment() {
         val spinnerAdapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        dialogBinding.shotSpinner.adapter = spinnerAdapter
+        dialogBinding.shotSpinnerInput.adapter = spinnerAdapter
 
         dialogBinding.shotCalenderIcon.setOnClickListener {
-            showDatePicker(requireContext(), "",dialogBinding.shotDate)
+            showDatePicker(requireContext(), "", dialogBinding.shotDateInput)
         }
 
         dialogBinding.shotSave.setOnClickListener {
+            // Create a ShotItem with the selected data
+            val selectedShotName = dialogBinding.shotSpinnerInput.selectedItem as String
+            val shotNum = dialogBinding.shotNumInput.text.toString()
+            val shotDate = dialogBinding.shotDateInput.text.toString()
+
+            val shotItem = ShotItem(selectedShotName, shotNum, shotDate)
+            // Save the shot data to Firebase
+            saveShotDataToFirebase(shotItem)
             dialog.dismiss()
         }
         dialog.show()
     }
 
+    private fun loadPetDataFromFirestore() {
+        db.collection("TB_PET").document(PET_ID)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document != null && document.exists()) {
+                        val petName = document.getString("pet_name")
+                        petName?.let {
+                            Log.d("ITM", "Pet Name: $it")
+                            binding.mypetDogName.text = it
+                        }
+                    } else {
+                        Log.d("ITM", "Document does not exist")
+                    }
+                } else {
+                    Log.e("ITM", "Error getting document", task.exception)
+                }
+            }
+    }
+
+    private fun loadPetImageFromStorage() {
+        val storageReference = storage.reference.child(PET_STORAGE_PATH)
+
+        storageReference.downloadUrl.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Glide.with(this)
+                    .load(task.result)
+                    .circleCrop()
+                    .into(binding.mypetDogPicture)
+            } else {
+                Log.e("ITM", "Error downloading image", task.exception)
+            }
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

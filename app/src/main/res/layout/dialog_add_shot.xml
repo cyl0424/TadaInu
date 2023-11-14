@@ -9,6 +9,18 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <TextView
+        android:id="@+id/shotNameDialogText"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="종류 : "
+        android:textAlignment="center"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shotDialogDescription" />
 
     <TextView
         android:id="@+id/shotDialogDescription"
@@ -23,48 +35,76 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--    <DatePicker-->
-<!--        android:id="@+id/shotDateDialog"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        tools:layout_editor_absoluteX="27dp"-->
-<!--        tools:layout_editor_absoluteY="145dp" />-->
-
     <Spinner
-        android:id="@+id/shotSpinner"
-        android:layout_width="250dp"
-        android:layout_height="20dp"
+        android:id="@+id/shotSpinnerInput"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:background="@color/gray005"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/shotNameDialogText"
         app:layout_constraintTop_toBottomOf="@+id/shotDialogDescription" />
 
+    <EditText
+        android:id="@+id/shotNumInput"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray005"
+        app:layout_constraintStart_toEndOf="@+id/shotNumDialogText"
+        app:layout_constraintTop_toBottomOf="@+id/shotSpinnerInput" />
+
     <TextView
-        android:id="@+id/shotDate"
+        android:id="@+id/shotNumDialogText"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="차수 : "
+        android:textAlignment="center"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shotNameDialogText" />
+
+    <TextView
+        android:id="@+id/shotDateDialogText"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="접종일 : "
+        android:textAlignment="center"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shotNumDialogText" />
+    <TextView
+        android:id="@+id/shotDateInput"
         android:layout_width="171dp"
         android:layout_height="25dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/pretendard_bold"
         android:text="2023년 11월 13일"
         android:textAlignment="center"
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.315"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shotSpinner" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/shotDateDialogText"
+        app:layout_constraintTop_toBottomOf="@+id/shotNumInput" />
 
     <ImageButton
         android:id="@+id/shotCalenderIcon"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@+id/shotDate"
-        app:layout_constraintTop_toBottomOf="@+id/shotSpinner"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/shotDateInput"
+        app:layout_constraintTop_toBottomOf="@+id/shotNumInput"
         app:srcCompat="@drawable/icon_calender" />
+
 
     <ImageButton
         android:id="@+id/shotSave"
@@ -75,7 +115,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shotDate"
+        app:layout_constraintTop_toBottomOf="@+id/shotDateInput"
         app:srcCompat="@drawable/mypet_shot_add" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,32 +1,38 @@
 package com.mobileprogramming.tadainu.myPetFeat.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import com.mobileprogramming.tadainu.R
+import androidx.recyclerview.widget.RecyclerView
 import com.mobileprogramming.tadainu.databinding.ShotItemBinding
 import com.mobileprogramming.tadainu.myPetFeat.model.ShotItem
 
-class ShotListAdapter(context: Context, private val shotList: ArrayList<ShotItem>) :
-    ArrayAdapter<ShotItem>(context, R.layout.shot_item, shotList) {
+class ShotListAdapter(
+    private val context: Context,
+    private val shotList: List<ShotItem>
+) : RecyclerView.Adapter<ShotListAdapter.ShotViewHolder>() {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val binding: ShotItemBinding
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShotViewHolder {
+        val inflater = LayoutInflater.from(context)
+        val binding = ShotItemBinding.inflate(inflater, parent, false)
+        return ShotViewHolder(binding)
+    }
 
-        if (convertView == null) {
-            val inflater = LayoutInflater.from(context)
-            binding = ShotItemBinding.inflate(inflater, parent, false)
-            binding.root.tag = binding
-        } else {
-            binding = convertView.tag as ShotItemBinding
+    override fun onBindViewHolder(holder: ShotViewHolder, position: Int) {
+        val shotItem = shotList[position]
+        holder.bind(shotItem)
+    }
+
+    override fun getItemCount(): Int {
+        return shotList.size
+    }
+
+    inner class ShotViewHolder(private val binding: ShotItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(shotItem: ShotItem) {
+            binding.shotName.text = shotItem.shotName
+            binding.num.text = shotItem.shotNum
+            binding.date.text = shotItem.date
         }
-
-        val shotItem = getItem(position) as ShotItem
-        binding.shotKind.text = shotItem.task
-        binding.shotDate.text = shotItem.date
-
-        return binding.root
     }
 }

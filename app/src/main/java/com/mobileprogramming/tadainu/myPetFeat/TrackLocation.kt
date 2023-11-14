@@ -1,6 +1,10 @@
 package com.mobileprogramming.tadainu.myPetFeat
 
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -14,6 +18,7 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 
 class TrackLocation : AppCompatActivity(), OnMapReadyCallback {
@@ -45,7 +50,7 @@ class TrackLocation : AppCompatActivity(), OnMapReadyCallback {
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
-                fm.beginTransaction().replace(R.id.map, it).commit() // replace로 변경
+                fm.beginTransaction().replace(R.id.map, it).commit()
             }
 
         mapFragment.getMapAsync(this)
@@ -92,5 +97,24 @@ class TrackLocation : AppCompatActivity(), OnMapReadyCallback {
 
         // Move the camera to the marker position
         naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
+
+        // 강아지 위치 트래킹
+        val dogLocation = Marker()
+        dogLocation.position = com.naver.maps.geometry.LatLng(37.5666102, 126.9783881)
+
+        val redCircleBitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(redCircleBitmap)
+        val paint = Paint()
+
+        paint.color = Color.RED
+        canvas.drawCircle(25f, 25f, 25f, paint)
+
+        // Set the custom icon for the marker
+        dogLocation.icon = OverlayImage.fromBitmap(redCircleBitmap)
+
+        // Add the marker to the NaverMap
+        dogLocation.map = naverMap
+        TODO("firebase에서 실시간으로 위치 데이터 받아와서 엡데이트 시켜야할것같음 ")
     }
+
 }
