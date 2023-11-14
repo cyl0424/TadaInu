@@ -22,8 +22,8 @@
         <!-- 추가 - 네이버 지도 API -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="ujfdwnmrr9" />
-
+            android:value= "${NaverMapApiKey}"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true">
