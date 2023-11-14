@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.DialogAddShotBinding
+import com.mobileprogramming.tadainu.databinding.DialogUpdateBhBinding
 import com.mobileprogramming.tadainu.databinding.FragmentMyPetBinding
 import com.mobileprogramming.tadainu.myPetFeat.adapter.ShotListAdapter
 import com.mobileprogramming.tadainu.myPetFeat.model.ShotItem
@@ -63,11 +64,11 @@ class MyPetFragment : Fragment() {
         binding.mypetToolbar.backBtn.visibility = View.INVISIBLE
 
         binding.mypetBeautyBackground.setOnClickListener {
-            showDatePicker(requireContext(), "beauty", null)
+            showHbDialog(requireContext(), "beauty", null)
         }
 
         binding.mypetHealthBackground.setOnClickListener {
-            showDatePicker(requireContext(), "health",null)
+            showHbDialog(requireContext(), "health",null)
         }
 
         binding.mypetShotBackground.setOnClickListener {
@@ -181,39 +182,49 @@ class MyPetFragment : Fragment() {
             "health" -> binding.mypetHealthDate.text = formattedDate
         }
     }
-    // 미용, 정기검진에서 DatePicker띄우고 파이어베이스에 저장까지
-    private fun showDatePicker(context: Context, field: String, shotDate: TextView?) {
-        val currentDate = Calendar.getInstance()
-        val year = currentDate.get(Calendar.YEAR)
-        val month = currentDate.get(Calendar.MONTH)
-        val day = currentDate.get(Calendar.DAY_OF_MONTH)
+  //   미용, 정기검진에서 DatePicker띄우고 파이어베이스에 저장까지
+    private fun showHbDialog(context: Context, field: String, shotDate: TextView?) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_update_bh, null)
+        val dialogBinding = DialogUpdateBhBinding.bind(dialogView)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+        dialogBinding.bhCalenderIcon.setOnClickListener {
+            val currentDate = Calendar.getInstance()
+            val year = currentDate.get(Calendar.YEAR)
+            val month = currentDate.get(Calendar.MONTH)
+            val day = currentDate.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(
-            context,
-            DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = Calendar.getInstance()
-                selectedDate.set(selectedYear, selectedMonth, selectedDay)
-                // Format the selected date
-                val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
-                val formattedDate = sdf.format(selectedDate.time)
+            val datePickerDialog = DatePickerDialog(
+                context,
+                DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
+                    val selectedDate = Calendar.getInstance()
+                    selectedDate.set(selectedYear, selectedMonth, selectedDay)
+                    // Format the selected date
+                    val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+                    val formattedDate = sdf.format(selectedDate.time)
 
-                // Set the formatted date to the TextView
-                shotDate?.text = formattedDate
+                    // Set the formatted date to the TextView
+                    shotDate?.text = formattedDate
 
-                val timestamp = selectedDate.timeInMillis
-                updateBeautyHealthDate(field, timestamp)
-            },
-            year, month, day
-        )
-        datePickerDialog.datePicker.minDate = currentDate.timeInMillis
-        datePickerDialog.show()
+                    val timestamp = selectedDate.timeInMillis
+                    updateBeautyHealthDate(field, timestamp)
+
+                    dialog.dismiss() // 날짜 선택 후 다이얼로그 닫기
+                },
+                year, month, day
+            )
+            datePickerDialog.datePicker.minDate = currentDate.timeInMillis
+            datePickerDialog.show()
+        }
+
+        dialog.show()
     }
 
     // showDatePicker()활용 - 추가 정보가 필요하기 때문이다.
     private fun showAddShotDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_shot, null)
         val dialogBinding = DialogAddShotBinding.bind(dialogView)
-
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
@@ -225,7 +236,32 @@ class MyPetFragment : Fragment() {
         dialogBinding.shotSpinnerInput.adapter = spinnerAdapter
 
         dialogBinding.shotCalenderIcon.setOnClickListener {
-            showDatePicker(requireContext(), "", dialogBinding.shotDateInput)
+            // Use the existing code of showDatePicker here
+            val currentDate = Calendar.getInstance()
+            val year = currentDate.get(Calendar.YEAR)
+            val month = currentDate.get(Calendar.MONTH)
+            val day = currentDate.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
+                    val selectedDate = Calendar.getInstance()
+                    selectedDate.set(selectedYear, selectedMonth, selectedDay)
+                    // Format the selected date
+                    val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+                    val formattedDate = sdf.format(selectedDate.time)
+
+                    // Set the formatted date to the TextView
+                    dialogBinding.shotDateInput.text = formattedDate
+
+                    val timestamp = selectedDate.timeInMillis
+                    // Call the appropriate function for your logic
+                    updateBeautyHealthDate("", timestamp)
+                },
+                year, month, day
+            )
+            datePickerDialog.datePicker.minDate = currentDate.timeInMillis
+            datePickerDialog.show()
         }
 
         dialogBinding.shotSave.setOnClickListener {
@@ -239,8 +275,10 @@ class MyPetFragment : Fragment() {
             saveShotDataToFirebase(shotItem)
             dialog.dismiss()
         }
+
         dialog.show()
     }
+
     /***
      *  showDatePicker에서 Date를 파이어베이스에 어떻게 저장하는지
      *  최신 값을 field_last로 옮기고 최신 field값을 DatePicker에서 받은 값으로 함.
