@@ -6,7 +6,7 @@ import android.os.Handler
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import com.mobileprogramming.tadainu.commuFeat.CommunityFragment
+import com.mobileprogramming.tadainu.partnersFeat.PartnersFragment
 import com.mobileprogramming.tadainu.databinding.ActivityMainBinding
 import com.mobileprogramming.tadainu.homeFeat.HomeFragment
 import com.mobileprogramming.tadainu.myPetFeat.MyPetFragment
@@ -19,7 +19,7 @@ import com.kakao.sdk.common.util.Utility
 class MainActivity : AppCompatActivity() {
     private val fragmentHome by lazy { HomeFragment() }
     private val fragmentMyPet by lazy { MyPetFragment() }
-    private val fragmentCommunity by lazy { CommunityFragment() }
+    private val fragmentPartners by lazy { PartnersFragment() }
     private val fragmentNoti by lazy { NotiFragment() }
     private val fragmentSetting by lazy { SettingFragment() }
 
@@ -77,10 +77,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.community_menu -> {
                     try {
-                        change(fragmentCommunity)
+                        change(fragmentPartners)
                     } catch (e: IllegalStateException) {
                         Handler().postDelayed({
-                            change(fragmentCommunity)
+                            change(fragmentPartners)
                         }, 500L)
                     }
                 }
