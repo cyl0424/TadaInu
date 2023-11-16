@@ -24,7 +24,7 @@ import com.mobileprogramming.tadainu.databinding.DialogAddShotBinding
 import com.mobileprogramming.tadainu.databinding.DialogUpdateBhBinding
 import com.mobileprogramming.tadainu.databinding.FragmentMyPetBinding
 import com.mobileprogramming.tadainu.myPetFeat.adapter.ShotListAdapter
-import com.mobileprogramming.tadainu.myPetFeat.model.ShotItem
+import com.mobileprogramming.tadainu.model.ShotItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Integer.max

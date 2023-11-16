@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobileprogramming.tadainu.databinding.ShotItemBinding
-import com.mobileprogramming.tadainu.myPetFeat.model.ShotItem
+import com.mobileprogramming.tadainu.model.ShotItem
 
 class ShotListAdapter(
     private val context: Context,

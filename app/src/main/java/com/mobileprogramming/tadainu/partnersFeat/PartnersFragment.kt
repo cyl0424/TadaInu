@@ -37,8 +37,8 @@ class PartnersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentPartnersBinding.inflate(inflater, container, false)
+        // PartnersFragment 뷰 반환한 것
         return binding.root
     }
 
@@ -46,16 +46,15 @@ class PartnersFragment : Fragment() {
         val tabLayout = binding.tabLayout
         val viewPager = binding.viewPager
 
-        // Use requireActivity() to get the FragmentActivity
         val adapter = PartnersAdapter(requireActivity())
 
         viewPager.adapter = adapter
-
-        // Set up TabLayout with ViewPager2 and associate tab titles
+        // TabLayout과 ViewPager연결
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            // 각 탭마다 텍스트 지정
             tab.text = when (position) {
-                0 -> "지도" // Map
-                1 -> "리스트" // List
+                0 -> "지도"
+                1 -> "리스트"
                 else -> throw IllegalArgumentException("Invalid position: $position")
             }
         }.attach()
