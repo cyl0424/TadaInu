@@ -139,8 +139,6 @@ class MyPetFragment : Fragment() {
                     val layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                     binding.shotList.layoutManager = layoutManager
-
-                    // Set the adapter to the RecyclerView
                     binding.shotList.adapter = shotAdapter
                 }
 

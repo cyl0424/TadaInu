@@ -118,11 +118,11 @@ class TrackLocation : AppCompatActivity(), OnMapReadyCallback {
         canvas.drawCircle(25f, 25f, 25f, paint)
         paint.color = Color.RED
         canvas.drawCircle(25f, 25f, 20f, paint)
-        // Set the custom icon for the marker
         dogLocation.icon = OverlayImage.fromBitmap(redCircleBitmap)
-        // Add the marker to the NaverMap
         dogLocation.map = naverMap
 
+
+        // 값이 변해야지 작동
 //        val databaseReference = FirebaseDatabase.getInstance().getReference("PetLocation/4Jipcx2xHXmvcKNVc6cO")
 //        databaseReference.addValueEventListener(object : ValueEventListener {
 //            override fun onDataChange(snapshot: DataSnapshot) {
