@@ -1,5 +1,6 @@
 package com.mobileprogramming.tadainu
 
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -14,6 +15,7 @@ import com.mobileprogramming.tadainu.notiFeat.NotiFragment
 import com.mobileprogramming.tadainu.settingFeat.SettingFragment
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.kakao.sdk.common.util.Utility
 
 class MainActivity : AppCompatActivity() {
@@ -44,9 +46,6 @@ class MainActivity : AppCompatActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        val keyHash = Utility.getKeyHash(this)
-        Log.d("Hash", keyHash)
 
         this.onBackPressedDispatcher.addCallback(this, callback)
 
