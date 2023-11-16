@@ -1,0 +1,6 @@
+<!-- res/drawable/date_picker_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/white" />
+    <corners android:radius="20dp" />
+    <stroke android:color="@color/base_black" android:width="2dp" />
+</shape>
