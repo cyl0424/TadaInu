@@ -60,8 +60,8 @@ class MyPetFragment : Fragment() {
     }
 
     private fun clickEventHandler() {
-        binding.mypetToolbar.toolbarTitle.text = "마이펫"
-        binding.mypetToolbar.backBtn.visibility = View.INVISIBLE
+//        binding.mypetToolbar.toolbarTitle.text = "마이펫"
+//        binding.mypetToolbar.backBtn.visibility = View.INVISIBLE
 
         binding.mypetBeautyBackground.setOnClickListener {
             showHbDialog(requireContext(), "beauty", null)
