@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/petcatr_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="반려견 유치원/호텔" />
+
+            <TextView
+                android:id="@+id/petcare_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="유치원/호텔 이름" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/petcare_isopen"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="Open" />
+
+                <TextView
+                    android:id="@+id/petcare_closed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Opening end or start time"
+                    />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/petcare_addr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="유치원/호텔 주소" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/pecare_img"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
