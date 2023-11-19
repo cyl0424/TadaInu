@@ -3,13 +3,16 @@ package com.mobileprogramming.tadainu.partnersFeat.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.mobileprogramming.tadainu.databinding.PartnerItemBinding
 import com.mobileprogramming.tadainu.model.ClusteredPartnerName
+import com.mobileprogramming.tadainu.partnersFeat.PartnersMapSubFragment
 
 class ClusterClickAdapter(
     private val context: Context,
-    private val clusteredPartnerNameList: List<ClusteredPartnerName>
+    private val clusteredPartnerNameList: List<ClusteredPartnerName>,
+    private val itemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<ClusterClickAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,6 +35,20 @@ class ClusterClickAdapter(
 
         fun bind(partner: ClusteredPartnerName) {
             binding.partnerElementName.text = partner.clusteredpartnerName
+
+            // RecyclerView의 개별 Item Click event처리
+            binding.partnerElementName.setOnClickListener {
+                Toast.makeText(
+                    context,
+                    "Clicked on ${partner.clusteredpartnerName}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                itemClickListener.onItemClick(partner)
+            }
         }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(partner: ClusteredPartnerName) {}
     }
 }
