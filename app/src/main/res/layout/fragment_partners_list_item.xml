@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!---->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -40,13 +41,13 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-                    android:id="@+id/petcare_isopen"
+                    android:id="@+id/petcare_opening"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Open" />
 
                 <TextView
-                    android:id="@+id/petcare_closed"
+                    android:id="@+id/petcare_closing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Opening end or start time"

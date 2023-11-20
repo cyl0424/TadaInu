@@ -3,11 +3,14 @@ package com.mobileprogramming.tadainu.partnersFeat.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.mobileprogramming.tadainu.model.PetcareItem
 import com.mobileprogramming.tadainu.partnersFeat.PartnersListSubFragment
 import com.mobileprogramming.tadainu.partnersFeat.PartnersMapSubFragment
 
 // For TabLayout
 class PartnersAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+
+    private var partnersListSubFragment: PartnersListSubFragment? = null
 
     //Map, List 두 개의 하위 Fragment
     override fun getItemCount(): Int = 2
@@ -19,5 +22,9 @@ class PartnersAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter
             1 -> PartnersListSubFragment()
             else -> throw IllegalArgumentException("Invalid position: $position")
         }
+    }
+
+    fun updateDataInListFragment(data: List<PetcareItem>) {
+        partnersListSubFragment?.updateData(data)
     }
 }
