@@ -10,8 +10,6 @@ import com.mobileprogramming.tadainu.partnersFeat.PartnersMapSubFragment
 // For TabLayout
 class PartnersAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
-    private var partnersListSubFragment: PartnersListSubFragment? = null
-
     //Map, List 두 개의 하위 Fragment
     override fun getItemCount(): Int = 2
 
@@ -24,7 +22,4 @@ class PartnersAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter
         }
     }
 
-    fun updateDataInListFragment(data: List<PetcareItem>) {
-        partnersListSubFragment?.updateData(data)
-    }
 }

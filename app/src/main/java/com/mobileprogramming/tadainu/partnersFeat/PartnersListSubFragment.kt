@@ -2,21 +2,17 @@ package com.mobileprogramming.tadainu.partnersFeat
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.mobileprogramming.tadainu.R
-import com.mobileprogramming.tadainu.databinding.FragmentMyPetBinding
+import com.mobileprogramming.tadainu.databinding.FragmentPartnersListSubBinding
 import com.mobileprogramming.tadainu.model.PetcareItem
 import com.mobileprogramming.tadainu.partnersFeat.adapter.PartnersAdapter
-import kotlinx.coroutines.Dispatchers
+import com.mobileprogramming.tadainu.partnersFeat.adapter.PartnersListAdapter
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -42,84 +38,93 @@ class PartnersListSubFragment : Fragment() {
         }
     }
 
-    private var _binding: FragmentMyPetBinding? = null
-    private val binding get() = _binding!!
+    private val petcareList = mutableListOf<PetcareItem>()
 
-    private val db = FirebaseFirestore.getInstance()
-    private val storage = FirebaseStorage.getInstance()
+    private lateinit var binding: FragmentPartnersListSubBinding
+    private lateinit var partnersListAdapter: PartnersListAdapter
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var partnersAdapter: PartnersAdapter
+//    private var _binding: FragmentPartnersListSubBinding? = null
+//    private val binding get() = _binding!!
 
+    private val firestore = FirebaseFirestore.getInstance()
 
-    private fun refreshUI() {
-        db.collection("TB_PETCARE")
-            .addSnapshotListener { snapshot, e ->
-                lifecycleScope.launch(Dispatchers.Main) {
-                    if (e != null) {
-                        Log.e("ITM", "Listen failed.", e)
-                        return@launch
-                    }
-
-                    if (snapshot != null && !snapshot.isEmpty) {
-                        // Process the data from the snapshot
-                        val petcareList = mutableListOf<PetcareItem>()
-
-                        for (document in snapshot.documents) {
-                            val petcareType = document.getString("petcare_type") ?: ""
-                            val petcareName = document.getString("petcare_name") ?: ""
-                            val petcareOpening = document.getString("petcare_opening") ?: ""
-                            val petcareClosing = document.getString("petcare_closing") ?: ""
-                            val petcareAddr = document.getString("petcare_addr") ?: ""
-                            val petcareImg = document.getString("pecare_img") ?: ""
-
-                            val petcareItem = PetcareItem(
-                                petcareType,
-                                petcareName,
-                                petcareOpening,
-                                petcareClosing,
-                                petcareAddr,
-                                petcareImg
-                            )
-
-                            petcareList.add(petcareItem)
-                        }
-
-                        // Now you have a list of PetcareItem objects, you can update your UI or adapter
-                        // For example, if you have a RecyclerView with an adapter:
-                        partnersAdapter.updateDataInListFragment(petcareList)
-                    } else {
-                        Log.d("ITM", "Snapshot is null or empty.")
-                    }
-                }
-            }
-    }
-
-    // Function to update data in the PartnersAdapter
-    fun updateData(data: List<PetcareItem>) {
-        partnersAdapter.updateDataInListFragment(data)
-    }
-
-
+//    private lateinit var recyclerView: RecyclerView
+//    private lateinit var partnersAdapter: PartnersAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_partners_list_sub, container, false)
+    ): View {
+//        _binding = FragmentPartnersListSubBinding.inflate(inflater, container, false)
+//        val view = binding.root
+        binding = FragmentPartnersListSubBinding.inflate(inflater, container, false)
+        return binding.root
 
-        // Initialize RecyclerView and set its layout manager
-        recyclerView = view.findViewById(R.id.view_list)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        recyclerView = binding.viewList
+//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        partnersAdapter = PartnersAdapter(requireActivity())
+//        recyclerView.adapter = partnersAdapter
+//        return view
+    }
 
-        // Initialize the PartnersAdapter
-        partnersAdapter = PartnersAdapter(requireContext() as FragmentActivity)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // Set the adapter to the RecyclerView
-        recyclerView.adapter = partnersAdapter
+        getItems()
 
-        return view
+//        // Sample data (replace this with your actual data source)
+//        petcareList.add(
+//            PetcareItem(
+//                "Type 1",
+//                "Partner 1",
+//                "9:00 AM",
+//                "6:00 PM",
+//                "123 Main St",
+//                "https://example.com/partner1.jpg"
+//            )
+//        )
+
+        // Set up RecyclerView
+        partnersListAdapter = PartnersListAdapter(petcareList)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = partnersListAdapter
+    }
+
+    private fun getItems() {
+        Log.d("ITM", "getItems() called")
+        firestore.collection("TB_PETCARE")
+            .get()
+            .addOnSuccessListener { documents ->
+
+                for (document in documents) {
+                    val petcare_type = document.getString("petcare_type")
+                    val petcare_name = document.getString("petcare_name")
+                    val petcare_opening = document.getString("petcare_opening")
+                    val petcare_closing = document.getString("petcare_closing")
+                    val petcare_addr = document.getString("petcare_addr")
+                    val petcare_img = document.getString("petcare_img")
+
+                    petcareList.add(
+                        PetcareItem(
+                            petcare_type,
+                            petcare_name,
+                            petcare_opening,
+                            petcare_closing,
+                            petcare_addr,
+                            petcare_img
+                        )
+                    )
+                    Log.d("ITM", "$petcare_name Items() added")
+
+
+                }
+                // Set up RecyclerView
+                partnersListAdapter = PartnersListAdapter(petcareList)
+                binding.recyclerView.layoutManager = LinearLayoutManager(context)
+                binding.recyclerView.adapter = partnersListAdapter
+            }
+
+
     }
 
 
