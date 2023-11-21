@@ -1,8 +1,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape android:shape="rectangle">
-            <corners android:radius="20dp" />
-            <solid android:color="@android:color/white" />
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <corners android:radius="16dp" /> <!-- Adjust the radius to control the roundness -->
+            <solid android:color="@android:color/white" /> <!-- Change the background color as needed -->
         </shape>
     </item>
 </layer-list>

@@ -1,12 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mapPartnerDialog"
     android:layout_width="370dp"
     android:layout_height="140dp"
     android:orientation="vertical"
-    android:background="@drawable/rounded_corners">
+    android:background="@drawable/rounded_corners"
+    android:padding="0dp">
 
     <TextView
         android:id="@+id/dialogPartnerType"

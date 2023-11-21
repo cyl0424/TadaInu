@@ -2,6 +2,8 @@ package com.mobileprogramming.tadainu.partnersFeat
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -136,6 +138,14 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                     }
                 }
 
+                /**
+                 * TedNaverClustering
+                 *
+                 * .customMarker : 마커 디자인
+                 * .markerClickListner : 마커 선택 시 dialog
+                 * .clusterClickListner : 클러스터 선택 시 리사이클러 뷰(리스트)
+                 * onItemClick() : 리사이클러 뷰의 아이템 선택 시 해당 Partner의 Dialog뜨도록
+                 */
                 TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
                     .customMarker {
                         Marker().apply {
@@ -165,18 +175,15 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                             }
                         }
 
-                        // Set up RecyclerView and adapter for the clustered partner list
                         binding.clusteredPartnerList.adapter = ClusterClickAdapter(requireContext(), clusteredPartnerNameList, this)
                         binding.clusteredPartnerList.layoutManager = LinearLayoutManager(requireContext())
                         binding.clusteredPartnerList.adapter?.notifyDataSetChanged()
 
-                        // Show the sliding panel
                         binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
                     }
                     .items(items)
                     .make()
 
-                // Perform any UI updates or logic that depends on the fetched data here
                 if (partnerInfoList.isNotEmpty()) {
                     Log.d("ITM", "${partnerInfoList[0].petcareName}")
                 } else {
@@ -194,20 +201,15 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
             val builder = AlertDialog.Builder(requireContext())
             val dialogView = layoutInflater.inflate(R.layout.partner_map_dialog, null) // replace with your dialog layout
 
-            // Initialize dialogBinding using the inflated view
             dialogBinding = PartnerMapDialogBinding.bind(dialogView)
 
             builder.setView(dialogView)
             val dialog = builder.create()
 
-            // Continue with your dialog logic
             firestore.collection("TB_PETCARE")
                 .get()
                 .addOnSuccessListener { querySnapshot ->
-                    // Assuming you want the first document in the collection
                     val document = querySnapshot.documents.firstOrNull()
-
-                    // Check if document is not null before accessing its fields
                     if (document != null) {
                         val partnerType = when (partnerInfo.petcareType) {
                             "k" -> "애견 유치원"
@@ -228,27 +230,32 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                             dialogBinding.dialogOpenCloseTime.text = "${partnerInfo.petcareOpening}에 영업 시작"
                         }
                         dialogBinding.dialogPartnerAddress.text = partnerInfo.petcareAddress
-                        // Continue updating other UI elements as needed
                     }
                 }
                 .addOnFailureListener { exception ->
                     Log.e("Firestore", "Error getting documents: ", exception)
                 }
 
-            dialog?.window?.attributes?.gravity = Gravity.BOTTOM
+            dialog.window?.apply {
+                setGravity(Gravity.BOTTOM)
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                val layoutParams = attributes
+                layoutParams.y = -500 // Adjust this value as needed
+                attributes = layoutParams
+            }
             dialog.show()
         }
     }
 
-    // 클러스터 클릭 시 뜨는 리사이클러 뷰의 리스트 요소를 클릭 시 해당하는 업체의 다이얼로그 띄우기
+
     override fun onItemClick(partner: ClusteredPartnerName) {
-        // Add logs to verify that onItemClick is called
-        Log.d("ClusterClickAdapter", "Item Clicked: ${partner.clusteredpartnerName}")
-        selectedPartnerInfo =
-            partnerInfoList.find { it.petcareName == partner.clusteredpartnerName }
+        // 클러스터 클릭 시 뜨는 리사이클러 뷰의 리스트 요소를 클릭 시 해당하는 업체의 다이얼로그 띄우기
+        selectedPartnerInfo = partnerInfoList.find { it.petcareName == partner.clusteredpartnerName }
         updateDialogWithSelectedPartner()
     }
 
+    // 영업 시간 처리용 함수
     private fun parseTimeString(timeString: String): Long {
         val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
         val parsedDate = dateFormat.parse(timeString)

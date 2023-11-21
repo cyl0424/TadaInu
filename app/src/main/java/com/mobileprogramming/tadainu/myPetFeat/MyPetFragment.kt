@@ -3,6 +3,8 @@ package com.mobileprogramming.tadainu.myPetFeat
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -60,21 +62,17 @@ class MyPetFragment : Fragment() {
     }
 
     private fun clickEventHandler() {
-//        binding.mypetToolbar.toolbarTitle.text = "마이펫"
-//        binding.mypetToolbar.backBtn.visibility = View.INVISIBLE
-
+        binding.mypetToolbar.toolbarTitle.text = "마이펫"
+        binding.mypetToolbar.backBtn.visibility = View.INVISIBLE
         binding.mypetBeautyBackground.setOnClickListener {
             showHbDialog(requireContext(), "beauty", null)
         }
-
         binding.mypetHealthBackground.setOnClickListener {
             showHbDialog(requireContext(), "health",null)
         }
-
         binding.mypetShotBackground.setOnClickListener {
             showAddShotDialog()
         }
-
         binding.mypetLocationBackground.setOnClickListener {
             val intent = Intent(requireContext(), TrackLocation::class.java)
             startActivity(intent)
@@ -237,7 +235,7 @@ class MyPetFragment : Fragment() {
             datePickerDialog.datePicker.minDate = currentDate.timeInMillis
             datePickerDialog.show()
         }
-
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }
 
@@ -248,12 +246,19 @@ class MyPetFragment : Fragment() {
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
-
         val spinnerItems = resources.getStringArray(R.array.my_array)
-        val spinnerAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerItems)
+
+        val spinnerAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.custom_spinner_items,
+            spinnerItems.toList().subList(1, spinnerItems.size)
+        )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        dialogBinding.shotSpinnerInput.prompt = "어떤 접종인가요?"
+
         dialogBinding.shotSpinnerInput.adapter = spinnerAdapter
+
 
         dialogBinding.shotCalenderIcon.setOnClickListener {
             // Use the existing code of showDatePicker here
@@ -292,7 +297,7 @@ class MyPetFragment : Fragment() {
             saveShotDataToFirebase(shotItem)
             dialog.dismiss()
         }
-
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }
 
@@ -382,6 +387,7 @@ class MyPetFragment : Fragment() {
             }
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -4,7 +4,14 @@
     <!-- 추가 - 권한 설정(내 위치 찍기) -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 카메라 권한 설정 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -17,13 +24,18 @@
         android:theme="@style/Theme.TadaInu"
         tools:targetApi="31">
         <activity
-            android:name=".myPetFeat.TrackLocation"
+            android:name=".notiFeat.CameraPreviewActivity"
             android:exported="false" />
-        <!-- 추가 - 네이버 지도 API -->
+        <activity
+            android:name=".notiFeat.CreateFeedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".myPetFeat.TrackLocation"
+            android:exported="false" /> <!-- 추가 - 네이버 지도 API -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value= "${NaverMapApiKey}"
-            />
+            android:value="${NaverMapApiKey}" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
