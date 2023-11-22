@@ -70,19 +70,52 @@ class PartnersListSubFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getItems()
+        // Sample data (replace this with your actual data source)
+        petcareList.add(
+            PetcareItem(
+                "반려견 유치원",
+                "왈독 강아지 유치원",
+                "영업 중",
+                "20:00에 영업 종료",
+                "서울 도봉구 노해로 65길 7-12 7층",
+                "https://example.com/partner1.jpg"
+            )
+        )
+        // Sample data (replace this with your actual data source)
+        petcareList.add(
+            PetcareItem(
+                "반려견 유치원",
+                "골드퍼피 애견 유치원",
+                "영업 종료",
+                "08:00에 영업 시작",
+                "서울 노원구 동일로 1014 3층",
+                "https://example.com/partner1.jpg"
+            )
+        )
+        // Sample data (replace this with your actual data source)
+        petcareList.add(
+            PetcareItem(
+                "반려견 유치원",
+                "땡일리 강아지 유치원",
+                "영업 중",
+                "20:00에 영업 종료",
+                "서울 성북구 월계로32길 24 302호",
+                "https://example.com/partner1.jpg"
+            )
+        )
+        // Sample data (replace this with your actual data source)
+        petcareList.add(
+            PetcareItem(
+                "반려견 호텔",
+                "마이단독 강아지 유치원",
+                "영업 중",
+                "20:00에 영업 종료",
+                "서울 도봉구 노해로 273 3층, 마이단독",
+                "https://example.com/partner1.jpg"
+            )
+        )
 
-//        // Sample data (replace this with your actual data source)
-//        petcareList.add(
-//            PetcareItem(
-//                "Type 1",
-//                "Partner 1",
-//                "9:00 AM",
-//                "6:00 PM",
-//                "123 Main St",
-//                "https://example.com/partner1.jpg"
-//            )
-//        )
+        getItems()
 
         // Set up RecyclerView
         partnersListAdapter = PartnersListAdapter(petcareList)

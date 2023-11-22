@@ -7,23 +7,27 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/visible"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_width="250dp"
-            android:layout_height="match_parent"
+            android:id="@+id/linearLayout"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/petcatr_type"
+                android:textColor="#808080"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="반려견 유치원/호텔" />
@@ -31,7 +35,10 @@
             <TextView
                 android:id="@+id/petcare_name"
                 android:layout_width="wrap_content"
+                android:textColor="#ED7D31"
+                android:textSize="20dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="유치원/호텔 이름" />
 
             <LinearLayout
@@ -44,14 +51,13 @@
                     android:id="@+id/petcare_opening"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:text="Open" />
+                    android:text="영업 종료" />
 
                 <TextView
                     android:id="@+id/petcare_closing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Opening end or start time"
-                    />
+                    android:text="21:00에 영업 종료" />
 
             </LinearLayout>
 
@@ -71,6 +77,96 @@
             android:src="@mipmap/ic_launcher"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/invisible"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/phone_icon">
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/petcare_phone_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0507-1330-4481"
+                    android:textSize="17dp"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/visible" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/detail_icon">
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/petcare_addr_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="위치 상세 주소"
+                    android:textSize="17dp"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/petcare_phone_number" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/instagram_icon">
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/petcare_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="인스타그램 주소"
+                    android:textSize="17dp"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/petcare_addr_detail" />
+
+            </LinearLayout>
+
+
+
+
+
+
+        </LinearLayout>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
