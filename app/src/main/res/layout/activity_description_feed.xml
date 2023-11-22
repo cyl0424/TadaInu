@@ -6,13 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".notiFeat.DescriptionFeedActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+    <include
+        android:id="@+id/mypet_toolbar"
+        layout="@layout/tool_bar_arrow"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/uploadImage1"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="28dp"
         android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toStartOf="@+id/uploadImage2"
         app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -20,9 +36,10 @@
         android:id="@+id/uploadImage2"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
-        app:layout_constraintStart_toEndOf="@+id/uploadImage1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -30,7 +47,7 @@
         android:id="@+id/uploadImage3"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="13dp"
         android:layout_marginTop="12dp"
         app:layout_constraintStart_toEndOf="@+id/uploadImage2"
         app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"
@@ -41,18 +58,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="@font/pretendard_bold"
         android:text="업로드 될 사진들 미리보기"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mypet_toolbar" />
 
     <TextView
         android:id="@+id/feedDetailDescriptionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="@font/pretendard_bold"
         android:text="피드 상세 내용"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,8 +77,8 @@
 
     <EditText
         android:id="@+id/feedDetailDescription"
-        android:layout_width="344dp"
-        android:layout_height="174dp"
+        android:layout_width="342dp"
+        android:layout_height="234dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/feed_description_box"
         android:hint="피드 상세 내용을 입력해주세요."
@@ -75,7 +92,7 @@
         android:id="@+id/uploadBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="35dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/feed_upload_confirm"
         android:fontFamily="@font/pretendard_bold"
         android:gravity="center"

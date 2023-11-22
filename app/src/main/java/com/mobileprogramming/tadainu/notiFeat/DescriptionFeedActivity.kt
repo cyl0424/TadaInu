@@ -25,11 +25,18 @@ class DescriptionFeedActivity : AppCompatActivity() {
         binding = ActivityDescriptionFeedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 툴바설정
+        val toolbar = binding.mypetToolbar
+        val toolbarTitle = binding.mypetToolbar.toolbarTitle
+        toolbarTitle.text = "피드 업로드"
+        toolbar.backBtn.setOnClickListener {
+            onBackPressed()
+        }
+
         val imageUris = intent.getParcelableArrayListExtra<Uri>("croppedImageUris") as ArrayList<Uri>?
         Log.d("ITM", "Passed Uris : ${imageUris?.toTypedArray()}")
 
         if (imageUris != null) {
-            // Process and display images
             for (i in 0 until imageUris.size) {
                 val imageViewId = resources.getIdentifier("uploadImage${i + 1}", "id", packageName)
                 val imageView = findViewById<ImageView>(imageViewId)
@@ -43,6 +50,8 @@ class DescriptionFeedActivity : AppCompatActivity() {
             uploadPhotosToFirebaseStorage(imageUris)
         }
     }
+
+    // 파이어스토리지에 사진 저장
     private fun uploadPhotosToFirebaseStorage(imageUris: ArrayList<Uri>?) {
         val storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference.child("care/feed")
@@ -69,6 +78,7 @@ class DescriptionFeedActivity : AppCompatActivity() {
         }
     }
 
+    // 파이어 스토어에 피드 내용 저장
     private fun saveDataToFirestore(feedId: String, imageUrls: List<String>) {
         val firestore = FirebaseFirestore.getInstance()
         val editText = binding.feedDetailDescription
@@ -89,6 +99,7 @@ class DescriptionFeedActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 // Document added successfully
                 Log.d("ITM", "Feed data added to Firestore")
+                finish()
             }
             .addOnFailureListener { e ->
                 // Handle errors

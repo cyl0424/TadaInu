@@ -190,7 +190,6 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                     Log.d("ITM", "partnerInfoList is empty")
                 }
 
-                // Continue with the clustering or other logic here...
             }
     }
     private fun updateDialogWithSelectedPartner() {

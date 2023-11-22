@@ -33,10 +33,15 @@ class CreateFeedActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         galleryButton = binding.galleryButton
-        imageView = binding.imageView
         cameraButton = binding.cameraButton
         previewImageTextView = binding.previewImage
-        imageView.visibility = View.INVISIBLE
+        // 툴바설정
+        val toolbar = binding.mypetToolbar
+        val toolbarTitle = binding.mypetToolbar.toolbarTitle
+        toolbarTitle.text = "피드 사진 선택하기"
+        toolbar.backBtn.setOnClickListener {
+            onBackPressed()
+        }
 
         // 갤러리 선택 시
         galleryButton.setOnClickListener {
@@ -118,13 +123,12 @@ class CreateFeedActivity : AppCompatActivity() {
             cropActivityResultLauncher.launch(uCropIntent)
         } else {
             Log.d("ITM","startcropactivity$index")
-            // All images have been processed, start the next activity
+            // 모든 이미지가 다 처리되어야만 다음 엑티비티로 넘어감
             val intent = Intent(this, DescriptionFeedActivity::class.java)
             intent.putParcelableArrayListExtra("croppedImageUris", croppedImageUris)
             Log.d("ITM", "Before Passing Uris : ${croppedImageUris}")
             startActivity(intent)
 
-            // Reset the counter for future use
             processedImageCount = 0
         }
     }
@@ -137,13 +141,10 @@ class CreateFeedActivity : AppCompatActivity() {
                     val resultUri: Uri? = UCrop.getOutput(data)
                     Log.d("ITM", "resultUri: $resultUri")
                     if (resultUri != null) {
-                        Log.d("ITM","launcher에서 ")
+                        // CROP한 사진 ArrayList에 추가
                         croppedImageUris.add(resultUri)
                     }
-
                     processedImageCount++
-
-                    // Process the next image
                     startCropActivity(selectedImageUris, processedImageCount)
                 }
             } else if (result.resultCode == UCrop.RESULT_ERROR) {

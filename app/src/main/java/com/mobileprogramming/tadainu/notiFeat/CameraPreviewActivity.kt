@@ -46,9 +46,9 @@ class CameraPreviewActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
         previewView = findViewById(R.id.previewView)
 
-        // Check camera permissions
+        // 카메라 권한 여부 판단
         if (allPermissionsGranted()) {
-            // Start the camera when the activity is created
+            // 권한 있으면 카메라 시작
             startCamera()
         } else {
             ActivityCompat.requestPermissions(
@@ -58,14 +58,16 @@ class CameraPreviewActivity : AppCompatActivity() {
             )
         }
 
-        // Set up the Camera capture
-        imageCapture = ImageCapture.Builder().build()  // Initialize imageCapture
+        // ImageCapture Initializing
+        imageCapture = ImageCapture.Builder().build()
 
+        // 캡쳐 버튼 누르면 사진 찍기
         binding.captureButton.setOnClickListener {
             Log.d("ITM"," 캡쳐캡쳐~")
             takePhoto()
         }
 
+        // 뒤로가기 버튼
         binding.goBackButton.setOnClickListener {
             finish()
         }
@@ -76,55 +78,46 @@ class CameraPreviewActivity : AppCompatActivity() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
-            // Bind the preview
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             bindPreview(cameraProvider)
         }, ContextCompat.getMainExecutor(this))
     }
 
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
-        // Set up the preview use case
+        // Preview 선언
         val preview = Preview.Builder().build().also {
             it.setSurfaceProvider(previewView.surfaceProvider)
         }
 
-        // Unbind use cases before rebinding
         cameraProvider.unbindAll()
 
-        // Bind use cases to camera
         val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
         val camera = cameraProvider.bindToLifecycle(
             this, cameraSelector, preview, imageCapture
         )
     }
 
+    // 사진 찍기
     private fun takePhoto() {
-        // Create a timestamped file to save the photo
+        // 사진 파일 생성
         val photoFile = createPhotoFile()
 
-        // Set up ImageCapture metadata
         val metadata = ImageCapture.Metadata().apply {
             isReversedHorizontal = false
         }
 
-        // Create output options for ImageCapture
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
             .setMetadata(metadata)
             .build()
 
-        // Capture the image
+        // 캡쳐
         imageCapture.takePicture(
             outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     imageCaptureUri = Uri.fromFile(photoFile)
-
-                    // Save the image to the gallery
+                    // 저장
                     saveImageToGallery(photoFile)
-//
-//                    // Optionally, you can update the UI or show a message
-//                    previewImageTextView.text = "Image saved: ${photoFile.absolutePath}"
                 }
-
                 override fun onError(exception: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
                 }
@@ -132,6 +125,7 @@ class CameraPreviewActivity : AppCompatActivity() {
         )
     }
 
+    // 갤러리에 저장
     private fun saveImageToGallery(photoFile: File) {
         // Use MediaStore to insert the image into the gallery
         val contentValues = ContentValues().apply {
@@ -139,7 +133,6 @@ class CameraPreviewActivity : AppCompatActivity() {
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
             put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + "/Camera")
         }
-
         contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)?.also { uri ->
             contentResolver.openOutputStream(uri)?.use { outputStream ->
                 val photoBytes = photoFile.readBytes()
@@ -147,6 +140,7 @@ class CameraPreviewActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun createPhotoFile(): File {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File = getExternalFilesDir(null)!!
@@ -154,22 +148,6 @@ class CameraPreviewActivity : AppCompatActivity() {
             photoFile = this
         }
     }
-
-    private fun openGallery() {
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        resultLauncher.launch(galleryIntent)
-    }
-
-    private val resultLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val data: Intent? = result.data
-                val selectedImageUri: Uri? = data?.data
-                // Handle the selected image URI, e.g., display in ImageView
-//                previewImageTextView.text = "Selected image from gallery: $selectedImageUri"
-            }
-        }
-
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
