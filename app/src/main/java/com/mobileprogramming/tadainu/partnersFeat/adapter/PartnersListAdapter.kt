@@ -1,16 +1,26 @@
 package com.mobileprogramming.tadainu.partnersFeat.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mobileprogramming.tadainu.databinding.FragmentPartnersListItemBinding
 import com.mobileprogramming.tadainu.model.PetcareItem
 
-class PartnersListAdapter(val petcareList: MutableList<PetcareItem>) : RecyclerView.Adapter<PartnersListAdapter.CustomViewHolder>() {
+class PartnersListAdapter(val petcareList: MutableList<PetcareItem>) :
+    RecyclerView.Adapter<PartnersListAdapter.CustomViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PartnersListAdapter.CustomViewHolder {
-        val binding = FragmentPartnersListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PartnersListAdapter.CustomViewHolder {
+        val binding = FragmentPartnersListItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return CustomViewHolder(binding)
     }
 
@@ -23,7 +33,33 @@ class PartnersListAdapter(val petcareList: MutableList<PetcareItem>) : RecyclerV
         return petcareList.size
     }
 
-    class CustomViewHolder(private val binding: FragmentPartnersListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CustomViewHolder(private val binding: FragmentPartnersListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        private var isExpanded = false
+
+        init {
+            // Add click listener to the entire item view
+            binding.root.setOnClickListener {
+                toggleVisibility()
+            }
+
+            // Add click listener to the '접기' button
+            binding.foldButton.setOnClickListener {
+                toggleVisibility()
+            }
+        }
+
+        private fun toggleVisibility() {
+            // Toggle the visibility of the 'invisible' section
+            val invisibleLayout = binding.invisible
+            isExpanded = !isExpanded
+            invisibleLayout.visibility = if (isExpanded) View.VISIBLE else View.GONE
+
+            Log.d("ITM", "Visibility is now ${if (isExpanded) "VISIBLE" else "GONE"}")
+        }
+
+
         fun bind(petcareItem: PetcareItem) {
             binding.apply {
                 petcatrType.text = petcareItem.petcare_type

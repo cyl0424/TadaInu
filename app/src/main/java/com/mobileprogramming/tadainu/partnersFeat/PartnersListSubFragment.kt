@@ -14,6 +14,8 @@ import com.mobileprogramming.tadainu.model.PetcareItem
 import com.mobileprogramming.tadainu.partnersFeat.adapter.PartnersAdapter
 import com.mobileprogramming.tadainu.partnersFeat.adapter.PartnersListAdapter
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,7 +80,7 @@ class PartnersListSubFragment : Fragment() {
                 "영업 중",
                 "20:00에 영업 종료",
                 "서울 도봉구 노해로 65길 7-12 7층",
-                "https://example.com/partner1.jpg"
+                "https://png.pngtree.com/thumb_back/fh260/background/20230609/pngtree-three-puppies-with-their-mouths-open-are-posing-for-a-photo-image_2902292.jpg"
             )
         )
         // Sample data (replace this with your actual data source)
@@ -89,7 +91,7 @@ class PartnersListSubFragment : Fragment() {
                 "영업 종료",
                 "08:00에 영업 시작",
                 "서울 노원구 동일로 1014 3층",
-                "https://example.com/partner1.jpg"
+                "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg"
             )
         )
         // Sample data (replace this with your actual data source)
@@ -100,7 +102,7 @@ class PartnersListSubFragment : Fragment() {
                 "영업 중",
                 "20:00에 영업 종료",
                 "서울 성북구 월계로32길 24 302호",
-                "https://example.com/partner1.jpg"
+                "https://img.freepik.com/premium-photo/cute-puppy-of-maltipoo-dog-posing-running-isolated-over-white-studio-background-playful-animal_756748-85193.jpg"
             )
         )
         // Sample data (replace this with your actual data source)
@@ -111,7 +113,7 @@ class PartnersListSubFragment : Fragment() {
                 "영업 중",
                 "20:00에 영업 종료",
                 "서울 도봉구 노해로 273 3층, 마이단독",
-                "https://example.com/partner1.jpg"
+                "https://images.mypetlife.co.kr/content/uploads/2023/07/20162542/%EC%A6%9D%EB%AA%85%EC%82%AC%EC%A7%84_%EB%A3%A8%ED%94%BC-1024x640.png"
             )
         )
 
@@ -130,19 +132,38 @@ class PartnersListSubFragment : Fragment() {
             .addOnSuccessListener { documents ->
 
                 for (document in documents) {
-                    val petcare_type = document.getString("petcare_type")
+                    val petcare_type = when (document.getString("petcare_type")) {
+                        "k" -> "애견 유치원"
+                        "h" -> "애견 호텔"
+                        else -> "Unknown Type"
+                    }
                     val petcare_name = document.getString("petcare_name")
                     val petcare_opening = document.getString("petcare_opening")
                     val petcare_closing = document.getString("petcare_closing")
                     val petcare_addr = document.getString("petcare_addr")
                     val petcare_img = document.getString("petcare_img")
 
+                    val currentTime = System.currentTimeMillis()
+                    val openingTime = parseTimeString(petcare_opening.toString())
+                    val closingTime = parseTimeString(petcare_closing.toString())
+
+                    var petcare_isopen = ""
+                    var petcare_open_close = ""
+
+                    if (currentTime in openingTime..closingTime) {
+                        petcare_isopen = "영업 중"
+                        petcare_open_close = "$petcare_closing 에 영업 종료"
+                    } else {
+                        petcare_isopen = "영업 종료"
+                        petcare_open_close = "$petcare_opening 에 영업 시작"
+                    }
+
                     petcareList.add(
                         PetcareItem(
                             petcare_type,
                             petcare_name,
-                            petcare_opening,
-                            petcare_closing,
+                            petcare_isopen,
+                            petcare_open_close,
                             petcare_addr,
                             petcare_img
                         )
@@ -160,6 +181,12 @@ class PartnersListSubFragment : Fragment() {
 
     }
 
+    // 영업 시간 처리용 함수
+    private fun parseTimeString(timeString: String): Long {
+        val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val parsedDate = dateFormat.parse(timeString)
+        return parsedDate?.time ?: 0L
+    }
 
     companion object {
         /**
