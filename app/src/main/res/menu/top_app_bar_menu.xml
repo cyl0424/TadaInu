@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--top_app_bar_menu.xml-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search_menu_item"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="검색"
+        android:contentDescription="검색"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        />
+
+    <item
+        android:id="@+id/more_menu_id"
+        android:title="더보기"
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        android:contentDescription="더보기 메뉴" />
+
+</menu>

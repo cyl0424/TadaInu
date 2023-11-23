@@ -1,17 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--fragment_partners_list_sub.xml-->
+<!-- fragment_partners_list_sub.xml -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".partnersFeat.PartnersListSubFragment">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/appbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ToggleButton
+                android:id="@+id/button_k"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:text="반려견 유치원"
+                android:textOff="반려견 유치원"
+                android:textColor="@drawable/toggle_text_color_selector"
+                android:textOn="반려견 유치원"
+                android:background="@drawable/toggle_background"
+                android:padding="8dp" />
+
+            <ToggleButton
+                android:id="@+id/button_h"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:text="애견 호텔"
+                android:textOff="애견 호텔"
+                android:textColor="@drawable/toggle_text_color_selector"
+                android:textOn="애견 호텔"
+                android:background="@drawable/toggle_background"
+                android:padding="8dp" />
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/top_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/top_app_bar_menu" />
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="?attr/actionBarSize">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
