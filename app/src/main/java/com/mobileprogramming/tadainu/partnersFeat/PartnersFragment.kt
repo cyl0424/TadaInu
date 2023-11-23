@@ -49,6 +49,10 @@ class PartnersFragment : Fragment() {
         val adapter = PartnersAdapter(requireActivity())
 
         viewPager.adapter = adapter
+
+        // 스와이프로 탭 전환 막음.(개인적인 이용 불편)
+        viewPager.isUserInputEnabled = false
+
         // TabLayout과 ViewPager연결
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             // 각 탭마다 텍스트 지정
