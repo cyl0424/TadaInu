@@ -6,15 +6,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityTrackLocationBinding
 import com.naver.maps.map.CameraUpdate
@@ -28,7 +22,7 @@ import com.naver.maps.map.util.FusedLocationSource
 
 
 private const val PET_ID = "Default_Value"
-class TrackLocation : AppCompatActivity(), OnMapReadyCallback {
+class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
 
@@ -97,15 +91,8 @@ class TrackLocation : AppCompatActivity(), OnMapReadyCallback {
         naverMap.uiSettings.isLocationButtonEnabled = true
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
-        // Example marker at Naver headquarters in Seoul
-        val marker = Marker()
-        marker.position = com.naver.maps.geometry.LatLng(37.5666102, 126.9783881)
-        marker.map = naverMap
-
-        // Move the camera to the marker position
-        naverMap.moveCamera(CameraUpdate.scrollTo(marker.position))
-
         // 강아지 위치 트래킹
+        // 임시로 찍어서 좌표 디자인함
         val dogLocation = Marker()
         dogLocation.position = com.naver.maps.geometry.LatLng(37.5666102, 126.9783881)
 

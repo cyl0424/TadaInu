@@ -5,31 +5,30 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.mobileprogramming.tadainu.databinding.ActivityCreateFeedBinding
+import com.mobileprogramming.tadainu.databinding.ActivityCameraGalleryBinding
 import com.yalantis.ucrop.UCrop
 import java.io.File
 import java.util.UUID
 
 
-class CreateFeedActivity : AppCompatActivity() {
+class CameraGalleryActivity : AppCompatActivity() {
     private lateinit var galleryButton: Button
     private lateinit var imageView: ImageView
     private lateinit var cameraButton: Button
     private lateinit var previewImageTextView: TextView
-    private lateinit var binding: ActivityCreateFeedBinding
+    private lateinit var binding: ActivityCameraGalleryBinding
     private var selectedImageUris: ArrayList<Uri> = ArrayList()
     private var croppedImageUris: ArrayList<Uri> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCreateFeedBinding.inflate(layoutInflater)
+        binding = ActivityCameraGalleryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         galleryButton = binding.galleryButton
@@ -49,7 +48,7 @@ class CreateFeedActivity : AppCompatActivity() {
         }
         // 카메라 선택 시
         cameraButton.setOnClickListener {
-            val intent = Intent(this@CreateFeedActivity, CameraPreviewActivity::class.java)
+            val intent = Intent(this@CameraGalleryActivity, CameraPreviewActivity::class.java)
             startActivity(intent)
         }
     }
@@ -124,7 +123,7 @@ class CreateFeedActivity : AppCompatActivity() {
         } else {
             Log.d("ITM","startcropactivity$index")
             // 모든 이미지가 다 처리되어야만 다음 엑티비티로 넘어감
-            val intent = Intent(this, DescriptionFeedActivity::class.java)
+            val intent = Intent(this, UploadFeedActivity::class.java)
             intent.putParcelableArrayListExtra("croppedImageUris", croppedImageUris)
             Log.d("ITM", "Before Passing Uris : ${croppedImageUris}")
             startActivity(intent)

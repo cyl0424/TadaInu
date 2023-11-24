@@ -4,25 +4,25 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.mobileprogramming.tadainu.R
-import com.mobileprogramming.tadainu.databinding.ActivityDescriptionFeedBinding
+import com.mobileprogramming.tadainu.databinding.ActivityUploadFeedBinding
 import com.mobileprogramming.tadainu.model.Feed
-import com.yalantis.ucrop.UCrop
 import java.util.UUID
 
-class DescriptionFeedActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityDescriptionFeedBinding
+class UploadFeedActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityUploadFeedBinding
     private lateinit var feedId: String
-
+    private lateinit var progressBar: ProgressBar
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDescriptionFeedBinding.inflate(layoutInflater)
+        binding = ActivityUploadFeedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // 툴바설정
@@ -46,7 +46,11 @@ class DescriptionFeedActivity : AppCompatActivity() {
             Log.e("ITM", "Image URIs are null")
         }
 
+        progressBar = binding.progressBar
+
         binding.uploadBtn.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            binding.uploadBtn.isEnabled = false
             uploadPhotosToFirebaseStorage(imageUris)
         }
     }
@@ -74,6 +78,8 @@ class DescriptionFeedActivity : AppCompatActivity() {
                 .addOnFailureListener { exception ->
                     // Handle unsuccessful upload
                     Log.e("ITM", "Upload failed: $exception")
+                    progressBar.visibility = View.INVISIBLE
+                    binding.uploadBtn.isEnabled = true
                 }
         }
     }
@@ -97,17 +103,19 @@ class DescriptionFeedActivity : AppCompatActivity() {
             .document(feedId)
             .set(feedData)
             .addOnSuccessListener {
-                // Document added successfully
                 Log.d("ITM", "Feed data added to Firestore")
+                progressBar.visibility = View.INVISIBLE
+                binding.uploadBtn.isEnabled = true
                 finish()
             }
             .addOnFailureListener { e ->
-                // Handle errors
+
                 Log.e("ITM", "Error adding feed data to Firestore: $e")
+                progressBar.visibility = View.INVISIBLE
+                binding.uploadBtn.isEnabled = true
             }
     }
     private fun generateFeedId(): String {
-        // You can implement your logic to generate a unique feed ID
         return UUID.randomUUID().toString()
     }
 }

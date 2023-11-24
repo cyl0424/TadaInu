@@ -1,7 +1,6 @@
 package com.mobileprogramming.tadainu.notiFeat
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -44,7 +43,7 @@ class NotiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnGoCreate.setOnClickListener {
-            val intent = Intent(requireContext(), CreateFeedActivity::class.java)
+            val intent = Intent(requireContext(), CameraGalleryActivity::class.java)
             startActivity(intent)
         }
     }

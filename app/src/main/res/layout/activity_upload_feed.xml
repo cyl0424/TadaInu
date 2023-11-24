@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".notiFeat.DescriptionFeedActivity">
+    tools:context=".notiFeat.UploadFeedActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
+
     <include
         android:id="@+id/mypet_toolbar"
         layout="@layout/tool_bar_arrow"
@@ -77,8 +78,8 @@
 
     <EditText
         android:id="@+id/feedDetailDescription"
-        android:layout_width="342dp"
-        android:layout_height="234dp"
+        android:layout_width="341dp"
+        android:layout_height="202dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/feed_description_box"
         android:hint="피드 상세 내용을 입력해주세요."
@@ -102,5 +103,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/uploadBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

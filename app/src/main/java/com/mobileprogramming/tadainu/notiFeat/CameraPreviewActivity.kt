@@ -1,23 +1,17 @@
 package com.mobileprogramming.tadainu.notiFeat
 
 import android.content.ContentValues
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import java.io.File
 import java.text.SimpleDateFormat
@@ -26,7 +20,6 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityCameraPreviewBinding
-import com.mobileprogramming.tadainu.databinding.FragmentNotiBinding
 
 class CameraPreviewActivity : AppCompatActivity() {
 
@@ -53,8 +46,8 @@ class CameraPreviewActivity : AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                CreateFeedActivity.REQUIRED_PERMISSIONS,
-                CreateFeedActivity.REQUEST_CODE_PERMISSIONS
+                CameraGalleryActivity.REQUIRED_PERMISSIONS,
+                CameraGalleryActivity.REQUEST_CODE_PERMISSIONS
             )
         }
 
