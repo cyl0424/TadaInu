@@ -1,6 +1,8 @@
 package com.mobileprogramming.tadainu.notiFeat
 
+import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -20,6 +22,8 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityCameraPreviewBinding
+import com.mobileprogramming.tadainu.notiFeat.UploadFeedActivity.Companion.sharedImageList
+import com.yalantis.ucrop.UCrop
 
 class CameraPreviewActivity : AppCompatActivity() {
 
@@ -46,8 +50,8 @@ class CameraPreviewActivity : AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                CameraGalleryActivity.REQUIRED_PERMISSIONS,
-                CameraGalleryActivity.REQUEST_CODE_PERMISSIONS
+                NotiFragment.REQUIRED_PERMISSIONS,
+                NotiFragment.REQUEST_CODE_PERMISSIONS
             )
         }
 
@@ -110,6 +114,16 @@ class CameraPreviewActivity : AppCompatActivity() {
                     imageCaptureUri = Uri.fromFile(photoFile)
                     // 저장
                     saveImageToGallery(photoFile)
+
+                    // 찍은 사진 Ucrop
+                    imageCaptureUri?.let {
+                        UCrop.of(it, Uri.fromFile(photoFile))
+                            .withAspectRatio(1f, 1f)
+                            .withMaxResultSize(1000, 1000)
+                            .start(this@CameraPreviewActivity)
+                    } ?: run {
+                        Log.e(TAG, "Image 찍은거 null")
+                    }
                 }
                 override fun onError(exception: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
@@ -117,8 +131,26 @@ class CameraPreviewActivity : AppCompatActivity() {
             }
         )
     }
+    // Ucrop의 결과 Uri
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+            val resultUri: Uri? = UCrop.getOutput(data!!)
+            if (resultUri != null) {
+                // Companion Object에 담아줌
+                sharedImageList.add(resultUri)
 
-    // 갤러리에 저장
+                // UploadFeedActivity로 넘어감
+                val intent = Intent(this, UploadFeedActivity::class.java)
+                startActivity(intent)
+            }
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            val cropError: Throwable? = UCrop.getError(data!!)
+            Log.e("ITM", "Error cropping image: $cropError")
+        }
+    }
+
+    // Modify the saveImageToGallery function
     private fun saveImageToGallery(photoFile: File) {
         // Use MediaStore to insert the image into the gallery
         val contentValues = ContentValues().apply {
@@ -132,8 +164,10 @@ class CameraPreviewActivity : AppCompatActivity() {
                 outputStream.write(photoBytes)
             }
         }
+        // Set the imageCaptureUri to the URI of the saved image
+        imageCaptureUri = Uri.fromFile(photoFile)
+        setResult(Activity.RESULT_OK)
     }
-
     private fun createPhotoFile(): File {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File = getExternalFilesDir(null)!!
@@ -141,6 +175,9 @@ class CameraPreviewActivity : AppCompatActivity() {
             photoFile = this
         }
     }
+
+
+
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }

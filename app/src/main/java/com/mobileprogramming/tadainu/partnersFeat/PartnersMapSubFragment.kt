@@ -16,11 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.type.LatLng
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.FragmentPartnersMapSubBinding
-import com.mobileprogramming.tadainu.databinding.PartnerMapDialogBinding
+import com.mobileprogramming.tadainu.databinding.DialogPartnerMapBinding
 import com.mobileprogramming.tadainu.model.ClusteredPartnerName
 import com.mobileprogramming.tadainu.model.NaverItem
 import com.mobileprogramming.tadainu.model.PartnerInfo
@@ -48,7 +46,7 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
     private lateinit var locationSource: FusedLocationSource
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private val firestore = FirebaseFirestore.getInstance()
-    private lateinit var dialogBinding: PartnerMapDialogBinding
+    private lateinit var dialogBinding: DialogPartnerMapBinding
     private val items = mutableListOf<NaverItem>()
     private val partnerInfoList = mutableListOf<PartnerInfo>()
     // 마커에 정보 저장
@@ -76,7 +74,7 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
     ): View? {
         Log.d("ITM","oncreateView시작")
         binding = FragmentPartnersMapSubBinding.inflate(inflater, container, false)
-        dialogBinding = PartnerMapDialogBinding.inflate(layoutInflater) // Add this line
+        dialogBinding = DialogPartnerMapBinding.inflate(layoutInflater) // Add this line
         return binding.root
     }
 
@@ -197,9 +195,9 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
         selectedPartnerInfo?.let { partnerInfo ->
             // 다이얼로그 업데이트 로직 수행
             val builder = AlertDialog.Builder(requireContext())
-            val dialogView = layoutInflater.inflate(R.layout.partner_map_dialog, null) // replace with your dialog layout
+            val dialogView = layoutInflater.inflate(R.layout.dialog_partner_map, null) // replace with your dialog layout
 
-            dialogBinding = PartnerMapDialogBinding.bind(dialogView)
+            dialogBinding = DialogPartnerMapBinding.bind(dialogView)
 
             builder.setView(dialogView)
             val dialog = builder.create()
@@ -237,7 +235,7 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
             dialog.window?.apply {
                 setGravity(Gravity.BOTTOM)
                 setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                setDimAmount(0.0f)
+                setDimAmount(0.7f)
                 val layoutParams = attributes
                 layoutParams.y = -500 // Adjust this value as needed
                 attributes = layoutParams

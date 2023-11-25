@@ -6,12 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".notiFeat.UploadFeedActivity">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+    <!--    <ImageView-->
+    <!--        android:id="@+id/uploadImage1"-->
+    <!--        android:layout_width="100dp"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:layout_marginTop="12dp"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        app:layout_constraintEnd_toStartOf="@+id/uploadImage2"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"-->
+    <!--        tools:srcCompat="@tools:sample/avatars" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/uploadImage2"-->
+    <!--        android:layout_width="100dp"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:layout_marginTop="12dp"-->
+    <!--        app:layout_constraintEnd_toStartOf="@+id/guideline"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/guideline"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"-->
+    <!--        tools:srcCompat="@tools:sample/avatars" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/uploadImage3"-->
+    <!--        android:layout_width="100dp"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:layout_marginStart="13dp"-->
+    <!--        android:layout_marginTop="12dp"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/uploadImage2"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"-->
+    <!--        tools:srcCompat="@tools:sample/avatars" />-->
 
     <include
         android:id="@+id/mypet_toolbar"
@@ -23,36 +47,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/uploadImage1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toStartOf="@+id/uploadImage2"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/imageRecyclerView"
+        android:layout_width="390dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
-        android:id="@+id/uploadImage2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
-        android:id="@+id/uploadImage3"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toEndOf="@+id/uploadImage2"
-        app:layout_constraintTop_toBottomOf="@+id/uploadPictureText"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:listitem="@layout/feed_image_item" />
 
     <TextView
         android:id="@+id/uploadPictureText"
@@ -69,23 +74,22 @@
         android:id="@+id/feedDetailDescriptionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="36dp"
         android:fontFamily="@font/pretendard_bold"
         android:text="피드 상세 내용"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadImage1" />
+        app:layout_constraintTop_toBottomOf="@+id/imageRecyclerView" />
 
     <EditText
         android:id="@+id/feedDetailDescription"
         android:layout_width="341dp"
         android:layout_height="202dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/feed_description_box"
         android:hint="피드 상세 내용을 입력해주세요."
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.447"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/feedDetailDescriptionText" />
 

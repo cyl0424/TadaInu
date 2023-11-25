@@ -112,4 +112,7 @@ dependencies {
 
     //UCrop
     implementation 'com.github.yalantis:ucrop:2.2.6-native'
+    //Image Picker
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+
 }
