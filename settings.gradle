@@ -17,6 +17,12 @@ dependencyResolutionManagement {
         maven {
             url 'https://naver.jfrog.io/artifactory/maven/'
         }
+        //Ucrop
+        jcenter()
+        maven {
+            url "https://jitpack.io"
+        }
+        maven { url "https://jitpack.io" }
     }
 }
 

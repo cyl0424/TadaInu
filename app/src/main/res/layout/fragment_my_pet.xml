@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".myPetFeat.MyPetFragment">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:ignore="InvalidId">
+            android:paddingBottom="40dp">
 
             <include
                 android:id="@+id/mypet_toolbar"
@@ -242,13 +244,13 @@
 
 
             <!--        <ListView-->
-    <!--            android:id="@+id/shotList"-->
-    <!--            android:layout_width="195dp"-->
-    <!--            android:layout_height="75dp"-->
-    <!--            android:layout_marginStart="20dp"-->
-    <!--            android:layout_marginTop="2dp"-->
-    <!--            app:layout_constraintStart_toStartOf="@+id/mypet_shot_background"-->
-    <!--            app:layout_constraintTop_toBottomOf="@+id/mypet_shot" />-->
+            <!--            android:id="@+id/shotList"-->
+            <!--            android:layout_width="195dp"-->
+            <!--            android:layout_height="75dp"-->
+            <!--            android:layout_marginStart="20dp"-->
+            <!--            android:layout_marginTop="2dp"-->
+            <!--            app:layout_constraintStart_toStartOf="@+id/mypet_shot_background"-->
+            <!--            app:layout_constraintTop_toBottomOf="@+id/mypet_shot" />-->
 
 
             <!--네번째 블록-->
@@ -425,22 +427,22 @@
                 android:id="@+id/imageView4"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="3dp"
-                    android:src="@drawable/mypet_walk_icon"
-                    app:layout_constraintEnd_toEndOf="@+id/mypet_walk_background"
-                    app:layout_constraintTop_toTopOf="@+id/mypet_walk_background" />
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/mypet_walk_icon"
+                app:layout_constraintEnd_toEndOf="@+id/mypet_walk_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_walk_background" />
 
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="3dp"
-                    android:src="@drawable/mypet_location_icon"
-                    app:layout_constraintEnd_toEndOf="@+id/mypet_location_background"
-                    app:layout_constraintTop_toTopOf="@+id/mypet_location_background" />
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/mypet_location_icon"
+                app:layout_constraintEnd_toEndOf="@+id/mypet_location_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_location_background" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </FrameLayout>

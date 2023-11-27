@@ -71,8 +71,6 @@
     <color name="gray060">#FF444F5B</color>
     <color name="gray080">#FF22272D</color>
 
-    <!-- datepicker -->
-    <color name="colorPrimary">#2196F3</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="partners_clicked">#ED7D31</color>
+    <color name="partners_uncliked">#737373</color>
 </resources>

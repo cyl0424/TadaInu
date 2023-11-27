@@ -1,0 +1,92 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mapPartnerDialog"
+    android:layout_width="370dp"
+    android:layout_height="140dp"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_corners"
+    android:padding="0dp">
+
+    <TextView
+        android:id="@+id/dialogPartnerType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="Default Type"
+        android:textColor="@android:color/tab_indicator_text"
+        android:textSize="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+    <TextView
+        android:id="@+id/dialogPartnerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="Partner Name"
+        android:textColor="#ED7D31"
+        android:textSize="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogPartnerType" />
+
+    <TextView
+        android:id="@+id/dialogIsOpen"
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/pretendard_medium"
+
+        android:text="영업 종료"
+        android:textSize="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogPartnerName" />
+
+    <TextView
+        android:id="@+id/dialogOpenCloseTime"
+        android:layout_width="115dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/pretendard_medium"
+
+        android:text="08:00에 영업 시작"
+        android:textSize="15dp"
+        app:layout_constraintStart_toEndOf="@+id/dialogIsOpen"
+        app:layout_constraintTop_toBottomOf="@+id/dialogPartnerName" />
+
+    <TextView
+        android:id="@+id/dialogPartnerAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="주소"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogIsOpen"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/dialogPartnerImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/dialogOpenCloseTime"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/nav_my_pet" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".commuFeat.CommunityFragment">
+    tools:context=".partnersFeat.PartnersListSubFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="커뮤니티 프래그먼트" />
+        android:text="partners list fragment" />
 
 </FrameLayout>
