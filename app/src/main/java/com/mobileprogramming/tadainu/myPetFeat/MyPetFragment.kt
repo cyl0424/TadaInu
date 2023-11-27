@@ -3,16 +3,24 @@ package com.mobileprogramming.tadainu.myPetFeat
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Half.EPSILON
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +29,10 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.WriterException
+import com.google.zxing.common.BitMatrix
+import com.google.zxing.qrcode.QRCodeWriter
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.DialogAddShotBinding
 import com.mobileprogramming.tadainu.databinding.DialogUpdateBhBinding
@@ -32,13 +44,15 @@ import kotlinx.coroutines.launch
 import java.lang.Integer.max
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val PET_ID = "4Jipcx2xHXmvcKNVc6cO"
 private const val PET_STORAGE_PATH = "pet/profile/20231110145312.png"
-
-class MyPetFragment : Fragment() {
+class MyPetFragment : Fragment(), SensorEventListener {
     private var _binding: FragmentMyPetBinding? = null
     private val binding get() = _binding!!
 
@@ -47,6 +61,10 @@ class MyPetFragment : Fragment() {
     private val shotList = mutableListOf<ShotItem>()
     private lateinit var shotAdapter: ShotListAdapter
 
+    // 센서
+    private lateinit var sensorManager: SensorManager
+    private var mLight: Sensor? = null
+    private var shakeDialog: AlertDialog? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,7 +83,131 @@ class MyPetFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.shotList.layoutManager = layoutManager
         binding.shotList.adapter = shotAdapter
+
+        // 버튼을 눌렀을 때만 센서 작동
+        binding.sensorBtn.setOnClickListener {
+            showShakeDialog()
+            Log.d("ITM", "흔들어서 초대하기를 클릭하여 센서를 초기화합니다.")
+            sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            // 장치에 어떤 센서 있는지 확인
+            val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+            Log.d("ITM", "$deviceSensors")
+
+            // 자이로스코프 센서 초기화
+            val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+            sensor?.let {
+                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+                Log.d("ITM", "자이로스코프 센서 초기화 됨")
+            } ?: Log.e("ITM", "자이로스코프 센서 초기화 안 됨")
+
+            // 가속도계 센서 초기화
+            mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            mLight?.let {
+                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+                Log.d("ITM", "가속도계 센서 초기화 됨")
+            } ?: Log.e("ITM", "가속도계 센서 초기화 안 됨")
+        }
     }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        // 센서 반응 처리
+        // 자이로스코프 센서 처리
+        if (event?.sensor?.type == Sensor.TYPE_GYROSCOPE) {
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+
+            val angularSpeed = sqrt(x * x + y * y + z * z)
+
+            val threshold = 10.0f  // 자이로스코프 센서 임계값 설정
+
+            if (angularSpeed > threshold) {
+                Log.d("ITM", "자이로스코프 센서 감지")
+                // ShakeDialog 닫은 후에 QrDialog 띄움
+                shakeDialog?.dismiss()
+                showQRCodeDialog("hi")
+            }
+        }
+
+        // 가속도계 센서 처리
+        if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+
+            val acceleration = sqrt(x * x + y * y + z * z)
+
+            val threshold = 40.0f // 가속도계 센서 임계값 설정
+
+            if (acceleration > threshold) {
+                Log.d("ITM", "가속도계 센서 감지")
+                // ShakeDialog 닫은 후에 QrDialog 띄움
+                shakeDialog?.dismiss()
+                showQRCodeDialog("hi")
+            }
+        }
+    }
+
+    // 디바이스 흔들었을 때 뜨는 다이얼로그
+    private fun showShakeDialog() {
+
+        // Your existing code to show the Shake dialog
+        val dialog = AlertDialog.Builder(requireContext())
+            .setMessage("휴대폰을 흔들어주세요!")
+            .setPositiveButton("돌아가기") { _, _ ->
+                // Unregister sensor listener when the Shake dialog is dismissed
+                sensorManager.unregisterListener(this)
+                shakeDialog = null // Set shakeDialog to null after dismissing the dialog
+            }
+            .setCancelable(false)
+            .create()
+        dialog.show()
+    }
+
+
+    // 흔들었을 때 QR띄우기
+    private fun generateQRCode(data: String): Bitmap {
+        val writer = QRCodeWriter()
+        try {
+            val bitMatrix: BitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, 512, 512)
+            val width = bitMatrix.width
+            val height = bitMatrix.height
+            val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bmp.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+                }
+            }
+            return bmp
+        } catch (e: WriterException) {
+            e.printStackTrace()
+            throw e
+        }
+    }
+    private fun showQRCodeDialog(qrData: String) {
+        // Generate QR code bitmap
+        val qrCodeBitmap = generateQRCode(qrData)
+
+        // Create an ImageView to display the QR code
+        val imageView = ImageView(requireContext())
+        imageView.setImageBitmap(qrCodeBitmap)
+
+        // Create a dialog with the ImageView
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(imageView)
+            .setPositiveButton("확인") { _, _ ->
+            }
+            .setCancelable(false)
+            .create()
+
+        // Show the dialog
+        dialog.show()
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    }
+
+
 
     private fun clickEventHandler() {
         binding.mypetToolbar.toolbarTitle.text = "마이펫"
@@ -396,6 +538,7 @@ class MyPetFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        sensorManager.unregisterListener(this)
     }
 
     companion object {
