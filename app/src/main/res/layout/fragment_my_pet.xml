@@ -131,6 +131,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mypet_beauty_background" />
 
+            <ImageView
+                android:id="@+id/gyroscopeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/icon_gyroscope"
+                app:layout_constraintStart_toEndOf="@+id/mypet_dog_name"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_toolbar" />
+
             <TextView
                 android:id="@+id/mypet_health"
                 android:layout_width="76dp"
