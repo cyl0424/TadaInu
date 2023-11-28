@@ -12,8 +12,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
+import com.mobileprogramming.tadainu.MainActivity
+import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.accountFeat.SignInActivity
 import com.mobileprogramming.tadainu.databinding.FragmentHomeBinding
 
@@ -31,10 +33,9 @@ class HomeFragment : Fragment() {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)  // 바인딩 초기화
         val view = binding.root
 
-        binding.toolbar.phoneBtn.visibility = View.GONE
-
-        val user = FirebaseAuth.getInstance().currentUser
-        if (user != null) {
+        val user = prefs.getString("currentUser", "")
+        Log.d("유저", user.toString())
+        if (user != "") {
             binding.profileView.visibility = View.VISIBLE
             binding.loginView.visibility = View.INVISIBLE
             Log.d(TAG, "User is signed in")
@@ -113,6 +114,13 @@ class HomeFragment : Fragment() {
             startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
         }
+
+        binding.kinderBtn.setOnClickListener {
+            (activity as MainActivity).apply {
+                selectBottomNavigationItem(R.id.petcare_menu)
+            }
+        }
+
 
     }
 

@@ -21,12 +21,10 @@
             android:id="@+id/contents_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -41,8 +39,8 @@
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/radius_16dp"
                     android:backgroundTint="@color/white"
-                    android:visibility="invisible"
                     android:elevation="4dp"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -53,9 +51,9 @@
                         android:layout_height="50dp"
                         android:layout_marginStart="10dp"
                         android:adjustViewBounds="true"
+                        android:background="@drawable/circle"
                         android:scaleType="centerCrop"
                         android:src="@drawable/example_img"
-                        android:background="@drawable/circle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -110,10 +108,10 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="20dp"
-                    android:visibility="visible"
                     android:background="@drawable/radius_16dp"
                     android:backgroundTint="@color/white"
                     android:elevation="4dp"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -173,23 +171,23 @@
                             android:id="@+id/kinder_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/kinder_title1_true"
-
                             android:fontFamily="@font/pretendard_medium"
+
                             android:letterSpacing="-0.02"
+                            android:text="@string/kinder_title1_true"
                             android:textColor="#84671E"
-                            android:textSize="14dp"/>
+                            android:textSize="14dp" />
 
                         <TextView
                             android:id="@+id/kinder_sub_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="OO아, 엄마 다녀올개!"
                             android:fontFamily="@font/pretendard_bold"
                             android:letterSpacing="-0.02"
+                            android:text="OO아, 엄마 다녀올개!"
                             android:textColor="#ED7D31"
-                            android:textSize="18dp"/>
+                            android:textSize="18dp" />
                     </LinearLayout>
 
                     <ImageView
@@ -214,11 +212,11 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="20dp"
-                    app:tabIndicator="@drawable/selector_tap"
-                    app:tabIndicatorColor="@color/base_black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/kinder_btn">
+                    app:layout_constraintTop_toBottomOf="@id/kinder_btn"
+                    app:tabIndicator="@drawable/selector_tap"
+                    app:tabIndicatorColor="@color/base_black">
 
                     <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
@@ -253,7 +251,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="포토캘린더"/>
+                            android:text="포토캘린더" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -262,15 +260,14 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:visibility="gone">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="다이어리"/>
+                            android:text="다이어리" />
                     </LinearLayout>
 
                 </FrameLayout>
-
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
