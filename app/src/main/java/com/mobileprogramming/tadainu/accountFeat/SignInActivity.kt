@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.sdk.user.UserApiClient
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.MainActivity
 import com.mobileprogramming.tadainu.databinding.ActivitySignInBinding
 
@@ -50,6 +51,7 @@ class SignInActivity : AppCompatActivity() {
                 } else if (token != null) {
                     Log.i("로그인", "카카오 로그인 성공 ${token.accessToken}")
 
+                    // 카카오 로그인 성공 후
                     UserApiClient.instance.me { user, error ->
                         if (error != null) {
                             Log.e("로그인", "사용자 정보 요청 실패", error)
@@ -60,43 +62,37 @@ class SignInActivity : AppCompatActivity() {
                             auth.signInAnonymously()
                                 .addOnCompleteListener(this) { task ->
                                     if (task.isSuccessful) {
-                                    // 익명 인증 성공, 사용자 정보 Firestore에 저장
-
-    //                                db.collection("TB_USER")
-    //                                    .whereEqualTo("user_email", email)
-    //                                    .get()
-    //                                    .addOnCompleteListener { task ->
-    //                                        if (task.isSuccessful) {
-    //                                            if (task.result?.isEmpty == true) {
-    //                                                // 회원가입 처리
-    //                                                val userData = hashMapOf(
-    //                                                    "uid" to user?.uid,
-    //                                                    "email" to email
-    //                                                )
-    //                                                db.collection("users")
-    //                                                    .add(userData)
-    //                                                    .addOnSuccessListener { documentReference ->
-    //                                                        Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-    //                                                    }
-    //                                                    .addOnFailureListener { e ->
-    //                                                        Log.w(TAG, "Error adding document", e)
-    //                                                    }
-    //                                            } else {
-    //                                                // 로그인 처리
-    //                                                Log.d(TAG, "User logged in: $email")
-    //                                            }
-    //                                        } else {
-    //                                            Log.w(TAG, "Error getting documents: ", task.exception)
-    //                                        }
-    //                                    }
+                                        // 익명 인증 성공, 사용자 정보 Firestore에 확인
+                                        db.collection("TB_USER")
+                                            .whereEqualTo("user_email", email)
+                                            .limit(1)  // 가장 처음 일치하는 문서만 가져옵니다.
+                                            .get()
+                                            .addOnSuccessListener { documents ->
+                                                if (documents.isEmpty) {
+                                                    // 일치하는 이메일이 없으므로 MoreInfoActivity로 이동
+                                                    val intent = Intent(this, MoreInfoActivity::class.java)
+                                                    intent.putExtra("user_email", email)
+                                                    startActivity(intent)
+                                                    finish()
+                                                } else {
+                                                    // 일치하는 이메일이 있으므로 MainActivity로 이동
+                                                    prefs.setString("currentUser", documents.first()["user_id"].toString())
+                                                    val intent = Intent(this, MainActivity::class.java)
+                                                    startActivity(intent)
+                                                    finish()
+                                                }
+                                            }
+                                            .addOnFailureListener { e ->
+                                                Log.w("로그인", "Error getting documents: ", e)
+                                            }
                                     } else {
                                         // 익명 인증 실패
                                         Log.w("로그인", "signInAnonymously:failure", task.exception)
                                     }
                                 }
                         }
-
                     }
+
                 }
             }
         }
