@@ -6,11 +6,23 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.firebase.firestore.firestore
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityTrackLocationBinding
+import com.mobileprogramming.tadainu.model.PetLocation
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
@@ -21,11 +33,9 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 
 
-private const val PET_ID = "Default_Value"
 class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
-
     private val PERMISSIONS = arrayOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
         android.Manifest.permission.ACCESS_COARSE_LOCATION
@@ -34,7 +44,10 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityTrackLocationBinding
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
-
+    private lateinit var dogLocation: Marker
+    val realtimeDb = FirebaseDatabase.getInstance().getReference()
+    private var canTrack = false
+    private val petId = "4Jipcx2xHXmvcKNVc6cO"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTrackLocationBinding.inflate(layoutInflater)
@@ -43,11 +56,74 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
+            // 권한 있을 때
+            Log.d("ITM", "권한 있음")
+            setCanTrack(true)
             initMapView()
+            initFirebase()
         }
     }
 
+
+    // 처음 강아지 위치 값 받아오기
+    override fun onMapReady(naverMap: NaverMap) {
+        Log.d("ITM", "onMapRead() Start")
+        this.naverMap = naverMap
+
+        naverMap.locationSource = locationSource
+        naverMap.uiSettings.isLocationButtonEnabled = true
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+
+        // 강아지 위치 마커 초기화
+        dogLocation = Marker()
+        val redCircleBitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(redCircleBitmap)
+        val paint = Paint()
+        // 강아지 좌표 디자인
+        paint.color = Color.WHITE
+        canvas.drawCircle(25f, 25f, 25f, paint)
+        paint.color = Color.RED
+        canvas.drawCircle(25f, 25f, 20f, paint)
+        dogLocation.icon = OverlayImage.fromBitmap(redCircleBitmap)
+
+        // 실시간으로 값 들고오기
+        realtimeDb.child("PetLocation").child(petId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val petLocation = dataSnapshot.getValue(PetLocation::class.java)
+                    if (petLocation != null) {
+                        val lat = petLocation.lat
+                        val lng = petLocation.lng
+                        val canTrack = petLocation.canTrack
+
+                        Log.d("ITM", "Lat: $lat, Lng: $lng, Can Track: $canTrack")
+                        runOnUiThread {
+                            // Update marker position on the main thread
+                            dogLocation.position = LatLng(lat, lng)
+                            dogLocation.map = naverMap
+                        }
+
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle onCancelled if needed
+            }
+        })
+    }
+
+    // 파이어베이스 초기화
+    private fun initFirebase() {
+        Log.d("ITM", "initFirebase() Start")
+        // Initialize the FirebaseApp (if not already initialized)
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseApp.initializeApp(this)
+        }
+    }
+    // 지도 View 초기화
     private fun initMapView() {
+        Log.d("ITM","initMapView() Start")
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -56,9 +132,10 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapFragment.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        Log.d("ITM","initMapView() End")
     }
 
-
+    // 권한 확인
     private fun hasPermission(): Boolean {
         for (permission in PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(this, permission)
@@ -70,6 +147,7 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         return true
     }
 
+    // 권한 요청 결과 처리
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -84,49 +162,24 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-
-        naverMap.locationSource = locationSource
-        naverMap.uiSettings.isLocationButtonEnabled = true
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-
-        // 강아지 위치 트래킹
-        // 임시로 찍어서 좌표 디자인함
-        val dogLocation = Marker()
-        dogLocation.position = com.naver.maps.geometry.LatLng(37.5666102, 126.9783881)
-
-        val redCircleBitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(redCircleBitmap)
-        val paint = Paint()
-
-        // 강아지 좌표 디자인
-        paint.color = Color.WHITE
-        canvas.drawCircle(25f, 25f, 25f, paint)
-        paint.color = Color.RED
-        canvas.drawCircle(25f, 25f, 20f, paint)
-        dogLocation.icon = OverlayImage.fromBitmap(redCircleBitmap)
-        dogLocation.map = naverMap
-
-
-        // 값이 변해야지 작동
-//        val databaseReference = FirebaseDatabase.getInstance().getReference("PetLocation/4Jipcx2xHXmvcKNVc6cO")
-//        databaseReference.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                // Get the lat and lng values from the snapshot
-//                val lat = snapshot.child("lat").getValue(Double::class.java) ?: 0.0
-//                val lng = snapshot.child("lng").getValue(Double::class.java) ?: 0.0
-//
-//                dogLocation.position = com.naver.maps.geometry.LatLng(lat, lng)
-//                Log.d("ITM","lat:$lat, lng:$lng")
-//
-//                dogLocation.map = naverMap
-//            }
-//            override fun onCancelled(error: DatabaseError) {
-//                Log.e("Firebase", "Error getting data", error.toException())
-//            }
-//        })
-
+    // canTrack값 설정하기
+    private fun setCanTrack(value: Boolean) {
+        val updates = hashMapOf<String, Any>("canTrack" to value)
+        realtimeDb.child("PetLocation").child(petId).updateChildren(updates)
+            .addOnSuccessListener {
+                // 성공적으로 업데이트된 경우
+                // 원하는 작업 수행
+                Log.d("ITM", "canTrack 값을 ${value}로 업데이트 성공")
+            }
+            .addOnFailureListener {
+                // 업데이트 중 오류 발생한 경우
+                // 오류 처리 코드 작성
+                Log.e("ITM", "canTrack 값을 ${value}로 업데이트 실패: ${it.message}")
+            }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        setCanTrack(false)
+    }
 }

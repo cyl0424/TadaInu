@@ -123,9 +123,11 @@ class MyPetFragment : Fragment(), SensorEventListener {
 
             if (angularSpeed > threshold) {
                 Log.d("ITM", "자이로스코프 센서 감지")
+                // JSON형식으로 넘겨주기
+                val jsonData = "{\"pet_id\":\"4Jipcx2xHXmvcKNVc6cO\"}"
                 // ShakeDialog 닫은 후에 QrDialog 띄움
                 shakeDialog?.dismiss()
-                showQRCodeDialog("hi")
+                showQRCodeDialog(jsonData)
             }
         }
 
@@ -141,9 +143,11 @@ class MyPetFragment : Fragment(), SensorEventListener {
 
             if (acceleration > threshold) {
                 Log.d("ITM", "가속도계 센서 감지")
+                // JSON형식으로 넘겨주기
+                val jsonData = "{\"pet_id\":\"4Jipcx2xHXmvcKNVc6cO\"}"
                 // ShakeDialog 닫은 후에 QrDialog 띄움
                 shakeDialog?.dismiss()
-                showQRCodeDialog("hi")
+                showQRCodeDialog(jsonData)
             }
         }
     }
