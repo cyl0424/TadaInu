@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mobileprogramming.tadainu.databinding.FragmentPartnersListItemBinding
@@ -73,6 +74,23 @@ class PartnersListAdapter(val petcareList: MutableList<PetcareItem>) :
                     .load(petcareItem.petcare_img)
                     .into(petcareImg)
             }
+        }
+    }
+
+    // Inside your PartnersListAdapter class
+    fun updateList(newList: List<PetcareItem>) {
+        petcareList.clear()
+        petcareList.addAll(newList)
+        notifyDataSetChanged()
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<PetcareItem>() {
+        override fun areItemsTheSame(oldItem: PetcareItem, newItem: PetcareItem): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: PetcareItem, newItem: PetcareItem): Boolean {
+            return oldItem == newItem
         }
     }
 }

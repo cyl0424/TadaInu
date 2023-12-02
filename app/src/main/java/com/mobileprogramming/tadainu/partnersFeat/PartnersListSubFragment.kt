@@ -3,17 +3,20 @@ package com.mobileprogramming.tadainu.partnersFeat
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.FragmentPartnersListSubBinding
 import com.mobileprogramming.tadainu.model.PetcareItem
-import com.mobileprogramming.tadainu.partnersFeat.adapter.PartnersAdapter
 import com.mobileprogramming.tadainu.partnersFeat.adapter.PartnersListAdapter
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -32,6 +35,19 @@ class PartnersListSubFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val petcareList = mutableListOf<PetcareItem>()
+
+    private lateinit var binding: FragmentPartnersListSubBinding
+    private lateinit var partnersListAdapter: PartnersListAdapter
+
+    private val firestore = FirebaseFirestore.getInstance()
+
+    private var isKindergartenSelected = false
+    private var isHotelSelected = false
+
+    private lateinit var searchView: SearchView
+    private lateinit var linearSearchHistoryView: LinearLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -40,33 +56,75 @@ class PartnersListSubFragment : Fragment() {
         }
     }
 
-    private val petcareList = mutableListOf<PetcareItem>()
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
 
-    private lateinit var binding: FragmentPartnersListSubBinding
-    private lateinit var partnersListAdapter: PartnersListAdapter
+    private fun initSearchView() {
+        Log.d("ITM", "init SearchView")
+        binding.search.isSubmitButtonEnabled = false
+        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                var filteredList = petcareList
+                filteredList = when (query) {
+                    query -> {
+                        val result = filteredList.filter {
+                            query?.let { it1 ->
+                                it.petcare_name!!.contains(
+                                    it1, ignoreCase = true
+                                )
+                            } == true
+                        } as MutableList<PetcareItem>
+                        if (result.isEmpty()) {
+                            showToast("Please enter a valid query")
+                        }
+                        result
+                    }
 
-//    private var _binding: FragmentPartnersListSubBinding? = null
-//    private val binding get() = _binding!!
+                    else -> {
+                        showToast("Please enter a valid query")
+                        petcareList
+                    }
+                }
+                // Update the adapter with the filtered list
+                partnersListAdapter = PartnersListAdapter(filteredList)
+                binding.recyclerView.layoutManager = LinearLayoutManager(context)
+                binding.recyclerView.adapter = partnersListAdapter
+                return false
+            }
 
-    private val firestore = FirebaseFirestore.getInstance()
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrBlank()) {
+                    // If the text is empty, reset the filter and update the adapter
+                    resetFilter()
+                }
+                return true
+            }
+        })
 
-//    private lateinit var recyclerView: RecyclerView
-//    private lateinit var partnersAdapter: PartnersAdapter
+        // Add OnCloseListener to handle clearing the query
+        binding.search.setOnCloseListener {
+            // Reset the filter and update the adapter with the original list
+            resetFilter()
+            false
+        }
+    }
+
+    private fun resetFilter() {
+        // Update the adapter with the original list (no filtering)
+        partnersListAdapter = PartnersListAdapter(petcareList)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = partnersListAdapter
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        _binding = FragmentPartnersListSubBinding.inflate(inflater, container, false)
-//        val view = binding.root
         binding = FragmentPartnersListSubBinding.inflate(inflater, container, false)
-        return binding.root
 
-//        recyclerView = binding.viewList
-//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-//        partnersAdapter = PartnersAdapter(requireActivity())
-//        recyclerView.adapter = partnersAdapter
-//        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,11 +177,50 @@ class PartnersListSubFragment : Fragment() {
 
         getItems()
 
-        // Set up RecyclerView
-        partnersListAdapter = PartnersListAdapter(petcareList)
+        binding.buttonK.setOnCheckedChangeListener { _, isChecked ->
+            isKindergartenSelected = isChecked
+            updateFilter()
+        }
+
+        binding.buttonH.setOnCheckedChangeListener { _, isChecked ->
+            isHotelSelected = isChecked
+            updateFilter()
+        }
+
+        initSearchView()
+    }
+
+
+    private fun updateFilter() {
+        val query = when {
+            isKindergartenSelected && isHotelSelected -> "둘다"
+            isKindergartenSelected -> "반려견 유치원"
+            isHotelSelected -> "애견 호텔"
+            else -> null
+        }
+
+        var petcarefilterdList = filterResults(query)
+        Log.d("ITM", "queryResult: ${petcarefilterdList.toString()}")
+        return petcarefilterdList
+    }
+
+
+    private fun filterResults(query: String?) {
+        var filteredList = petcareList
+        Log.d("ITM", "filterResults Start: $query")
+        filteredList = when (query) {
+            "반려견 유치원" -> filteredList.filter { it.petcare_type == "반려견 유치원" } as MutableList<PetcareItem>
+            "애견 호텔" -> filteredList.filter { it.petcare_type == "애견 호텔" } as MutableList<PetcareItem>
+            "둘다" -> filteredList.filter { it.petcare_type == "반려견 유치원" || it.petcare_type == "애견 호텔" } as MutableList<PetcareItem>
+            else -> petcareList
+        }
+
+        // Update the adapter with the filtered list
+        partnersListAdapter = PartnersListAdapter(filteredList)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = partnersListAdapter
     }
+
 
     private fun getItems() {
         Log.d("ITM", "getItems() called")
@@ -133,7 +230,7 @@ class PartnersListSubFragment : Fragment() {
 
                 for (document in documents) {
                     val petcare_type = when (document.getString("petcare_type")) {
-                        "k" -> "애견 유치원"
+                        "k" -> "반려견 유치원"
                         "h" -> "애견 호텔"
                         else -> "Unknown Type"
                     }
@@ -168,8 +265,7 @@ class PartnersListSubFragment : Fragment() {
                             petcare_img
                         )
                     )
-                    Log.d("ITM", "$petcare_name Items() added")
-
+//                    Log.d("ITM", "$petcare_name Items() added")
 
                 }
                 // Set up RecyclerView
@@ -177,8 +273,6 @@ class PartnersListSubFragment : Fragment() {
                 binding.recyclerView.layoutManager = LinearLayoutManager(context)
                 binding.recyclerView.adapter = partnersListAdapter
             }
-
-
     }
 
     // 영업 시간 처리용 함수
