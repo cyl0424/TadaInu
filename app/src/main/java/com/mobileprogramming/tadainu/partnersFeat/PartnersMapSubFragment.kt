@@ -16,11 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.FragmentPartnersMapSubBinding
-import com.mobileprogramming.tadainu.databinding.PartnerMapDialogBinding
-import com.mobileprogramming.tadainu.databinding.PartnerSlidingLayoutBinding
+import com.mobileprogramming.tadainu.databinding.DialogPartnerMapBinding
 import com.mobileprogramming.tadainu.model.ClusteredPartnerName
 import com.mobileprogramming.tadainu.model.NaverItem
 import com.mobileprogramming.tadainu.model.PartnerInfo
@@ -44,20 +42,18 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentPartnersMapSubBinding
-    private lateinit var slidingBinding: PartnerSlidingLayoutBinding
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private val firestore = FirebaseFirestore.getInstance()
-    private val firestorage = FirebaseStorage.getInstance()
-    private lateinit var dialogBinding: PartnerMapDialogBinding
+    private lateinit var dialogBinding: DialogPartnerMapBinding
     private val items = mutableListOf<NaverItem>()
     private val partnerInfoList = mutableListOf<PartnerInfo>()
     // 마커에 정보 저장
     private var selectedPartnerInfo: PartnerInfo? = null
     //cluster
     private val clusteredPartnerNameList = mutableListOf<ClusteredPartnerName>()
-    private lateinit var slidingLayout: SlidingUpPanelLayout
+
 
     private val PERMISSIONS = arrayOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -76,30 +72,33 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("ITM","oncreateView시작")
         binding = FragmentPartnersMapSubBinding.inflate(inflater, container, false)
-        dialogBinding = PartnerMapDialogBinding.inflate(layoutInflater) // Add this line
+        dialogBinding = DialogPartnerMapBinding.inflate(layoutInflater) // Add this line
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("ITM","onviewCreated시작")
         if (!hasPermission(requireContext())) {
             // 사용자에게 런타임 중 권한 요청할 때 쓰임.
             ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
             // 권한 있으면 지도 띄움.
+            Log.d("ITM","initMapView()전")
             initMapView()
+            Log.d("ITM","initMapView()후")
         }
-        slidingLayout = binding.slidingLayout  // 수정된 부분
     }
     private fun initMapView() {
+        Log.d("ITM","initMapView() 시작")
         val fm = childFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
                 fm.beginTransaction().replace(R.id.map, it).commit()
             }
-
         // 비동기로 맵 가져옴.
         mapFragment.getMapAsync { naverMap ->
             this.naverMap = naverMap
@@ -114,10 +113,12 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
 
             getMarkers()
         }
+
     }
 
     // firestore의 유치원 및 호텔 좌표 받아서 찍어주기
     private fun getMarkers() {
+        Log.d("ITM","getMarkers()시작")
         firestore.collection("TB_PETCARE")
             .get()
             .addOnSuccessListener { documents ->
@@ -135,8 +136,11 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                         val partnerInfo = PartnerInfo(id, name, type, opening, closing, address, position)
                         items.add(NaverItem(position))
                         partnerInfoList.add(partnerInfo)
+                        clusteredPartnerNameList.add(ClusteredPartnerName(partnerInfo.petcareName))
+
                     }
                 }
+
 
                 /**
                  * TedNaverClustering
@@ -175,6 +179,7 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                             }
                         }
 
+                        binding.emptyRecyclerView.visibility = View.GONE
                         binding.clusteredPartnerList.adapter = ClusterClickAdapter(requireContext(), clusteredPartnerNameList, this)
                         binding.clusteredPartnerList.layoutManager = LinearLayoutManager(requireContext())
                         binding.clusteredPartnerList.adapter?.notifyDataSetChanged()
@@ -183,24 +188,16 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                     }
                     .items(items)
                     .make()
-
-                if (partnerInfoList.isNotEmpty()) {
-                    Log.d("ITM", "${partnerInfoList[0].petcareName}")
-                } else {
-                    Log.d("ITM", "partnerInfoList is empty")
-                }
-
             }
     }
     private fun updateDialogWithSelectedPartner() {
-        Log.d("ClusterClickAdapter","들어왔음.")
-        Log.d("UpdateDialog", "selectedPartnerInfo: $selectedPartnerInfo")
+        Log.d("ITM","updateDialog()시작")
         selectedPartnerInfo?.let { partnerInfo ->
             // 다이얼로그 업데이트 로직 수행
             val builder = AlertDialog.Builder(requireContext())
-            val dialogView = layoutInflater.inflate(R.layout.partner_map_dialog, null) // replace with your dialog layout
+            val dialogView = layoutInflater.inflate(R.layout.dialog_partner_map, null) // replace with your dialog layout
 
-            dialogBinding = PartnerMapDialogBinding.bind(dialogView)
+            dialogBinding = DialogPartnerMapBinding.bind(dialogView)
 
             builder.setView(dialogView)
             val dialog = builder.create()
@@ -238,12 +235,17 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
             dialog.window?.apply {
                 setGravity(Gravity.BOTTOM)
                 setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
+                setDimAmount(0.7f)
                 val layoutParams = attributes
                 layoutParams.y = -500 // Adjust this value as needed
                 attributes = layoutParams
             }
             dialog.show()
+            /**
+             * setBackgroundDrawable의 argument를 null로 바꾸면 투명하게 가능하긴함
+             * 근데 배경을 눌러서 꺼뜨리는게 유저입장에서 더 편한것같음.
+             *
+             */
         }
     }
 

@@ -59,6 +59,12 @@ class MyPetFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         clickEventHandler()
         refreshUI()
+
+        // Recycler View 계속 띄워놓기
+        shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.shotList.layoutManager = layoutManager
+        binding.shotList.adapter = shotAdapter
     }
 
     private fun clickEventHandler() {
@@ -74,7 +80,7 @@ class MyPetFragment : Fragment() {
             showAddShotDialog()
         }
         binding.mypetLocationBackground.setOnClickListener {
-            val intent = Intent(requireContext(), TrackLocation::class.java)
+            val intent = Intent(requireContext(), TrackLocationActivity::class.java)
             startActivity(intent)
         }
     }
@@ -139,7 +145,6 @@ class MyPetFragment : Fragment() {
                     binding.shotList.layoutManager = layoutManager
                     binding.shotList.adapter = shotAdapter
                 }
-
                 shotAdapter.notifyDataSetChanged()
             }
     }
