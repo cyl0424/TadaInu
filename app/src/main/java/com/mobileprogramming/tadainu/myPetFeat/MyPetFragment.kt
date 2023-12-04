@@ -75,17 +75,20 @@ class MyPetFragment : Fragment(), SensorEventListener {
     ): View? {
         _binding = FragmentMyPetBinding.inflate(inflater, container, false)
 
-        val petCollection = db.collection("TB_PET")
-        val docRef = petCollection.document(petId)
-        if(docRef != null) {
-            docRef.get()
-                .addOnSuccessListener { document ->
-                    petImg = document["pet_img"].toString()
-                }.addOnFailureListener { exception ->
-                    Log.d("MP", "get failed with ", exception)
-                }
+        if(petId != ""){
+            val petCollection = db.collection("TB_PET")
+            val docRef = petCollection.document(petId)
+            if(docRef != null) {
+                docRef.get()
+                    .addOnSuccessListener { document ->
+                        petImg = document["pet_img"].toString()
+                    }.addOnFailureListener { exception ->
+                        Log.d("MP", "get failed with ", exception)
+                    }
+            }
+            petInfoUpdate()
         }
-        petInfoUpdate()
+
 
         sensorManager = binding.root.context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         return binding.root
@@ -94,36 +97,38 @@ class MyPetFragment : Fragment(), SensorEventListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         clickEventHandler()
-        refreshUI()
+        if(petId != ""){
+            refreshUI()
 
-        // Recycler View 계속 띄워놓기
-        shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.shotList.layoutManager = layoutManager
-        binding.shotList.adapter = shotAdapter
+            // Recycler View 계속 띄워놓기
+            shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
+            val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            binding.shotList.layoutManager = layoutManager
+            binding.shotList.adapter = shotAdapter
 
-        // 버튼을 눌렀을 때만 센서 작동
-        binding.sensorBtn.setOnClickListener {
-            showShakeDialog()
-            Log.d("ITM", "흔들어서 초대하기를 클릭하여 센서를 초기화합니다.")
-            sensorManager = binding.root.context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            // 장치에 어떤 센서 있는지 확인
-            val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
-            Log.d("ITM", "$deviceSensors")
+            // 버튼을 눌렀을 때만 센서 작동
+            binding.sensorBtn.setOnClickListener {
+                showShakeDialog()
+                Log.d("ITM", "흔들어서 초대하기를 클릭하여 센서를 초기화합니다.")
+                sensorManager = binding.root.context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+                // 장치에 어떤 센서 있는지 확인
+                val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+                Log.d("ITM", "$deviceSensors")
 
-            // 자이로스코프 센서 초기화
-            val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-            sensor?.let {
-                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
-                Log.d("ITM", "자이로스코프 센서 초기화 됨")
-            } ?: Log.e("ITM", "자이로스코프 센서 초기화 안 됨")
+                // 자이로스코프 센서 초기화
+                val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+                sensor?.let {
+                    sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+                    Log.d("ITM", "자이로스코프 센서 초기화 됨")
+                } ?: Log.e("ITM", "자이로스코프 센서 초기화 안 됨")
 
-            // 가속도계 센서 초기화
-            mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-            mLight?.let {
-                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
-                Log.d("ITM", "가속도계 센서 초기화 됨")
-            } ?: Log.e("ITM", "가속도계 센서 초기화 안 됨")
+                // 가속도계 센서 초기화
+                mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+                mLight?.let {
+                    sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+                    Log.d("ITM", "가속도계 센서 초기화 됨")
+                } ?: Log.e("ITM", "가속도계 센서 초기화 안 됨")
+            }
         }
     }
 
@@ -232,8 +237,6 @@ class MyPetFragment : Fragment(), SensorEventListener {
 
 
     private fun clickEventHandler() {
-        binding.mypetToolbar.toolbarTitle.text = "마이펫"
-        binding.mypetToolbar.backBtn.visibility = View.INVISIBLE
         binding.mypetBeautyBackground.setOnClickListener {
             showHbDialog(requireContext(), "beauty", null)
         }
