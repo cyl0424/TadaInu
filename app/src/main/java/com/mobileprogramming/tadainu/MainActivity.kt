@@ -7,6 +7,7 @@ import android.os.Handler
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.databinding.ActivityMainBinding
 import com.mobileprogramming.tadainu.homeFeat.HomeFragment
 import com.mobileprogramming.tadainu.myPetFeat.MyPetFragment
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
+
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
