@@ -110,9 +110,14 @@ dependencies {
     implementation("androidx.camera:camera-mlkit-vision:${camerax_version}")
     implementation("androidx.camera:camera-extensions:${camerax_version}")
 
-    //UCrop
+    // UCrop
     implementation 'com.github.yalantis:ucrop:2.2.6-native'
-    //Image Picker
+
+    // Image Picker
     implementation 'com.github.dhaval2404:imagepicker:2.1'
+
+    // QR
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
 
 }
