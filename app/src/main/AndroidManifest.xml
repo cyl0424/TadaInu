@@ -42,6 +42,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".partnersFeat.PartnersActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".notiFeat.CameraPreviewActivity"
             android:exported="false" />
 
