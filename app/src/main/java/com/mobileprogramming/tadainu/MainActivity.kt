@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                         }, 500L)
                     }
                 }
-                R.id.community_menu -> {
+                R.id.petcare_menu -> {
                     try {
                         change(fragmentCommunity)
                     } catch (e: IllegalStateException) {
@@ -108,10 +108,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun change(fragment: Fragment) {
+    fun change(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentArea, fragment)
             .commitNow()
+    }
+
+    fun selectBottomNavigationItem(itemId: Int) {
+        binding.bottomNavi.selectedItemId = itemId
     }
 }

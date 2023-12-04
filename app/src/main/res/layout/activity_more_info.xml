@@ -19,70 +19,71 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profile_img_area"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="66dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/invite_check">
-
-        <ImageView
-            android:id="@id/profile_img"
-            android:layout_width="142dp"
-            android:layout_height="142dp"
-            android:src="@drawable/circle"
-            android:background="@drawable/circle"
-            android:backgroundTint="#F6F6F6"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/temp_profile"
-            android:layout_width="78dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:src="@drawable/icon_pet_paw"
-            app:layout_constraintBottom_toBottomOf="@+id/profile_img"
-            app:layout_constraintEnd_toEndOf="@+id/profile_img"
-            app:layout_constraintStart_toStartOf="@+id/profile_img"
-            app:layout_constraintTop_toTopOf="@+id/profile_img" />
-
-        <TextView
-            android:id="@+id/profile_img_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/pretendard_medium"
-            android:text="반려견 사진"
-            android:textColor="#606060"
-            android:textSize="16dp"
-            android:letterSpacing="-0.02"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_img" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <ScrollView
         android:id="@+id/input_area"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_img_area">
+        app:layout_constraintTop_toBottomOf="@+id/invite_check">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_gravity="center"
+                android:id="@+id/profile_img_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="66dp"
+                android:layout_marginBottom="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/invite_check">
+
+                <ImageView
+                    android:id="@id/profile_img"
+                    android:layout_width="142dp"
+                    android:layout_height="142dp"
+                    android:src="@drawable/circle"
+                    android:background="@drawable/circle"
+                    android:backgroundTint="#F6F6F6"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/temp_profile"
+                    android:layout_width="78dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/icon_pet_paw"
+                    app:layout_constraintBottom_toBottomOf="@+id/profile_img"
+                    app:layout_constraintEnd_toEndOf="@+id/profile_img"
+                    app:layout_constraintStart_toStartOf="@+id/profile_img"
+                    app:layout_constraintTop_toTopOf="@+id/profile_img" />
+
+                <TextView
+                    android:id="@+id/profile_img_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:text="반려견 사진"
+                    android:textColor="#606060"
+                    android:textSize="16dp"
+                    android:letterSpacing="-0.02"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_img" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/name_space"
@@ -102,11 +103,12 @@
                     android:background="@null"
                     android:fontFamily="@font/pretendard_bold"
                     android:hint="반려견 이름"
-                    android:textColorHint="#969696"
                     android:letterSpacing="-0.02"
                     android:textColor="#606060"
+                    android:textColorHint="#969696"
                     android:textSize="16dp"
                     app:layout_constraintBottom_toBottomOf="@+id/name_space"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/name_space"
                     app:layout_constraintTop_toTopOf="@+id/name_space" />
 
@@ -333,6 +335,14 @@
 
                 </RadioGroup>
 
+                <Spinner
+                    android:id="@+id/relationSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/relation_group" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
@@ -359,7 +369,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/radius_16dp"
-            android:backgroundTint="#ED7D31"
+            android:backgroundTint="#C1C1C1"
             android:elevation="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -371,7 +381,7 @@
             android:layout_height="wrap_content"
             android:elevation="4dp"
             android:fontFamily="@font/pretendard_bold"
-            android:text="시작하기"
+            android:text="필수 정보를 모두 입력해주세요"
             android:textColor="@color/white"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="@+id/complete_btn"

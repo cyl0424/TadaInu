@@ -9,7 +9,7 @@ data class UserData(
     var user_following: MutableList<String> = mutableListOf(),
     var user_type: String = "USER",
     var user_email: String = "",
-    var user_pet: MutableMap<String, String> = mutableMapOf(),
+    var user_pet: MutableList<Map<String, String>> = mutableListOf(),
     var user_created_at: Timestamp = Timestamp.now(),
     var user_phone: String = "",
     var user_name: String = ""
