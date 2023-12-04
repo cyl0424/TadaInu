@@ -28,8 +28,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "KAKAO_NATIVE_KEY", properties['kakao.native.key']
-        manifestPlaceholders = [KakaoNativeKey:KakaoNativeKey]
-        manifestPlaceholders = [NaverMapApiKey:NaverMapApiKey]
+        manifestPlaceholders = [KakaoNativeKey:KakaoNativeKey, NaverMapApiKey:NaverMapApiKey]
     }
 
     buildTypes {

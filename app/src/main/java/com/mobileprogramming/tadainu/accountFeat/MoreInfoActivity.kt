@@ -24,6 +24,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.MainActivity
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.accountFeat.data.PetData
@@ -246,7 +247,7 @@ class MoreInfoActivity : AppCompatActivity() {
 
     private fun moveToMainActivity(userId : String) {
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("currentUser", userId)
+        prefs.setString("currentUser", userId)
         startActivity(intent)
         Toast.makeText(this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT).show()
     }
