@@ -86,7 +86,11 @@ class MyPetFragment : Fragment(), SensorEventListener {
                         Log.d("MP", "get failed with ", exception)
                     }
             }
-            petInfoUpdate()
+//            val myPetCollection = db.collection("TB_MYPET")
+//            val docRef2 = myPetCollection.document(petId)
+//            if (docRef2 == null) {
+//                Log.d("ITM","hi")
+//            }
         }
 
 
@@ -277,6 +281,29 @@ class MyPetFragment : Fragment(), SensorEventListener {
                         petInfoUpdate()
                     } else {
                         Log.d("ITM", "Current data: null")
+                        val petCollection = db.collection("TB_MYPET")
+                        val newPetDocument = petCollection.document(petId)
+
+                        // Create a new document with the specified fields
+                        val data = hashMapOf(
+                            "beauty" to null,
+                            "beauty_last" to null,
+                            "health" to null,
+                            "health_last" to null,
+                            "pet_id" to petId,
+                        )
+
+                        newPetDocument.set(data)
+                            .addOnSuccessListener {
+                                Log.d("MP", "New pet document created successfully")
+                                // After creating the document, you can perform your usual logic
+                                petInfoUpdate()
+                                refreshUI()
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.e("MP", "Error creating new pet document", exception)
+                            }
+
                     }
                 }
             }
