@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dialog_add_todo.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/todoDialog"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corners"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <TextView
+        android:id="@+id/bhDialogDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="날짜를 선택해 주세요"
+        android:textAlignment="center"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/bhDateDialogText"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="예정일 : "
+        android:textAlignment="center"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toStartOf="@+id/bhDateInput"
+        app:layout_constraintTop_toBottomOf="@+id/bhDialogDescription" />
+
+    <TextView
+        android:id="@+id/bhDateInput"
+        android:layout_width="135dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/spinner_background"
+        android:fontFamily="@font/pretendard_medium"
+        android:gravity="center_vertical"
+        android:hint="날짜를 선택해주세요"
+        android:paddingStart="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/bhDialogDescription" />
+
+    <ImageButton
+        android:id="@+id/bhCalenderIcon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toEndOf="@+id/bhDateInput"
+        app:layout_constraintTop_toBottomOf="@+id/bhDialogDescription"
+        app:srcCompat="@drawable/icon_calender" />
+
+    <ImageButton
+        android:id="@+id/bhSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bhDateDialogText"
+        app:srcCompat="@drawable/mypet_shot_add" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -87,26 +87,6 @@
         <item name="android:textSize">10dp</item>
         <item name="android:fontFamily">@font/pretendard_semibold</item>
     </style>
-
-
-    <style name="SpinnerDivideStyle">
-        <!--아이템을 나누는 선 색상-->
-        <item name="android:divider">@color/base_gray_4</item>
-        <!--선 높이-->
-        <item name="android:dividerHeight">1dp</item>
-        <item name="background">@color/white</item>
-        <item name="android:popupBackground">@color/white</item>
-    </style>
-
-    <style name="SpinnerTheme">
-        <!--spinnerDivideStyle을 먼저 만들어 줘야한다.-->
-        <item name="android:dialogTheme">@style/SpinnerDivideStyle</item>
-        <item name="background">@color/white</item>
-        <item name="android:textSize">12dp</item>
-        <item name="fontFamily">@font/pretendard_medium</item>
-        <item name="android:textColor">@color/base_gray_4</item>
-    </style>
-
     <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
     </style>
@@ -120,6 +100,23 @@
         <item name="tabIndicatorColor">@color/base_black</item>
         <item name="tabPaddingStart">16dp</item>
         <item name="tabPaddingEnd">16dp</item>
+    </style>
+
+    <style name="CustomDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+    <style name="SpinnerDivideStyle" parent="android:style/Widget.ListView.DropDown">
+        <item name="android:divider">#000000</item> <!-- divider 색 -->
+        <item name="android:dividerHeight">2dp</item> <!-- divider 높이 -->
+    </style>
+
+    <style name="MySwitchButton" parent="">
+        <item name="colorSwitchThumbNormal">@color/colorLightGray</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="android:colorForeground">@color/colorLightGray</item>
+
     </style>
 
 </resources>

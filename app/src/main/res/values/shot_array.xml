@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="my_array">
+        <item>어떤 접종인가요?</item>
+        <item>DHPPL(종합 백신)</item>
+        <item>코로나 장염 백신</item>
+        <item>신종 플루 백신</item>
+        <item>켄넬코프</item>
+        <item>광견병 백신</item>
+        <item>심장 사상충 백신</item>
+        <item>외부 기생충 백신</item>
+    </string-array>
+</resources>

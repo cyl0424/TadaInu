@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- fragment_partners_list_sub.xml -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".partnersFeat.PartnersListSubFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/appbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ToggleButton
+                android:id="@+id/button_k"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:text="반려견 유치원"
+                android:textOff="반려견 유치원"
+                android:textColor="@drawable/toggle_text_color_selector"
+                android:textOn="반려견 유치원"
+                android:background="@drawable/toggle_background"
+                android:padding="8dp" />
+
+            <ToggleButton
+                android:id="@+id/button_h"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:text="애견 호텔"
+                android:textOff="애견 호텔"
+                android:textColor="@drawable/toggle_text_color_selector"
+                android:textOn="애견 호텔"
+                android:background="@drawable/toggle_background"
+                android:padding="8dp" />
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:iconifiedByDefault="false"
+                app:queryHint="검색어를 입력하시오"
+                />
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:id="@+id/recyclerViewlayout"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!-- 검색 히스토리 뷰 -->
+    <LinearLayout
+        android:id="@+id/linear_search_history_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="#fff"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            >
+            <TextView
+                android:id="@+id/search_history_mode_switch_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="검색어 저장"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/search_history_mode_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/search_history_mode_switch_label"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="3dp"
+                android:theme="@style/MySwitchButton"
+                android:checked="false"
+                />
+            <Button
+                android:id="@+id/clear_search_history_buttton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="전체삭제"
+                android:textColor="@color/colorGray"
+                android:drawableEnd="@drawable/ic_baseline_delete_outline_24"
+                android:background="?attr/selectableItemBackground"
+
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

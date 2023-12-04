@@ -1,14 +1,458 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".myPetFeat.MyPetFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="마이펫 프래그먼트" />
+        android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="40dp">
+
+            <include
+                android:id="@+id/mypet_toolbar"
+                layout="@layout/tool_bar_arrow"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/mypet_dog_picture"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/nav_my_pet"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_toolbar" />
+
+            <!--첫번째 블록-->
+
+            <TextView
+                android:id="@+id/mypet_dog_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="23dp"
+                android:text="PetName"
+                android:textSize="20dp"
+                app:layout_constraintStart_toEndOf="@+id/mypet_dog_picture"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_toolbar" />
+
+            <ImageView
+                android:id="@+id/mypet_beauty_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:src="@drawable/mypet_first_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.505"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_dog_name" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="다음 미용 "
+                app:layout_constraintStart_toStartOf="@+id/mypet_beauty_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_beauty" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="x"
+                android:textColor="#B64A00"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/mypet_beauty_text1"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_beauty" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="일 전"
+                android:textColor="#B64A00"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/mypet_beauty_left"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_beauty" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_text4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text=" 입니다."
+                app:layout_constraintStart_toEndOf="@+id/mypet_beauty_text3"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_beauty" />
+
+            <TextView
+                android:id="@+id/mypet_beauty"
+                android:layout_width="76dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="강아지 미용"
+                android:textColor="#B64A00"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/mypet_beauty_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_beauty_background" />
+
+
+            <!--두번째 블록-->
+
+            <ImageView
+                android:id="@+id/mypet_health_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/mypet_second_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_beauty_background" />
+
+            <ImageView
+                android:id="@+id/sensorBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/icon_gyroscope"
+                app:layout_constraintStart_toEndOf="@+id/mypet_dog_name"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_toolbar" />
+
+            <TextView
+                android:id="@+id/mypet_health"
+                android:layout_width="76dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="정기검진"
+                android:textColor="#004E1F"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/mypet_health_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_health_background" />
+
+            <TextView
+                android:id="@+id/mypet_health_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="다음 정기검진 "
+                android:textSize="14dp"
+                app:layout_constraintStart_toStartOf="@+id/mypet_health_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_health" />
+
+            <TextView
+                android:id="@+id/mypet_health_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="y"
+                android:textColor="#004E1F"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/mypet_health_text1"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_health" />
+
+            <TextView
+                android:id="@+id/mypet_health_text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="일 전"
+                android:textColor="#004E1F"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/mypet_health_left"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_health" />
+
+            <TextView
+                android:id="@+id/mypet_health_text4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text=" 입니다."
+                android:textSize="14dp"
+                app:layout_constraintStart_toEndOf="@+id/mypet_health_text3"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_health" />
+
+            <TextView
+                android:id="@+id/mypet_health_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="가장 최근 정기검진:"
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="@+id/mypet_health_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_health_text1" />
+
+            <TextView
+                android:id="@+id/mypet_health_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="10dp"
+                android:text="TextView"
+                android:textSize="10dp"
+                app:layout_constraintStart_toEndOf="@+id/mypet_health_recent"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_health_text1" />
+
+            <!--세번째 블록-->
+            <ImageView
+                android:id="@+id/mypet_shot_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/mypet_third_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_health_background" />
+
+            <TextView
+                android:id="@+id/mypet_shot"
+                android:layout_width="76dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="예방접종"
+                android:textColor="#083A4B"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/mypet_shot_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_shot_background" />
+
+
+            <!--        <ListView-->
+            <!--            android:id="@+id/shotList"-->
+            <!--            android:layout_width="195dp"-->
+            <!--            android:layout_height="75dp"-->
+            <!--            android:layout_marginStart="20dp"-->
+            <!--            android:layout_marginTop="2dp"-->
+            <!--            app:layout_constraintStart_toStartOf="@+id/mypet_shot_background"-->
+            <!--            app:layout_constraintTop_toBottomOf="@+id/mypet_shot" />-->
+
+
+            <!--네번째 블록-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/shotList"
+                android:layout_width="200dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="12dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="@+id/mypet_shot_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_shot"
+                tools:listitem="@layout/shot_item" />
+
+            <ImageView
+                android:id="@+id/mypet_walk_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/mypet_fourth_back"
+                app:layout_constraintStart_toStartOf="@+id/mypet_shot_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_shot_background" />
+
+            <TextView
+                android:id="@+id/mypet_walk"
+                android:layout_width="76dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="18dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="산책 트래킹"
+                android:textColor="#730000"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/mypet_walk_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_walk_background" />
+
+            <TextView
+                android:id="@+id/mypet_walk_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="최근 산책 : "
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="@+id/mypet_walk_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_walk" />
+
+            <TextView
+                android:id="@+id/mypet_walk_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="3dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="산책거리 : "
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="@+id/mypet_walk_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_walk_text1" />
+
+            <!--다섯번째 블록-->
+
+            <ImageView
+                android:id="@+id/mypet_location_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/mypet_fourth_back"
+                app:layout_constraintEnd_toEndOf="@+id/mypet_shot_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_shot_background" />
+
+            <TextView
+                android:id="@+id/mypet_location"
+                android:layout_width="76dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="18dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="위치 추적"
+                android:textColor="#730000"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/mypet_location_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_location_background" />
+
+            <TextView
+                android:id="@+id/mypet_location_text"
+                android:layout_width="102dp"
+                android:layout_height="33dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="강아지가 사라졌다면\n이 기능을 사용해보세요!"
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="@+id/mypet_location_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_location" />
+
+            <TextView
+                android:id="@+id/mypet_walk_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="TextView"
+                android:textSize="10dp"
+                app:layout_constraintStart_toEndOf="@+id/mypet_walk_text1"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_walk" />
+
+            <TextView
+                android:id="@+id/mypet_walk_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="TextView"
+                android:textSize="10dp"
+                app:layout_constraintStart_toEndOf="@+id/mypet_walk_text2"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_walk_text1" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="가장 최근 미용 : "
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="@+id/mypet_beauty_background"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_beauty_text1" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="10dp"
+                android:text="TextView"
+                android:textSize="10dp"
+                app:layout_constraintStart_toEndOf="@+id/mypet_beauty_recent"
+                app:layout_constraintTop_toBottomOf="@+id/mypet_beauty_text1" />
+
+            <ImageView
+                android:id="@+id/mypet_beauty_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="2dp"
+                android:src="@drawable/mypet_first_icon"
+                app:layout_constraintEnd_toEndOf="@+id/mypet_beauty_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_beauty_background" />
+
+            <ImageView
+                android:id="@+id/mypet_health_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="2dp"
+                android:src="@drawable/mypet_second_icon"
+                app:layout_constraintEnd_toEndOf="@+id/mypet_health_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_health_background" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/mypet_shot_icon"
+                app:layout_constraintEnd_toEndOf="@+id/mypet_shot_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_shot_background" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/mypet_walk_icon"
+                app:layout_constraintEnd_toEndOf="@+id/mypet_walk_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_walk_background" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="3dp"
+                android:src="@drawable/mypet_location_icon"
+                app:layout_constraintEnd_toEndOf="@+id/mypet_location_background"
+                app:layout_constraintTop_toTopOf="@+id/mypet_location_background" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </FrameLayout>
