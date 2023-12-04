@@ -19,9 +19,9 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/community_menu"
+        android:id="@+id/petcare_menu"
         android:enabled="true"
-        android:title="@string/community_menu"
+        android:title="@string/petcare_menu"
         android:icon="@drawable/nav_community"
         app:showAsAction="always"/>
 

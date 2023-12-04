@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".accountFeat.MoreInfoActivity">
+
+    <TextView
+        android:id="@+id/invite_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_medium"
+        android:letterSpacing="-0.02"
+        android:padding="20dp"
+        android:text="초대를 받으셨나요?"
+        android:textColor="#606060"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/input_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invite_check">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_gravity="center"
+                android:id="@+id/profile_img_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="66dp"
+                android:layout_marginBottom="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/invite_check">
+
+                <ImageView
+                    android:id="@id/profile_img"
+                    android:layout_width="142dp"
+                    android:layout_height="142dp"
+                    android:src="@drawable/circle"
+                    android:background="@drawable/circle"
+                    android:backgroundTint="#F6F6F6"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/temp_profile"
+                    android:layout_width="78dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/icon_pet_paw"
+                    app:layout_constraintBottom_toBottomOf="@+id/profile_img"
+                    app:layout_constraintEnd_toEndOf="@+id/profile_img"
+                    app:layout_constraintStart_toStartOf="@+id/profile_img"
+                    app:layout_constraintTop_toTopOf="@+id/profile_img" />
+
+                <TextView
+                    android:id="@+id/profile_img_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:text="반려견 사진"
+                    android:textColor="#606060"
+                    android:textSize="16dp"
+                    android:letterSpacing="-0.02"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_img" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/name_space"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/radius_16dp"
+                android:backgroundTint="#F6F6F6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_img_area">
+
+                <EditText
+                    android:id="@+id/name_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@null"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:hint="반려견 이름"
+                    android:letterSpacing="-0.02"
+                    android:textColor="#606060"
+                    android:textColorHint="#969696"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/name_space"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/name_space"
+                    app:layout_constraintTop_toTopOf="@+id/name_space" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/together_space"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/radius_16dp"
+                android:backgroundTint="#F6F6F6"
+                app:layout_constraintEnd_toEndOf="@+id/name_space"
+                app:layout_constraintStart_toStartOf="@+id/name_space"
+                app:layout_constraintTop_toBottomOf="@+id/name_space">
+
+                <TextView
+                    android:id="@+id/together_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@null"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:text="함께하게 된 날"
+                    android:letterSpacing="-0.02"
+                    android:textColor="#969696"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/together_space"
+                    app:layout_constraintStart_toStartOf="@+id/together_space"
+                    app:layout_constraintTop_toTopOf="@+id/together_space" />
+
+                <ImageView
+                    android:id="@+id/together_cal"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/icon_calendar"
+                    app:layout_constraintBottom_toBottomOf="@+id/together_space"
+                    app:layout_constraintEnd_toEndOf="@+id/together_space"
+                    app:layout_constraintTop_toTopOf="@+id/together_space" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/birth_space"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/radius_16dp"
+                android:backgroundTint="#F6F6F6"
+                app:layout_constraintEnd_toEndOf="@+id/together_space"
+                app:layout_constraintStart_toStartOf="@+id/together_space"
+                app:layout_constraintTop_toBottomOf="@+id/together_space">
+
+                <TextView
+                    android:id="@+id/birth_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@null"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:text="태어난 날 (선택)"
+                    android:letterSpacing="-0.02"
+                    android:textColor="#969696"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/birth_space"
+                    app:layout_constraintStart_toStartOf="@+id/birth_space"
+                    app:layout_constraintTop_toTopOf="@+id/birth_space" />
+
+                <ImageView
+                    android:id="@+id/birth_cal"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/icon_calendar"
+                    app:layout_constraintBottom_toBottomOf="@+id/birth_space"
+                    app:layout_constraintEnd_toEndOf="@+id/birth_space"
+                    app:layout_constraintTop_toTopOf="@+id/birth_space" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/gender_space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                app:layout_constraintEnd_toEndOf="@+id/together_space"
+                app:layout_constraintStart_toStartOf="@+id/together_space"
+                app:layout_constraintTop_toBottomOf="@+id/together_space">
+
+                <TextView
+                    android:id="@+id/gender_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:hint="반려견 성별"
+                    android:letterSpacing="-0.02"
+                    android:textColor="#606060"
+                    android:textSize="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/gender_group"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/gender_txt">
+
+                    <RadioButton
+                        android:id="@+id/male_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/radius_16dp"
+                        android:backgroundTint="@drawable/selector_radio_background"
+                        android:button="@null"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:gravity="center"
+                        android:text="남자"
+                        android:textColor="@drawable/selector_radio_txt"
+                        android:textSize="16dp" />
+
+                    <RadioButton
+                        android:id="@+id/female_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/radius_16dp"
+                        android:backgroundTint="@drawable/selector_radio_background"
+                        android:button="@null"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:gravity="center"
+                        android:text="여자"
+                        android:textColor="@drawable/selector_radio_txt"
+                        android:textSize="16dp" />
+
+                </RadioGroup>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/relation_space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                app:layout_constraintEnd_toEndOf="@+id/together_space"
+                app:layout_constraintStart_toStartOf="@+id/together_space"
+                app:layout_constraintTop_toBottomOf="@+id/together_space">
+
+                <TextView
+                    android:id="@+id/relation_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:hint="반려견과의 관계"
+                    android:letterSpacing="-0.02"
+                    android:textColor="#606060"
+                    android:textSize="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/relation_group"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relation_txt">
+
+                    <RadioButton
+                        android:id="@+id/dad_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/radius_16dp"
+                        android:backgroundTint="@drawable/selector_radio_background"
+                        android:button="@null"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:gravity="center"
+                        android:text="아빠"
+                        android:textColor="@drawable/selector_radio_txt"
+                        android:textSize="16dp" />
+
+                    <RadioButton
+                        android:id="@+id/mom_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/radius_16dp"
+                        android:backgroundTint="@drawable/selector_radio_background"
+                        android:button="@null"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:gravity="center"
+                        android:text="엄마"
+                        android:textColor="@drawable/selector_radio_txt"
+                        android:textSize="16dp" />
+
+                    <RadioButton
+                        android:id="@+id/etc_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/radius_16dp"
+                        android:backgroundTint="@drawable/selector_radio_background"
+                        android:button="@null"
+                        android:fontFamily="@font/pretendard_bold"
+                        android:gravity="center"
+                        android:text="기타"
+                        android:textColor="@drawable/selector_radio_txt"
+                        android:textSize="16dp" />
+
+                </RadioGroup>
+
+                <Spinner
+                    android:id="@+id/relationSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/relation_group" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="120dp" />
+        </LinearLayout>
+
+    </ScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/complete_btn_background"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/gradient_white"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/complete_btn"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/radius_16dp"
+            android:backgroundTint="#C1C1C1"
+            android:elevation="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/complete_btn_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="필수 정보를 모두 입력해주세요"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/complete_btn"
+            app:layout_constraintEnd_toEndOf="@+id/complete_btn"
+            app:layout_constraintStart_toStartOf="@+id/complete_btn"
+            app:layout_constraintTop_toTopOf="@+id/complete_btn" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

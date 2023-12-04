@@ -7,6 +7,7 @@ plugins {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def KakaoNativeKey = properties.getProperty('kakao.native.key')
 def NaverMapApiKey = properties.getProperty('NAVER_API_KEY')
 
 android {
@@ -25,6 +26,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "KAKAO_NATIVE_KEY", properties['kakao.native.key']
+        manifestPlaceholders = [KakaoNativeKey:KakaoNativeKey]
         manifestPlaceholders = [NaverMapApiKey:NaverMapApiKey]
     }
 
@@ -37,6 +41,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 
     compileOptions {
@@ -53,26 +58,30 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.firebase:firebase-database-ktx:20.3.0'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
     implementation 'androidx.databinding:databinding-runtime:8.1.1'
     implementation 'com.google.firebase:firebase-database-ktx:20.3.0'
     implementation 'androidx.camera:camera-core:1.2.3'
     implementation 'androidx.camera:camera-lifecycle:1.2.3'
     implementation 'androidx.camera:camera-view:1.2.3'
     implementation 'com.google.firebase:firebase-inappmessaging:20.4.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation platform('com.google.firebase:firebase-bom:32.5.0')
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-auth:22.2.0'
+    implementation 'com.google.firebase:firebase-auth-ktx:22.2.0'
+    implementation 'com.google.firebase:firebase-storage:20.3.0'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
-    implementation 'com.google.firebase:firebase-storage'
-    implementation 'com.google.firebase:firebase-auth-ktx:22.2.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.9.1'
     implementation 'com.google.firebase:firebase-firestore:24.9.1'
     implementation 'com.google.firebase:firebase-common-ktx:20.4.2'
-    implementation 'com.google.firebase:firebase-storage:20.3.0'
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.firebaseui:firebase-ui-storage:8.0.0'
 
@@ -111,10 +120,15 @@ dependencies {
     implementation("androidx.camera:camera-mlkit-vision:${camerax_version}")
     implementation("androidx.camera:camera-extensions:${camerax_version}")
 
-    //UCrop
+    // UCrop
     implementation 'com.github.yalantis:ucrop:2.2.6-native'
 
-    //Image Picker
+    // Image Picker
     implementation 'com.github.dhaval2404:imagepicker:2.1'
 
+    // QR
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
+
+    implementation 'com.airbnb.android:lottie:3.0.7'
 }

@@ -1,5 +1,6 @@
 package com.mobileprogramming.tadainu
 
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -14,6 +15,7 @@ import com.mobileprogramming.tadainu.notiFeat.NotiFragment
 import com.mobileprogramming.tadainu.settingFeat.SettingFragment
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.kakao.sdk.common.util.Utility
 
 class MainActivity : AppCompatActivity() {
@@ -45,9 +47,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val keyHash = Utility.getKeyHash(this)
-        Log.d("Hash", keyHash)
-
         this.onBackPressedDispatcher.addCallback(this, callback)
 
         initNavigationBar()
@@ -75,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                         }, 500L)
                     }
                 }
-                R.id.community_menu -> {
+                R.id.petcare_menu -> {
                     try {
                         change(fragmentPartners)
                     } catch (e: IllegalStateException) {
@@ -109,10 +108,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun change(fragment: Fragment) {
+    fun change(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentArea, fragment)
             .commitNow()
+    }
+
+    fun selectBottomNavigationItem(itemId: Int) {
+        binding.bottomNavi.selectedItemId = itemId
     }
 }

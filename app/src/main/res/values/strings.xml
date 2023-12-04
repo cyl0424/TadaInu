@@ -3,9 +3,16 @@
 
     <string name="home_menu">홈</string>
     <string name="my_pet_menu">마이펫</string>
-    <string name="community_menu">커뮤니티</string>
+    <string name="petcare_menu">펫케어</string>
     <string name="noti_menu">알림</string>
     <string name="setting_menu">설정</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="sign_in_title1">간편가입으로</string>
+    <string name="sign_in_title2">안심하고 다녀올개!</string>
+
+    <string name="kakao_login_title">카카오로 시작하기</string>
+
+    <string name="kinder_title1_true">반려견을 어딘가에 맡겨야할 때,</string>
 </resources>

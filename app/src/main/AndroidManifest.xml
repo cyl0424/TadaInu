@@ -13,7 +13,20 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="true" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".GlobalApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,17 +37,21 @@
         android:theme="@style/Theme.TadaInu"
         tools:targetApi="31">
         <activity
+            android:name=".accountFeat.MoreInfoActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".notiFeat.UploadFeedActivity"
             android:exported="false" />
+
         <activity
             android:name=".notiFeat.CameraPreviewActivity"
             android:exported="false" />
-        <activity
-            android:name=".notiFeat.CameraGalleryActivity"
-            android:exported="false" />
+
         <activity
             android:name=".myPetFeat.TrackLocationActivity"
             android:exported="false" /> <!-- 추가 - 네이버 지도 API -->
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="${NaverMapApiKey}" />
@@ -46,6 +63,24 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".accountFeat.SignInActivity"
+            android:exported="false" />
+            
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao${KakaoNativeKey}" />
             </intent-filter>
         </activity>
         <activity
