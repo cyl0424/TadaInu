@@ -75,6 +75,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
     ): View? {
         _binding = FragmentMyPetBinding.inflate(inflater, container, false)
 
+
         if(petId != ""){
             val petCollection = db.collection("TB_PET")
             val docRef = petCollection.document(petId)
@@ -147,7 +148,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
             if (angularSpeed > threshold) {
                 Log.d("ITM", "자이로스코프 센서 감지")
                 // JSON형식으로 넘겨주기
-                val jsonData = "{\"pet_id\":\"4Jipcx2xHXmvcKNVc6cO\"}"
+                val jsonData = "{\"pet_id\":\"$petId\"}"
                 // ShakeDialog 닫은 후에 QrDialog 띄움
                 shakeDialog?.dismiss()
                 showQRCodeDialog(jsonData)
