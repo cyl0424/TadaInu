@@ -250,10 +250,15 @@ class MyPetFragment : Fragment(), SensorEventListener {
         binding.mypetShotBackground.setOnClickListener {
             showAddShotDialog()
         }
+        binding.mypetWalkBackground.setOnClickListener {
+            val intent = Intent(requireContext(), TrackWalkActivity::class.java)
+            startActivity(intent)
+        }
         binding.mypetLocationBackground.setOnClickListener {
             val intent = Intent(requireContext(), TrackLocationActivity::class.java)
             startActivity(intent)
         }
+
     }
     private fun refreshUI() {
         db.collection("TB_MYPET").document(petId)
