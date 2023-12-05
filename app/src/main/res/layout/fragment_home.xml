@@ -73,6 +73,7 @@
                         app:layout_constraintTop_toTopOf="@+id/profile_img" />
 
                     <ImageView
+                        android:id="@+id/more_pet"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:layout_marginStart="6dp"

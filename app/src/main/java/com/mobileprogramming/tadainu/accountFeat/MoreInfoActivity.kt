@@ -24,6 +24,9 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentResult
+import com.google.zxing.qrcode.encoder.QRCode
 import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.MainActivity
 import com.mobileprogramming.tadainu.R
@@ -129,6 +132,10 @@ class MoreInfoActivity : AppCompatActivity() {
         binding.completeBtn.setOnClickListener {
             saveData()
         }
+
+        binding.inviteCheck.setOnClickListener {
+            scanQRCode()
+        }
     }
 
     private fun chooseProfileImage() {
@@ -166,6 +173,19 @@ class MoreInfoActivity : AppCompatActivity() {
 
             profileImageName = "pet/profile/${UUID.randomUUID()}.png"
             uploadProfileImage(profileImage!!, profileImageName!!)
+        }else{
+            val result: IntentResult =
+                IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+            if(result != null) {
+                if (result.contents == null) {
+                    Log.d("this", "잘못된 QR코드입니다.")
+                } else {
+                    Log.d("this", result.contents.toString())
+                }
+            }
+            else{
+                super.onActivityResult(requestCode, resultCode, data)
+            }
         }
     }
 
@@ -252,8 +272,19 @@ class MoreInfoActivity : AppCompatActivity() {
         Toast.makeText(this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
+
+
     companion object {
         private const val REQUEST_CODE_CHOOSE_PROFILE_IMAGE = 1
         private const val REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE = 2
+    }
+
+    fun scanQRCode(){
+        val integrator = IntentIntegrator(this)
+        integrator.setPrompt("QR코드를 스캔해주세요")
+        integrator.setOrientationLocked(false)
+        integrator.setBeepEnabled(false)
+        integrator.setCaptureActivity(QRScanActivity::class.java) // 추가된 라인
+        integrator.initiateScan()
     }
 }

@@ -21,6 +21,7 @@ import com.google.firebase.storage.StorageReference
 import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.MainActivity
 import com.mobileprogramming.tadainu.R
+import com.mobileprogramming.tadainu.accountFeat.MoreInfoActivity
 import com.mobileprogramming.tadainu.accountFeat.SignInActivity
 import com.mobileprogramming.tadainu.databinding.FragmentHomeBinding
 import java.text.SimpleDateFormat
@@ -186,6 +187,12 @@ class HomeFragment : Fragment() {
             (activity as MainActivity).apply {
                 selectBottomNavigationItem(R.id.petcare_menu)
             }
+        }
+
+        binding.morePet.setOnClickListener {
+            val intent = Intent(requireContext(), MoreInfoActivity::class.java)
+            requireActivity().overridePendingTransition(0, 0)
+            startActivity(intent)
         }
 
 
