@@ -142,6 +142,7 @@ class CameraPreviewActivity : AppCompatActivity() {
 
                 // UploadFeedActivity로 넘어감
                 val intent = Intent(this, UploadFeedActivity::class.java)
+                overridePendingTransition(0, 0)
                 startActivity(intent)
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {

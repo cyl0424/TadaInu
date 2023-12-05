@@ -1,53 +1,52 @@
-package com.mobileprogramming.tadainu.homeFeat
+package com.mobileprogramming.tadainu.partnersFeat
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
-import com.mobileprogramming.tadainu.MainActivity
-import com.mobileprogramming.tadainu.R
-import com.mobileprogramming.tadainu.accountFeat.MoreInfoActivity
+import com.mobileprogramming.tadainu.GlobalApplication
 import com.mobileprogramming.tadainu.accountFeat.SignInActivity
-import com.mobileprogramming.tadainu.databinding.FragmentHomeBinding
+import com.mobileprogramming.tadainu.databinding.FragmentPartnerMainBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class HomeFragment : Fragment() {
+
+class PartnerMainFragment : Fragment() {
     val db = Firebase.firestore
 
     private val storage: FirebaseStorage = FirebaseStorage.getInstance("gs://tadainu-2023.appspot.com/")
     private val storageRef: StorageReference = storage.reference
 
-    private var mBinding: FragmentHomeBinding? = null
+    private var mBinding: FragmentPartnerMainBinding? = null
     private val binding get() = mBinding!!
 
-    private val user = prefs.getString("currentUser", "")
+    private val user = GlobalApplication.prefs.getString("currentUser", "")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = FragmentHomeBinding.inflate(inflater, container, false)  // 바인딩 초기화
+        mBinding = FragmentPartnerMainBinding.inflate(inflater, container, false)  // 바인딩 초기화
         val view = binding.root
 
-        Log.d("유저", user.toString())
         if (user != "") {
             binding.profileView.visibility = View.VISIBLE
             binding.loginView.visibility = View.INVISIBLE
@@ -65,7 +64,7 @@ class HomeFragment : Fragment() {
                         val firstPetKey = firstPetMap.first().keys.first()
                         petRelation = firstPetMap.first().values.first()
                         petId = firstPetKey
-                        prefs.setString("petId", petId)
+                        GlobalApplication.prefs.setString("petId", petId)
                         Log.d("MP", "DocumentSnapshot data: ${document.data}")
                     } else {
                         Log.d("MP", "No such document")
@@ -98,16 +97,6 @@ class HomeFragment : Fragment() {
 
                                     binding.profileImg.clipToOutline = true
 
-                                    Log.d("집", document["pet_at_home"].toString())
-
-                                    if(document["pet_at_home"] as Boolean){
-                                        binding.kinderTitle.text= "반려견을 어딘가에 맡겨야할 때,"
-                                        binding.kinderSubTitle.text = "$petName, $petRelation 다녀올개!"
-                                    }
-                                    else{
-                                        binding.kinderTitle.text= "${petName}은(는) 지금 유치원에서 공부 중,"
-                                        binding.kinderSubTitle.text = "$petRelation 안심하고 다녀오개!"
-                                    }
                                     Log.d("MP", "DocumentSnapshot data: ${document.data}")
                                 } else {
                                     Log.d("MP", "No such document")
@@ -122,39 +111,11 @@ class HomeFragment : Fragment() {
                     Log.d("MP", "get failed with ", exception)
                 }
 
-            Log.d(TAG, "User is signed in")
+            Log.d(ContentValues.TAG, "User is signed in")
         } else {
             binding.profileView.visibility = View.INVISIBLE
             binding.loginView.visibility = View.VISIBLE
-            binding.kinderSubTitle.text = "오늘도 안심하고 다녀올개!"
-            Log.d(TAG, "User is signed out")
         }
-
-        val tabLayout = binding.tabLayout
-        val photoCalendarView = binding.photoCalendar
-        val diaryView = binding.homeDiary
-
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    0 -> {
-                        photoCalendarView.visibility = View.VISIBLE
-                        diaryView.visibility = View.GONE
-                    }
-                    1 -> {
-                        photoCalendarView.visibility = View.GONE
-                        diaryView.visibility = View.VISIBLE
-                    }
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                // 이미 선택된 탭이 다시 선택됐을 때의 동작
-            }
-        })
 
         return view
     }
@@ -183,19 +144,11 @@ class HomeFragment : Fragment() {
             requireActivity().overridePendingTransition(0, 0)
         }
 
-        binding.kinderBtn.setOnClickListener {
-            (activity as MainActivity).apply {
-                selectBottomNavigationItem(R.id.petcare_menu)
-            }
-        }
-
-        binding.morePet.setOnClickListener {
-            val intent = Intent(requireContext(), MoreInfoActivity::class.java)
-            requireActivity().overridePendingTransition(0, 0)
+        binding.searchList.setOnClickListener {
+            val intent = Intent(requireContext(), PartnersActivity::class.java)
             startActivity(intent)
+            requireActivity().overridePendingTransition(0, 0)
         }
-
-
     }
 
     override fun onDestroyView() {
@@ -217,4 +170,5 @@ class HomeFragment : Fragment() {
 
         return differenceInDays
     }
+
 }
