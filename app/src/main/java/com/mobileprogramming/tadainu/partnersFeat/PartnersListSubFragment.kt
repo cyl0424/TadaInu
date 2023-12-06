@@ -61,51 +61,23 @@ class PartnersListSubFragment : Fragment() {
     }
 
     private fun initSearchView() {
-        Log.d("ITM", "init SearchView")
         binding.search.isSubmitButtonEnabled = false
         binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                var filteredList = petcareList
-                filteredList = when (query) {
-                    query -> {
-                        val result = filteredList.filter {
-                            query?.let { it1 ->
-                                it.petcare_name!!.contains(
-                                    it1, ignoreCase = true
-                                )
-                            } == true
-                        } as MutableList<PetcareItem>
-                        if (result.isEmpty()) {
-                            showToast("Please enter a valid query")
-                        }
-                        result
-                    }
-
-                    else -> {
-                        showToast("Please enter a valid query")
-                        petcareList
-                    }
-                }
-                // Update the adapter with the filtered list
-                partnersListAdapter = PartnersListAdapter(filteredList)
-                binding.recyclerView.layoutManager = LinearLayoutManager(context)
-                binding.recyclerView.adapter = partnersListAdapter
+                updateFilter()
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
-                    // If the text is empty, reset the filter and update the adapter
                     resetFilter()
                 }
                 return true
             }
         })
 
-        // Add OnCloseListener to handle clearing the query
         binding.search.setOnCloseListener {
-            // Reset the filter and update the adapter with the original list
             resetFilter()
             false
         }
@@ -199,11 +171,42 @@ class PartnersListSubFragment : Fragment() {
             else -> null
         }
 
-        var petcarefilterdList = filterResults(query)
-        Log.d("ITM", "queryResult: ${petcarefilterdList.toString()}")
-        return petcarefilterdList
+        val petcareFilteredByType = filterResultsByType(query)
+        val petcareFilteredBySearch = filterResultsBySearch(binding.search.query.toString())
+
+        val finalFilteredList = if (query != null) {
+            petcareFilteredByType.filter { it in petcareFilteredBySearch }
+        } else {
+            petcareFilteredBySearch
+        }
+
+        partnersListAdapter = PartnersListAdapter(finalFilteredList as MutableList<PetcareItem>)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = partnersListAdapter
     }
 
+    private fun filterResultsByType(query: String?): List<PetcareItem> {
+        return when (query) {
+            "반려견 유치원" -> petcareList.filter { it.petcare_type == "반려견 유치원" }
+            "애견 호텔" -> petcareList.filter { it.petcare_type == "애견 호텔" }
+            "둘다" -> petcareList.filter { it.petcare_type == "반려견 유치원" || it.petcare_type == "애견 호텔" }
+            else -> petcareList
+        }
+    }
+
+    private fun filterResultsBySearch(query: String): List<PetcareItem> {
+        return if (query.isNotBlank()) {
+            val result = petcareList.filter {
+                it.petcare_name?.contains(query, ignoreCase = true) == true
+            }
+            if (result.isEmpty()) {
+                showToast("Please enter a valid query")
+            }
+            result
+        } else {
+            petcareList
+        }
+    }
 
     private fun filterResults(query: String?) {
         var filteredList = petcareList
