@@ -7,21 +7,17 @@ import android.os.Handler
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import com.mobileprogramming.tadainu.partnersFeat.PartnersFragment
 import com.mobileprogramming.tadainu.databinding.ActivityMainBinding
 import com.mobileprogramming.tadainu.homeFeat.HomeFragment
 import com.mobileprogramming.tadainu.myPetFeat.MyPetFragment
 import com.mobileprogramming.tadainu.notiFeat.NotiFragment
 import com.mobileprogramming.tadainu.settingFeat.SettingFragment
-
-import android.util.Log
-import com.google.firebase.auth.FirebaseAuth
-import com.kakao.sdk.common.util.Utility
+import com.mobileprogramming.tadainu.partnersFeat.PartnerMainFragment
 
 class MainActivity : AppCompatActivity() {
     private val fragmentHome by lazy { HomeFragment() }
     private val fragmentMyPet by lazy { MyPetFragment() }
-    private val fragmentPartners by lazy { PartnersFragment() }
+    private val fragmentPartners by lazy { PartnerMainFragment() }
     private val fragmentNoti by lazy { NotiFragment() }
     private val fragmentSetting by lazy { SettingFragment() }
 

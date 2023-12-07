@@ -11,7 +11,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.util.Half.EPSILON
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,19 +19,22 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.DialogAddShotBinding
 import com.mobileprogramming.tadainu.databinding.DialogUpdateBhBinding
@@ -44,20 +46,17 @@ import kotlinx.coroutines.launch
 import java.lang.Integer.max
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.math.sqrt
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-private const val PET_ID = "4Jipcx2xHXmvcKNVc6cO"
-private const val PET_STORAGE_PATH = "pet/profile/20231110145312.png"
 class MyPetFragment : Fragment(), SensorEventListener {
     private var _binding: FragmentMyPetBinding? = null
     private val binding get() = _binding!!
 
     private val db = FirebaseFirestore.getInstance()
-    private val storage = FirebaseStorage.getInstance()
+
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance("gs://tadainu-2023.appspot.com/")
+    private val storageRef: StorageReference = storage.reference
+
     private val shotList = mutableListOf<ShotItem>()
     private lateinit var shotAdapter: ShotListAdapter
 
@@ -65,47 +64,72 @@ class MyPetFragment : Fragment(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var mLight: Sensor? = null
     private var shakeDialog: AlertDialog? = null
+
+    val petId = prefs.getString("petId", "")
+    var petImg = ""
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMyPetBinding.inflate(inflater, container, false)
+
+
+        if(petId != ""){
+            val petCollection = db.collection("TB_PET")
+            val docRef = petCollection.document(petId)
+            if(docRef != null) {
+                docRef.get()
+                    .addOnSuccessListener { document ->
+                        petImg = document["pet_img"].toString()
+                    }.addOnFailureListener { exception ->
+                        Log.d("MP", "get failed with ", exception)
+                    }
+            }
+            petInfoUpdate()
+        }
+
+
+        sensorManager = binding.root.context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         clickEventHandler()
-        refreshUI()
+        if(petId != ""){
+            refreshUI()
 
-        // Recycler View 계속 띄워놓기
-        shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.shotList.layoutManager = layoutManager
-        binding.shotList.adapter = shotAdapter
+            // Recycler View 계속 띄워놓기
+            shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
+            val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            binding.shotList.layoutManager = layoutManager
+            binding.shotList.adapter = shotAdapter
 
-        // 버튼을 눌렀을 때만 센서 작동
-        binding.sensorBtn.setOnClickListener {
-            showShakeDialog()
-            Log.d("ITM", "흔들어서 초대하기를 클릭하여 센서를 초기화합니다.")
-            sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            // 장치에 어떤 센서 있는지 확인
-            val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
-            Log.d("ITM", "$deviceSensors")
+            // 버튼을 눌렀을 때만 센서 작동
+            binding.sensorBtn.setOnClickListener {
+                showShakeDialog()
+                Log.d("ITM", "흔들어서 초대하기를 클릭하여 센서를 초기화합니다.")
+                sensorManager = binding.root.context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+                // 장치에 어떤 센서 있는지 확인
+                val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+                Log.d("ITM", "$deviceSensors")
 
-            // 자이로스코프 센서 초기화
-            val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-            sensor?.let {
-                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
-                Log.d("ITM", "자이로스코프 센서 초기화 됨")
-            } ?: Log.e("ITM", "자이로스코프 센서 초기화 안 됨")
+                // 자이로스코프 센서 초기화
+                val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+                sensor?.let {
+                    sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+                    Log.d("ITM", "자이로스코프 센서 초기화 됨")
+                } ?: Log.e("ITM", "자이로스코프 센서 초기화 안 됨")
 
-            // 가속도계 센서 초기화
-            mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-            mLight?.let {
-                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
-                Log.d("ITM", "가속도계 센서 초기화 됨")
-            } ?: Log.e("ITM", "가속도계 센서 초기화 안 됨")
+                // 가속도계 센서 초기화
+                mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+                mLight?.let {
+                    sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+                    Log.d("ITM", "가속도계 센서 초기화 됨")
+                } ?: Log.e("ITM", "가속도계 센서 초기화 안 됨")
+            }
         }
     }
 
@@ -124,7 +148,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
             if (angularSpeed > threshold) {
                 Log.d("ITM", "자이로스코프 센서 감지")
                 // JSON형식으로 넘겨주기
-                val jsonData = "{\"pet_id\":\"4Jipcx2xHXmvcKNVc6cO\"}"
+                val jsonData = "{\"pet_id\":\"$petId\"}"
                 // ShakeDialog 닫은 후에 QrDialog 띄움
                 shakeDialog?.dismiss()
                 showQRCodeDialog(jsonData)
@@ -214,8 +238,6 @@ class MyPetFragment : Fragment(), SensorEventListener {
 
 
     private fun clickEventHandler() {
-        binding.mypetToolbar.toolbarTitle.text = "마이펫"
-        binding.mypetToolbar.backBtn.visibility = View.INVISIBLE
         binding.mypetBeautyBackground.setOnClickListener {
             showHbDialog(requireContext(), "beauty", null)
         }
@@ -231,7 +253,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
         }
     }
     private fun refreshUI() {
-        db.collection("TB_MYPET").document(PET_ID)
+        db.collection("TB_MYPET").document(petId)
             .addSnapshotListener { snapshot, e ->
                 lifecycleScope.launch(Dispatchers.Main) {
                     if (e != null) {
@@ -252,10 +274,8 @@ class MyPetFragment : Fragment(), SensorEventListener {
                         updateUIData("health", healthDate, healthLastDate, currentDate)
                         // 접종기록 UI 업데이트
                         updateShotUI(snapshot)
-                        // 이미지 UI 업데이트
-                        petImageUpdate()
-                        // 이름 UI 업데이트
-                        petNameUpdate()
+                        // UI 업데이트
+                        petInfoUpdate()
                     } else {
                         Log.d("ITM", "Current data: null")
                     }
@@ -265,7 +285,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
     // 접종History UI 업데이트
     private fun updateShotUI(snapshot: DocumentSnapshot) {
         // Fetch shot data from SUBTB_VACCINE subcollection
-        db.collection("TB_MYPET").document(PET_ID)
+        db.collection("TB_MYPET").document(petId)
             .collection("SUBTB_VACCINE")
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -457,7 +477,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
      *  최신 값을 field_last로 옮기고 최신 field값을 DatePicker에서 받은 값으로 함.
      */
     private fun updateBeautyHealthDate(field: String, timestamp: Long) {
-        val documentRef = db.collection("TB_MYPET").document(PET_ID)
+        val documentRef = db.collection("TB_MYPET").document(petId)
 
         val date = Date(timestamp)
         val firebaseTimestamp = Timestamp(date)
@@ -482,7 +502,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
     // showAddShotDialog()에서 얻은 값을 파이어베이스에 저장하는 로직(sub table에 저장)
     private fun saveShotDataToFirebase(shotItem: ShotItem) {
         // Get reference to the pet document using the pet_id
-        val petRef = db.collection("TB_MYPET").document(PET_ID)
+        val petRef = db.collection("TB_MYPET").document(petId)
         val vaccineCollection = petRef.collection("SUBTB_VACCINE")
         Log.d("ITM","${shotItem.shotName},${shotItem.shotNum},${shotItem.date}")
         // Create a new document for each shot in the SUBTB_VACCINE subcollection
@@ -501,41 +521,39 @@ class MyPetFragment : Fragment(), SensorEventListener {
             }
     }
 
-    // 상단 펫 이름 가져오기
-    private fun petNameUpdate() {
-        db.collection("TB_PET").document(PET_ID)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document != null && document.exists()) {
-                        val petName = document.getString("pet_name")
-                        petName?.let {
-                            Log.d("ITM", "Pet Name: $it")
-                            binding.mypetDogName.text = it
+    private fun petInfoUpdate() {
+        val petCollection = db.collection("TB_PET")
+
+        val docRef = petCollection.document(petId)
+        if(docRef != null){
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        binding.mypetDogName.text = document["pet_name"].toString()
+                        storageRef.child(document["pet_img"].toString()).downloadUrl.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                if(isAdded){
+                                    Glide.with(binding.root.context)
+                                        .load(task.result)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .apply(RequestOptions().circleCrop())
+                                        .thumbnail(0.1f)
+                                        .into(binding.mypetDogPicture)
+                                }
+                            } else {
+                            }
                         }
+
+                        binding.mypetDogPicture.clipToOutline = true
+
+                        Log.d("MP", "DocumentSnapshot data: ${document.data}")
                     } else {
-                        Log.d("ITM", "Document does not exist")
+                        Log.d("MP", "No such document")
                     }
-                } else {
-                    Log.e("ITM", "Error getting document", task.exception)
                 }
-            }
-    }
-
-    // 상단 이미지 들고오기
-    private fun petImageUpdate() {
-        val storageReference = storage.reference.child(PET_STORAGE_PATH)
-
-        storageReference.downloadUrl.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Glide.with(this)
-                    .load(task.result)
-                    .circleCrop()
-                    .into(binding.mypetDogPicture)
-            } else {
-                Log.e("ITM", "Error downloading image", task.exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.d("MP", "get failed with ", exception)
+                }
         }
     }
 
@@ -543,16 +561,5 @@ class MyPetFragment : Fragment(), SensorEventListener {
         super.onDestroyView()
         _binding = null
         sensorManager.unregisterListener(this)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyPetFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

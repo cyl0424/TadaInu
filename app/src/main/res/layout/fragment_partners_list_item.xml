@@ -21,7 +21,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
+            android:layout_marginStart="20dp"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
@@ -35,7 +35,7 @@
                 android:fontFamily="@font/pretendard_medium"
                 android:text="반려견 유치원/호텔"
                 android:textColor="#808080"
-                android:textSize="18dp" />
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/petcare_name"
@@ -44,22 +44,24 @@
                 android:fontFamily="@font/pretendard_bold"
                 android:text="유치원/호텔 이름"
                 android:textColor="#ED7D31"
-                android:textSize="25dp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:id="@+id/petcare_opening"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:fontFamily="@font/pretendard_medium"
                     android:text="영업 종료"
-                    android:textSize="18dp" />
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/petcare_closing"
@@ -67,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_medium"
                     android:text="21:00에 영업 종료"
-                    android:textSize="18dp" />
+                    android:textSize="12dp" />
 
             </LinearLayout>
 
@@ -76,19 +78,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:fontFamily="@font/pretendard_medium"
+                android:fontFamily="@font/pretendard_bold"
                 android:text="유치원/호텔 주소"
-                android:textSize="18dp" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_marginRight="30dp"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 

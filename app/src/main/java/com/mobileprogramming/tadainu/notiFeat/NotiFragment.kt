@@ -90,7 +90,7 @@ class NotiFragment : Fragment() {
     // 갤러리 열기
     private fun openGallery() {
         // 갤러리를 여는 Intent
-        val galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
+        val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "image/*"
         // 여러개 선택 가능 하도록
         galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
@@ -162,6 +162,7 @@ class NotiFragment : Fragment() {
         } else {
             // All images have been processed, start the UploadFeedActivity
             val intent = Intent(requireContext(), UploadFeedActivity::class.java)
+            requireActivity().overridePendingTransition(0, 0)
             startActivity(intent)
         }
     }
