@@ -173,8 +173,8 @@ class HomeFragment : Fragment() {
 
         binding.loginView.setOnClickListener {
             val intent = Intent(requireContext(), SignInActivity::class.java)
-            requireActivity().overridePendingTransition(0, 0)
             startActivity(intent)
+            requireActivity().overridePendingTransition(0, 0)
         }
 
         binding.kinderBtn.setOnClickListener {
