@@ -140,14 +140,39 @@ class PartnerMainFragment : Fragment() {
 
         binding.loginView.setOnClickListener {
             val intent = Intent(requireContext(), SignInActivity::class.java)
-            startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
+            startActivity(intent)
         }
+
 
         binding.searchList.setOnClickListener {
             val intent = Intent(requireContext(), PartnersActivity::class.java)
-            startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
+            startActivity(intent)
+        }
+
+        binding.chatList.setOnClickListener {
+            val intent = Intent(requireContext(), ChatListActivity::class.java)
+            requireActivity().overridePendingTransition(0, 0)
+            startActivity(intent)
+        }
+
+        binding.reservationList.setOnClickListener {
+            val intent = Intent(requireContext(), ReservationListActivity::class.java)
+            requireActivity().overridePendingTransition(0, 0)
+            startActivity(intent)
+        }
+
+        binding.creditList.setOnClickListener {
+            val intent = Intent(requireContext(), PurchaseListActivity::class.java)
+            requireActivity().overridePendingTransition(0, 0)
+            startActivity(intent)
+        }
+
+        binding.feedList.setOnClickListener {
+            val intent = Intent(requireContext(), FeedListActivity::class.java)
+            requireActivity().overridePendingTransition(0, 0)
+            startActivity(intent)
         }
     }
 

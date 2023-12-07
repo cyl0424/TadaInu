@@ -49,15 +49,15 @@ class SettingFragment : Fragment() {
         binding.completeBtn.setOnClickListener {
             if(binding.completeBtnTxt.text.equals("로그인")){
                 val intent = Intent(requireContext(), SignInActivity::class.java)
-                startActivity(intent)
                 requireActivity().overridePendingTransition(0, 0)
+                startActivity(intent)
             }else{
                 prefs.setString("currentUser", "")
                 prefs.setString("petId", "")
                 Toast.makeText(requireContext(), "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
                 val intent = Intent(requireContext(), MainActivity::class.java)
-                startActivity(intent)
                 requireActivity().overridePendingTransition(0, 0)
+                startActivity(intent)
             }
         }
     }
