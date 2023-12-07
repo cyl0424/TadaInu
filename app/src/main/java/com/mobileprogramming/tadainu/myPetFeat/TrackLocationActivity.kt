@@ -10,6 +10,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DataSnapshot
@@ -19,6 +22,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityTrackLocationBinding
 import com.mobileprogramming.tadainu.model.PetLocation
@@ -34,6 +40,9 @@ import com.naver.maps.map.util.FusedLocationSource
 
 
 class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
+    val db = Firebase.firestore
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance("gs://tadainu-2023.appspot.com/")
+    private val storageRef: StorageReference = storage.reference
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private val PERMISSIONS = arrayOf(
@@ -47,7 +56,8 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var dogLocation: Marker
     val realtimeDb = FirebaseDatabase.getInstance().getReference()
     private var canTrack = false
-    private val petId = "4Jipcx2xHXmvcKNVc6cO"
+    private val petId = prefs.getString("petId", "")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTrackLocationBinding.inflate(layoutInflater)
@@ -61,6 +71,36 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
             setCanTrack(true)
             initMapView()
             initFirebase()
+            binding.toolbar.toolbarTitle.text = "위치추적"
+        }
+
+        val petCollection = db.collection("TB_PET")
+
+        val docRef = petCollection.document(petId)
+
+        if(docRef != null){
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        storageRef.child(document["pet_img"].toString()).downloadUrl.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Glide.with(binding.root.context)
+                                    .load(task.result)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .apply(RequestOptions().circleCrop())
+                                    .thumbnail(0.1f)
+                                    .into(binding.toolbar.petImg)
+                            }
+                        }
+
+                        Log.d("MP", "DocumentSnapshot data: ${document.data}")
+                    } else {
+                        Log.d("MP", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("MP", "get failed with ", exception)
+                }
         }
     }
 
@@ -94,7 +134,7 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (petLocation != null) {
                         val lat = petLocation.lat
                         val lng = petLocation.lng
-                        val canTrack = petLocation.canTrack
+                        canTrack = petLocation.canTrack
 
                         Log.d("ITM", "Lat: $lat, Lng: $lng, Can Track: $canTrack")
                         runOnUiThread {
@@ -111,6 +151,10 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 // Handle onCancelled if needed
             }
         })
+
+        binding.toolbar.backBtn.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     // 파이어베이스 초기화
