@@ -56,8 +56,9 @@ class SettingFragment : Fragment() {
                 prefs.setString("petId", "")
                 Toast.makeText(requireContext(), "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
                 val intent = Intent(requireContext(), MainActivity::class.java)
-                requireActivity().overridePendingTransition(0, 0)
+               
                 startActivity(intent)
+                requireActivity().overridePendingTransition(0, 0)
             }
         }
     }
