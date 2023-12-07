@@ -142,8 +142,8 @@ class CameraPreviewActivity : AppCompatActivity() {
 
                 // UploadFeedActivity로 넘어감
                 val intent = Intent(this, UploadFeedActivity::class.java)
-                overridePendingTransition(0, 0)
                 startActivity(intent)
+                overridePendingTransition(0, 0)
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
             val cropError: Throwable? = UCrop.getError(data!!)
