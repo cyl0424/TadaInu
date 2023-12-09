@@ -173,7 +173,7 @@ class MoreInfoActivity : AppCompatActivity() {
             roundedBitmapDrawable.isCircular = true
 
             binding.profileImg.setImageDrawable(roundedBitmapDrawable)
-            binding.tempProfile.visibility = View.GONE
+            binding.tempProfile.visibility = View.INVISIBLE
 
             profileImageName = "pet/profile/${UUID.randomUUID()}.png"
             uploadProfileImage(profileImage!!, profileImageName!!)
