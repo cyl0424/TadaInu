@@ -19,10 +19,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.FragmentPartnersMapSubBinding
 import com.mobileprogramming.tadainu.databinding.DialogPartnerMapBinding
-import com.mobileprogramming.tadainu.model.ClusteredPartnerName
 import com.mobileprogramming.tadainu.model.NaverItem
 import com.mobileprogramming.tadainu.model.PartnerInfo
-import com.mobileprogramming.tadainu.partnersFeat.adapter.ClusterClickAdapter
+import com.mobileprogramming.tadainu.model.PetcareItem
+import com.mobileprogramming.tadainu.partnersFeat.adapter.ClusterClickVer2Adapter
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -37,7 +37,7 @@ import java.util.Locale
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListener {
+class PartnersMapSubFragment : Fragment(), ClusterClickVer2Adapter.OnItemClickListener {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -52,8 +52,7 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
     // 마커에 정보 저장
     private var selectedPartnerInfo: PartnerInfo? = null
     //cluster
-    private val clusteredPartnerNameList = mutableListOf<ClusteredPartnerName>()
-
+    private val petcareItem = mutableListOf<PetcareItem>()
 
     private val PERMISSIONS = arrayOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -133,11 +132,16 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                     val lng = document.getDouble("petcare_lng") ?: 0.0
                     if (id != null && name != null && type != null && opening != null && closing != null && address != null) {
                         val position = com.naver.maps.geometry.LatLng(lat, lng)
-                        val partnerInfo = PartnerInfo(id, name, type, opening, closing, address, position)
+                        val partnerInfo =
+                            PartnerInfo(id, name, type, opening, closing, address, position)
                         items.add(NaverItem(position))
                         partnerInfoList.add(partnerInfo)
-                        clusteredPartnerNameList.add(ClusteredPartnerName(partnerInfo.petcareName))
-
+                        petcareItem.add(PetcareItem(partnerInfo.petcareType,
+                            partnerInfo.petcareName,
+                            partnerInfo.petcareOpening,
+                            partnerInfo.petcareClosing,
+                            partnerInfo.petcareAddress
+                            ))
                     }
                 }
 
@@ -150,6 +154,7 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                  * .clusterClickListner : 클러스터 선택 시 리사이클러 뷰(리스트)
                  * onItemClick() : 리사이클러 뷰의 아이템 선택 시 해당 Partner의 Dialog뜨도록
                  */
+                // Replace the existing code in getMarkers() method
                 TedNaverClustering.with<NaverItem>(requireContext(), naverMap)
                     .customMarker {
                         Marker().apply {
@@ -159,29 +164,58 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
                         }
                     }
                     .markerClickListener { marker ->
-                        // 클릭한 마커의 위치를 가져오고 해당 위치에 대응되는 파트너 정보를 찾아 selectedPartnerInfo에 저장
-                        val clickedPosition = marker.position
-                        selectedPartnerInfo =
-                            partnerInfoList.find { it.position == clickedPosition }
+                        // Existing code for marker click
 
                         // 다이얼로그 업데이트 메소드 호출
                         updateDialogWithSelectedPartner()
                     }
                     .clusterClickListener { cluster ->
-                        val clusteredPartnerNameList = mutableListOf<ClusteredPartnerName>()
+                        val clusteredPartnerList = mutableListOf<PetcareItem>()
 
                         // 클릭한 클러스터에 속한 파트너의 리스트를 가져옵니다.
                         for (item in cluster.items) {
                             for (partner in partnerInfoList) {
                                 if (item.position == partner.position) {
-                                    clusteredPartnerNameList.add(ClusteredPartnerName(partner.petcareName))
+                                    val changeType = when (partner.petcareType) {
+                                        "k" -> "반려견 유치원"
+                                        "h" -> "애견 호텔"
+                                        else -> "Unknown Type"
+                                    }
+                                    val currentTime = System.currentTimeMillis()
+                                    val openingTime = parseTimeString(partner.petcareOpening)
+                                    val closingTime = parseTimeString(partner.petcareClosing)
+
+                                    var changeIsOpen = ""
+                                    var changeOpenCloseInfo = ""
+
+                                    if (currentTime in openingTime..closingTime) {
+                                        changeIsOpen = "영업 중"
+                                        changeOpenCloseInfo = "${partner.petcareClosing} 에 영업 종료"
+                                    } else {
+                                        changeIsOpen = "영업 종료"
+                                        changeOpenCloseInfo = "${partner.petcareOpening} 에 영업 시작"
+                                    }
+                                    val petcareItem = PetcareItem(
+                                        petcare_type = changeType,
+                                        petcare_name = partner.petcareName,
+                                        petcare_opening = changeIsOpen,
+                                        petcare_closing = changeOpenCloseInfo,
+                                        petcare_addr = partner.petcareAddress,
+                                        petcare_img = "" // You can set the image URL if available
+                                    )
+                                    clusteredPartnerList.add(petcareItem)
                                 }
                             }
                         }
 
                         binding.emptyRecyclerView.visibility = View.GONE
-                        binding.clusteredPartnerList.adapter = ClusterClickAdapter(requireContext(), clusteredPartnerNameList, this)
-                        binding.clusteredPartnerList.layoutManager = LinearLayoutManager(requireContext())
+                        binding.clusteredPartnerList.adapter = ClusterClickVer2Adapter(
+                            requireContext(),
+                            clusteredPartnerList,
+                            this
+                        )
+                        binding.clusteredPartnerList.layoutManager =
+                            LinearLayoutManager(requireContext())
                         binding.clusteredPartnerList.adapter?.notifyDataSetChanged()
 
                         binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
@@ -250,9 +284,9 @@ class PartnersMapSubFragment : Fragment(), ClusterClickAdapter.OnItemClickListen
     }
 
 
-    override fun onItemClick(partner: ClusteredPartnerName) {
+    override fun onItemClick(partner: PetcareItem) {
         // 클러스터 클릭 시 뜨는 리사이클러 뷰의 리스트 요소를 클릭 시 해당하는 업체의 다이얼로그 띄우기
-        selectedPartnerInfo = partnerInfoList.find { it.petcareName == partner.clusteredpartnerName }
+        selectedPartnerInfo = partnerInfoList.find { it.petcareName == partner.petcare_name }
         updateDialogWithSelectedPartner()
     }
 
