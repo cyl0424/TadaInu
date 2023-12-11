@@ -19,6 +19,8 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -129,6 +131,19 @@ class MyPetFragment : Fragment(), SensorEventListener {
                     sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
                     Log.d("ITM", "가속도계 센서 초기화 됨")
                 } ?: Log.e("ITM", "가속도계 센서 초기화 안 됨")
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.mypetToolbar.menuBtn.setOnClickListener {
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.whole_layout)
+            drawerLayout?.let {
+                if (!it.isDrawerOpen(GravityCompat.END)) {
+                    it.openDrawer(GravityCompat.END)
+                }
             }
         }
     }

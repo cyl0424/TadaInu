@@ -22,4 +22,9 @@ class ChatListActivity : AppCompatActivity() {
 
         setContentView(view)
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(0, 0)
+    }
 }
