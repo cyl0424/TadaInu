@@ -151,30 +151,35 @@ class PartnerMainFragment : Fragment() {
 
         binding.searchList.setOnClickListener {
             val intent = Intent(requireContext(), PartnersActivity::class.java)
+            intent.putExtra("petId", petId)
             startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
         }
 
         binding.chatList.setOnClickListener {
             val intent = Intent(requireContext(), ChatListActivity::class.java)
+            intent.putExtra("petId", petId)
             startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
         }
 
         binding.reservationList.setOnClickListener {
             val intent = Intent(requireContext(), ReservationListActivity::class.java)
+            intent.putExtra("petId", petId)
             startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
         }
 
         binding.creditList.setOnClickListener {
             val intent = Intent(requireContext(), PurchaseListActivity::class.java)
+            intent.putExtra("petId", petId)
             startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
         }
 
         binding.feedList.setOnClickListener {
             val intent = Intent(requireContext(), FeedListActivity::class.java)
+            intent.putExtra("petId", petId)
             startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
         }

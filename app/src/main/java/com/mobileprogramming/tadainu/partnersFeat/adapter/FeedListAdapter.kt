@@ -22,9 +22,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @OptIn(DelicateCoroutinesApi::class)
-class FeedListAdapter() :
+class FeedListAdapter(pet_id:String) :
     RecyclerView.Adapter<FeedListAdapter.CustomViewHolder>() {
-    val petId = prefs.getString("petId", "")
+    val petId = pet_id
     var feedList = mutableListOf<MutableMap<String, *>>()
 
     val db = FirebaseFirestore.getInstance()
@@ -86,15 +86,17 @@ class FeedListAdapter() :
 
         fun bind(feedItem: MutableMap<String, *>) {
             binding.apply {
-                storageRef.child(feedItem["profile_img"].toString()).downloadUrl.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Glide.with(itemView)
-                            .load(task.result)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .override(50, 50)
-                            .thumbnail(0.1f)
-                            .into(binding.profileImg)
+                if(feedItem["profile_img"]!= null && feedItem["profile_img"].toString().isNotEmpty()){
+                    storageRef.child(feedItem["profile_img"].toString()).downloadUrl.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Glide.with(itemView)
+                                .load(task.result)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .override(50, 50)
+                                .thumbnail(0.1f)
+                                .into(binding.profileImg)
 
+                        }
                     }
                 }
                 binding.profileName.text = feedItem["profile_name"].toString()
