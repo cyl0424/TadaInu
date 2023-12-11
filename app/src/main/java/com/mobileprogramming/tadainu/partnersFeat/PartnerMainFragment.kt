@@ -20,6 +20,7 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.mobileprogramming.tadainu.GlobalApplication
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.accountFeat.SignInActivity
 import com.mobileprogramming.tadainu.databinding.FragmentPartnerMainBinding
@@ -38,6 +39,7 @@ class PartnerMainFragment : Fragment() {
     private val binding get() = mBinding!!
 
     private val user = GlobalApplication.prefs.getString("currentUser", "")
+    private var petId = GlobalApplication.prefs.getString("petId", "")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -55,20 +57,19 @@ class PartnerMainFragment : Fragment() {
             binding.loginView.visibility = View.INVISIBLE
 
             val userCollection = db.collection("TB_USER")
-            var petId = ""
             var petName = ""
             var petRelation = ""
 
             val userDocRef = userCollection.document(user)
             userDocRef.get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        val firstPetMap = document["user_pet"] as MutableList<Map<String, String>>
+                .addOnSuccessListener { doc ->
+                    if (doc != null && petId == "") {
+                        val firstPetMap = doc["user_pet"] as MutableList<Map<String, String>>
                         val firstPetKey = firstPetMap.first().keys.first()
                         petRelation = firstPetMap.first().values.first()
                         petId = firstPetKey
-                        GlobalApplication.prefs.setString("petId", petId)
-                        Log.d("MP", "DocumentSnapshot data: ${document.data}")
+                        prefs.setString("petId", petId)
+                        Log.d("MP", "DocumentSnapshot data: ${doc.data}")
                     } else {
                         Log.d("MP", "No such document")
                     }

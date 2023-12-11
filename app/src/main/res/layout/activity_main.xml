@@ -47,11 +47,31 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/main_drawer"
-        android:layout_width="300dp"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
-        app:headerLayout="@layout/drawer_header"
         android:layout_gravity="end"
         android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+            <include
+                layout="@layout/drawer_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pet_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/recycler_pet_item"/>
+
+        </LinearLayout>
+
 
     </com.google.android.material.navigation.NavigationView>
 
