@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.mobileprogramming.tadainu.GlobalApplication
+import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.accountFeat.SignInActivity
 import com.mobileprogramming.tadainu.databinding.FragmentPartnerMainBinding
 import java.text.SimpleDateFormat
@@ -173,6 +176,15 @@ class PartnerMainFragment : Fragment() {
             val intent = Intent(requireContext(), FeedListActivity::class.java)
             startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
+        }
+
+        binding.toolbar.menuBtn.setOnClickListener {
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.whole_layout)
+            drawerLayout?.let {
+                if (!it.isDrawerOpen(GravityCompat.END)) {
+                    it.openDrawer(GravityCompat.END)
+                }
+            }
         }
     }
 

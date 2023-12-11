@@ -274,7 +274,7 @@ class UploadFeedActivity : AppCompatActivity() {
                 }
             } else if (result.resultCode == UCrop.RESULT_ERROR) {
                 val error: Throwable? = UCrop.getError(result.data!!)
-                Log.e(NotiFragment.TAG, "Error cropping image: ${error?.message}", error)
+                Log.e("Feed Create", "Error cropping image: ${error?.message}", error)
             }
         }
 

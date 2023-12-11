@@ -50,8 +50,8 @@ class CameraPreviewActivity : AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                NotiFragment.REQUIRED_PERMISSIONS,
-                NotiFragment.REQUEST_CODE_PERMISSIONS
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
             )
         }
 
