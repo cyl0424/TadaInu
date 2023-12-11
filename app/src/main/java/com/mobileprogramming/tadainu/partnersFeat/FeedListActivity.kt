@@ -13,6 +13,7 @@ import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityFeedListBinding
 import com.mobileprogramming.tadainu.databinding.DialogCameraGalleryBinding
@@ -29,9 +30,10 @@ class FeedListActivity : AppCompatActivity() {
     private var mBinding: ActivityFeedListBinding? = null
     private val binding get() = mBinding!!
 
-    lateinit var dialogBinding: DialogCameraGalleryBinding
     private var selectedImageUris: ArrayList<Uri> = ArrayList()
     private var croppedImageUris: ArrayList<Uri> = ArrayList()
+
+    val petId = prefs.getString("petId", "")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +49,12 @@ class FeedListActivity : AppCompatActivity() {
             overridePendingTransition(0, 0)
         }
 
-        val feedListAdapter = FeedListAdapter()
-        binding.feedRecycler.layoutManager = LinearLayoutManager(this)
-        binding.feedRecycler.adapter = feedListAdapter
+        if(petId != ""){
+            val feedListAdapter = FeedListAdapter(pet_id = petId)
+            binding.feedRecycler.layoutManager = LinearLayoutManager(this)
+            binding.feedRecycler.adapter = feedListAdapter
+        }
+
 
         setContentView(view)
 

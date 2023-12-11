@@ -17,7 +17,7 @@
             android:id="@+id/profile_img"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:adjustViewBounds="true"
