@@ -28,7 +28,8 @@ class FeedListAdapter() :
     var feedList = mutableListOf<MutableMap<String, *>>()
 
     val db = FirebaseFirestore.getInstance()
-    val storageRef = FirebaseStorage.getInstance().reference
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance("gs://tadainu-2023.appspot.com/")
+    private val storageRef: StorageReference = storage.reference
 
     init {
         GlobalScope.launch {
@@ -85,9 +86,17 @@ class FeedListAdapter() :
 
         fun bind(feedItem: MutableMap<String, *>) {
             binding.apply {
-                Glide.with(itemView)
-                    .load(feedItem["profile_img"])
-                    .into(binding.profileImg)
+                storageRef.child(feedItem["profile_img"].toString()).downloadUrl.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Glide.with(itemView)
+                            .load(task.result)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .override(50, 50)
+                            .thumbnail(0.1f)
+                            .into(binding.profileImg)
+
+                    }
+                }
                 binding.profileName.text = feedItem["profile_name"].toString()
                 binding.feedTxt.text = feedItem["feed_txt"].toString()
 
