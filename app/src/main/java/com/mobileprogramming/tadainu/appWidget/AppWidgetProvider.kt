@@ -1,5 +1,6 @@
 package com.mobileprogramming.tadainu.appWidget
 
+//https://velog.io/@soyoung-dev/AndroidKotlin-%EC%95%B1-%EC%9C%84%EC%A0%AF%EC%9D%84-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B3%B4%EC%9E%90
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
