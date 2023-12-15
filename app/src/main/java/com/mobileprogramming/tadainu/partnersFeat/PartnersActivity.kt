@@ -44,4 +44,9 @@ class PartnersActivity : AppCompatActivity() {
         }.attach()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(0, 0)
+    }
+
 }
