@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="PetName"
+                    android:text="강아지 이름"
                     android:textSize="20dp"
                     app:layout_constraintBottom_toBottomOf="@+id/mypet_dog_picture"
                     app:layout_constraintStart_toEndOf="@+id/mypet_dog_picture"
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="x"
+                        android:text="0"
                         android:textColor="#B64A00"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@+id/mypet_beauty_text1"
@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="1dp"
                         android:layout_marginTop="10dp"
-                        android:text="TextView"
+                        android:text="가장 최근 미용 날짜입니다."
                         android:textSize="10dp"
                         app:layout_constraintStart_toEndOf="@+id/mypet_beauty_recent"
                         app:layout_constraintTop_toBottomOf="@+id/mypet_beauty_text1" />
@@ -213,7 +213,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="y"
+                        android:text="0"
                         android:textColor="#004E1F"
                         android:textSize="14dp"
                         android:textStyle="bold"
@@ -262,7 +262,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="1dp"
                         android:layout_marginTop="10dp"
-                        android:text="TextView"
+                        android:text="가장 최근 정기검진 날짜입니다."
                         android:textSize="10dp"
                         app:layout_constraintStart_toEndOf="@+id/mypet_health_recent"
                         app:layout_constraintTop_toBottomOf="@+id/mypet_health_text1" />
@@ -394,47 +394,15 @@
 
                         <TextView
                             android:id="@+id/mypet_walk_text1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="100dp"
+                            android:layout_height="39dp"
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="8dp"
                             android:fontFamily="@font/pretendard_medium"
-                            android:text="최근 산책 : "
+                            android:text="강아지와의 산책을\n기록해보세요!"
                             android:textSize="10dp"
                             app:layout_constraintStart_toStartOf="@+id/mypet_walk_background"
                             app:layout_constraintTop_toBottomOf="@+id/mypet_walk" />
-
-                        <TextView
-                            android:id="@+id/mypet_walk_text2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginTop="3dp"
-                            android:fontFamily="@font/pretendard_medium"
-                            android:text="산책거리 : "
-                            android:textSize="10dp"
-                            app:layout_constraintStart_toStartOf="@+id/mypet_walk_background"
-                            app:layout_constraintTop_toBottomOf="@+id/mypet_walk_text1" />
-
-                        <TextView
-                            android:id="@+id/mypet_walk_recent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="TextView"
-                            android:textSize="10dp"
-                            app:layout_constraintStart_toEndOf="@+id/mypet_walk_text1"
-                            app:layout_constraintTop_toBottomOf="@+id/mypet_walk" />
-
-                        <TextView
-                            android:id="@+id/mypet_walk_distance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="TextView"
-                            android:textSize="10dp"
-                            app:layout_constraintStart_toEndOf="@+id/mypet_walk_text2"
-                            app:layout_constraintTop_toBottomOf="@+id/mypet_walk_text1" />
 
                         <ImageView
                             android:id="@+id/imageView4"

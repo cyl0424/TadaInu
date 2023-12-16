@@ -38,7 +38,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private lateinit var binding: ActivityTrackWalkBinding
-private lateinit var naverMap: NaverMap
 private lateinit var locationSource: FusedLocationSource
 private lateinit var dogLocation: Marker
 private val realtimeDb = FirebaseDatabase.getInstance().getReference()
@@ -195,7 +194,7 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
         // PathOverlay 초기화
         pathOverlay = PathOverlay()
         pathOverlay.width = resources.getDimensionPixelSize(R.dimen.path_overlay_width)
-        pathOverlay.color = ContextCompat.getColor(this, R.color.red005)
+        pathOverlay.color = ContextCompat.getColor(this, R.color.partners_clicked)
 
         dogLocation = Marker()
         val redCircleBitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
