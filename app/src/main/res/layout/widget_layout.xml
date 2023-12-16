@@ -49,6 +49,7 @@
             android:id="@+id/widget_mypet_beauty_text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="10dp"
             android:layout_below="@+id/widget_mypet_beauty"
             android:layout_marginStart="30dp"
             android:layout_marginTop="5dp"
@@ -62,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/widget_mypet_beauty"
             android:layout_marginStart="5dp"
+            android:textSize="10dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/widget_mypet_beauty_text1"
             android:fontFamily="@font/pretendard_bold"
@@ -79,6 +81,7 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/widget_mypet_beauty_left"
             android:fontFamily="@font/pretendard_bold"
+            android:textSize="10dp"
             android:text="일 전"
             android:textColor="#B64A00"
             android:textStyle="bold"
@@ -93,6 +96,7 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/widget_mypet_beauty_text3"
             android:fontFamily="@font/pretendard_medium"
+            android:textSize="10dp"
             android:text=" 입니다."
             />
 
@@ -140,9 +144,9 @@
     <RelativeLayout
         android:id="@+id/widget_mypet_health_background"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="150dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/radius_16dp"
         android:backgroundTint="#F2FFE1"
@@ -152,7 +156,7 @@
             android:id="@+id/widget_mypet_health"
             android:layout_width="76dp"
             android:layout_height="23dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="24dp"
             android:fontFamily="@font/pretendard_bold"
             android:text="정기검진"
@@ -166,8 +170,9 @@
             android:id="@+id/widget_mypet_health_text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_below="@+id/widget_mypet_health"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_medium"
             android:text="다음 정기검진 "
             android:textSize="14dp"
@@ -178,68 +183,77 @@
             android:id="@+id/widget_mypet_health_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_below="@+id/widget_mypet_health"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_health_text1"
             android:fontFamily="@font/pretendard_bold"
             android:text="y"
             android:textColor="#004E1F"
             android:textSize="14dp"
             android:textStyle="bold"
-            tools:ignore="TextSizeCheck"
-            />
+            tools:ignore="TextSizeCheck" />
 
         <TextView
             android:id="@+id/widget_mypet_health_text3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_below="@+id/widget_mypet_health"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_health_left"
             android:fontFamily="@font/pretendard_bold"
             android:text="일 전"
             android:textColor="#004E1F"
             android:textSize="14dp"
             android:textStyle="bold"
-            tools:ignore="TextSizeCheck"
-            />
+            tools:ignore="TextSizeCheck" />
 
         <TextView
             android:id="@+id/widget_mypet_health_text4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_below="@+id/widget_mypet_health"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_health_text3"
             android:fontFamily="@font/pretendard_medium"
             android:text=" 입니다."
             android:textSize="14dp"
-            tools:ignore="TextSizeCheck"
-            />
+            tools:ignore="TextSizeCheck" />
 
         <TextView
             android:id="@+id/widget_mypet_health_recent"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/widget_mypet_health_text1"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_medium"
             android:text="가장 최근 정기검진:"
-            android:textSize="10dp"
-            />
+            android:textSize="10dp" />
 
         <TextView
             android:id="@+id/widget_mypet_health_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/widget_mypet_health_text1"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_health_recent"
             android:text="TextView"
             android:textSize="10dp"
-            tools:ignore="TextSizeCheck"
-            />
+            tools:ignore="TextSizeCheck" />
 
 
         <ImageView
             android:id="@+id/widget_mypet_health_icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="2dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
             android:src="@drawable/mypet_second_icon"
             />
 
