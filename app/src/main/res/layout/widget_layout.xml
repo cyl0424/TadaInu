@@ -1,9 +1,13 @@
+<!--widget_layout.xml-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+<!--    카카오톡 로그인 안돼서 이거 추가해야함 -->
+<!--    prefs.setString("currentUser", "c66910b7-289c-4976-a18f-97ad10619b5f")-->
 
 <!--    버튼은 안보이게 하고 화면 누르면 앱으로 전환되게-->
     <RelativeLayout

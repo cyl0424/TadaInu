@@ -8,14 +8,26 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.RemoteViews
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mobileprogramming.tadainu.MainActivity
 import com.mobileprogramming.tadainu.R
+import com.mobileprogramming.tadainu.databinding.FragmentMyPetBinding
 import com.mobileprogramming.tadainu.databinding.WidgetLayoutBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+import kotlin.math.log
 
 class MyWidgetProvider : AppWidgetProvider() {
-
 
     // 앱 위젯은 여러개가 등록 될 수 있는데, 최초의 앱 위젯이 등록 될 때 호출 됩니다. (각 앱 위젯 인스턴스가 등록 될때마다 호출 되는 것이 아님)
     override fun onEnabled(context: Context) {
@@ -35,6 +47,35 @@ class MyWidgetProvider : AppWidgetProvider() {
         appWidgetId: Int,
         newOptions: Bundle
     ) {
+        val sharedPreferences = context.getSharedPreferences("MyWidgetPreferences", Context.MODE_PRIVATE)
+
+        val beautyLeftValue = sharedPreferences.getString("widget_mypet_beauty_left", "")
+        val healthLeftValue = sharedPreferences.getString("widget_mypet_health_left", "")
+        val beautyDateValue = sharedPreferences.getString("widget_mypet_beauty_date", "")
+        val healthDateValue = sharedPreferences.getString("widget_mypet_health_date", "")
+        Log.d("ITMwidget", "beautyLeftValue: $beautyLeftValue")
+        Log.d("ITMwidget", "healthLeftValue: $healthLeftValue")
+        Log.d("ITMwidget", "beautyDateValue: $beautyDateValue")
+        Log.d("ITMwidget", "healthDateValue: $healthDateValue")
+
+        val pendingIntent: PendingIntent = Intent(context, MainActivity::class.java)
+            .let { intent ->
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            }
+
+        val views: RemoteViews =
+            RemoteViews(context.packageName, R.layout.widget_layout).apply {
+                setOnClickPendingIntent(R.id.widget_mypet_beauty_background, pendingIntent)
+                setOnClickPendingIntent(R.id.widget_mypet_health_background, pendingIntent)
+
+                setTextViewText(R.id.widget_mypet_beauty_left, beautyLeftValue)
+                setTextViewText(R.id.widget_mypet_health_left, healthLeftValue)
+                setTextViewText(R.id.widget_mypet_beauty_date, beautyDateValue)
+                setTextViewText(R.id.widget_mypet_health_date, healthDateValue)
+            }
+
+        appWidgetManager.updateAppWidget(appWidgetId, views)
+
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
     }
 
@@ -49,30 +90,51 @@ class MyWidgetProvider : AppWidgetProvider() {
         // 위젯 업데이트 로직을 구현
         appWidgetIds.forEach { appWidgetId ->
             // 액티비티를 실행할 인텐트 정의
+
+            val sharedPreferences = context.getSharedPreferences("MyWidgetPreferences", Context.MODE_PRIVATE)
+
+            val beautyLeftValue = sharedPreferences.getString("widget_mypet_beauty_left", "")
+            val healthLeftValue = sharedPreferences.getString("widget_mypet_health_left", "")
+            val beautyDateValue = sharedPreferences.getString("widget_mypet_beauty_date", "")
+            val healthDateValue = sharedPreferences.getString("widget_mypet_health_date", "")
+            Log.d("ITMwidget", "beautyLeftValue: $beautyLeftValue")
+
             val pendingIntent: PendingIntent = Intent(context, MainActivity::class.java)
                 .let { intent ->
                     PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
                 }
 
-            // 앱 위젯의 레이아웃 가져옴. 버튼에 클릭 리스너 연결
+            // 앱 위젯의 레이아웃 가져옴. 레이아웃에 클릭 리스너 연결
             val views: RemoteViews =
                 RemoteViews(context.packageName, R.layout.widget_layout).apply {
-                    setOnClickPendingIntent(R.id.mvbutton, pendingIntent)
+                    setOnClickPendingIntent(R.id.widget_mypet_beauty_background, pendingIntent)
+                    setOnClickPendingIntent(R.id.widget_mypet_health_background, pendingIntent)
+
+                    setTextViewText(R.id.widget_mypet_beauty_left, beautyLeftValue)
+                    setTextViewText(R.id.widget_mypet_health_left, healthLeftValue)
+                    setTextViewText(R.id.widget_mypet_beauty_date, beautyDateValue)
+                    setTextViewText(R.id.widget_mypet_health_date, healthDateValue)
                 }
 
             // 앱 위젯에서 업데이트 수행하도록 AppWidgetManager 에 알림
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
-            super.onUpdate(context, appWidgetManager, appWidgetIds)
+//            super.onUpdate(context, appWidgetManager, appWidgetIds)
         }
     }
 
-    // 이 메소드는 앱 데이터가 구글 시스템에 백업 된 이후 복원 될 때 만약 위젯 데이터가 있다면 데이터가 복구 된 이후 호출 됩니다.
-    // 일반적으로 사용 될 경우는 흔치 않습니다.
-    // 위젯 ID 는 UID 별로 관리 되는데 이때 복원 시점에서 ID 가 변경 될 수 있으므로 백업 시점의 oldID 와 복원 후의 newID 를 전달합니다
-    override fun onRestored(context: Context, oldWidgetIds: IntArray, newWidgetIds: IntArray) {
-        super.onRestored(context, oldWidgetIds, newWidgetIds)
-    }
+        // 이 메소드는 앱 데이터가 구글 시스템에 백업 된 이후 복원 될 때 만약 위젯 데이터가 있다면 데이터가 복구 된 이후 호출 됩니다.
+        // 일반적으로 사용 될 경우는 흔치 않습니다.
+        // 위젯 ID 는 UID 별로 관리 되는데 이때 복원 시점에서 ID 가 변경 될 수 있으므로 백업 시점의 oldID 와 복원 후의 newID 를 전달합니다
+        override fun onRestored(context: Context, oldWidgetIds: IntArray, newWidgetIds: IntArray) {
+
+
+
+            super.onRestored(context, oldWidgetIds, newWidgetIds)
+
+
+
+        }
 
     // 해당 앱 위젯이 삭제 될 때 호출 됩니다
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
