@@ -166,34 +166,36 @@ class MainActivity : AppCompatActivity() {
         private val storageRef: StorageReference = storage.reference
 
         init {
-            GlobalScope.launch {
-                db.collection("TB_USER").document(userId)
-                    .get()
-                    .addOnSuccessListener { doc ->
+            if(userId != ""){
+                GlobalScope.launch {
+                    db.collection("TB_USER").document(userId)
+                        .get()
+                        .addOnSuccessListener { doc ->
 
-                        val petMapList =
-                            doc["user_pet"] as MutableList<MutableMap<String, String>>
-                        for (pet in petMapList) {
-                            val petId = pet.keys.first()
-                            val petCollection = db.collection("TB_PET")
-                            val petDocRef = petCollection.document(petId)
-                            if (petDocRef != null) {
-                                petDocRef.get()
-                                    .addOnSuccessListener { document ->
-                                        if (document != null) {
-                                            val petMap = mutableMapOf<String, String>()
-                                            petMap["pet_name"] = document["pet_name"].toString()
-                                            petMap["pet_img"] = document["pet_img"].toString()
-                                            petMap["pet_id"] = document["pet_id"].toString()
+                            val petMapList =
+                                doc["user_pet"] as MutableList<MutableMap<String, String>>
+                            for (pet in petMapList) {
+                                val petId = pet.keys.first()
+                                val petCollection = db.collection("TB_PET")
+                                val petDocRef = petCollection.document(petId)
+                                if (petDocRef != null) {
+                                    petDocRef.get()
+                                        .addOnSuccessListener { document ->
+                                            if (document != null) {
+                                                val petMap = mutableMapOf<String, String>()
+                                                petMap["pet_name"] = document["pet_name"].toString()
+                                                petMap["pet_img"] = document["pet_img"].toString()
+                                                petMap["pet_id"] = document["pet_id"].toString()
 
-                                            petMap["pet_day"] = "${calculateDDay(document["pet_adopt_day"].toString())}일"
-                                            petList.add(petMap)
-                                            notifyDataSetChanged()
+                                                petMap["pet_day"] = "${calculateDDay(document["pet_adopt_day"].toString())}일"
+                                                petList.add(petMap)
+                                                notifyDataSetChanged()
+                                            }
                                         }
-                                    }
+                                }
                             }
                         }
-                    }
+                }
             }
         }
 

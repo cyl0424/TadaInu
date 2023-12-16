@@ -41,6 +41,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.*
 
+
 class MoreInfoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMoreInfoBinding
