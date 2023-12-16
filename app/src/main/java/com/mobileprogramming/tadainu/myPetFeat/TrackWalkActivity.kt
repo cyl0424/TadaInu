@@ -11,10 +11,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.mobileprogramming.tadainu.GlobalApplication
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityTrackWalkBinding
 import com.mobileprogramming.tadainu.model.PetLocation
@@ -46,14 +54,55 @@ private val pendingPathPoints: MutableList<LatLng> = mutableListOf()
 private val petId = "4Jipcx2xHXmvcKNVc6cO"
 
 class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
+    val db = Firebase.firestore
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance("gs://tadainu-2023.appspot.com/")
+    private val storageRef: StorageReference = storage.reference
+
     private lateinit var naverMap: NaverMap
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private lateinit var pathOverlay: PathOverlay
+
+//    private val petId = GlobalApplication.prefs.getString("petId", "")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTrackWalkBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.toolbar.toolbarTitle.text = "산책트래킹"
+
+        val petCollection = db.collection("TB_PET")
+
+        val docRef = petCollection.document(petId)
+
+        binding.toolbar.backBtn.setOnClickListener {
+            onBackPressed()
+        }
+
+        if(docRef != null){
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        storageRef.child(document["pet_img"].toString()).downloadUrl.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Glide.with(binding.root.context)
+                                    .load(task.result)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .apply(RequestOptions().circleCrop())
+                                    .thumbnail(0.1f)
+                                    .into(binding.toolbar.petImg)
+                            }
+                        }
+
+                        Log.d("MP", "DocumentSnapshot data: ${document.data}")
+                    } else {
+                        Log.d("MP", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("MP", "get failed with ", exception)
+                }
+        }
 
         // 시작 or 종료
         binding.controlBtn.setOnClickListener {
