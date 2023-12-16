@@ -180,10 +180,16 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+//    private fun calculateAverageSpeed(distance: Double, timeInMillis: Long): Double {
+//        // Convert time to minutes
+//        val timeInMinutes = timeInMillis / (1000.0 * 60.0)
+//        return if (timeInMinutes > 0) distance / timeInMinutes else 0.0
+//    }
     private fun calculateAverageSpeed(distance: Double, timeInMillis: Long): Double {
-        // Convert time to minutes
-        val timeInMinutes = timeInMillis / (1000.0 * 60.0)
-        return if (timeInMinutes > 0) distance / timeInMinutes else 0.0
+        // Convert time to hours
+        val timeInHours = timeInMillis / (1000.0 * 60.0 * 60.0)
+        // Calculate average speed in km/h
+        return if (timeInHours > 0) distance / timeInHours else 0.0
     }
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
@@ -193,9 +199,12 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // PathOverlay 초기화
         pathOverlay = PathOverlay()
+        // R.dimen.path_overlay_width 타고 들어가면 경로 굵기 수정 가능합니다.
         pathOverlay.width = resources.getDimensionPixelSize(R.dimen.path_overlay_width)
+        // 앱 칼러 사용
         pathOverlay.color = ContextCompat.getColor(this, R.color.partners_clicked)
 
+        // 강아지 마커 디자인
         dogLocation = Marker()
         val redCircleBitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(redCircleBitmap)
@@ -270,22 +279,41 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
             }
     }
 
-    // 산책 종료 후 통계 Dialog
+    // 산책 종료 후 통계 Dialog - m/m
+//    private fun showWalkSummaryDialog() {
+//        val formattedTime = totalTimeMillis?.let { formatMillisToTime(it) }
+//        val formattedDistance = String.format("%.2f", totalDistance)
+//        val formattedSpeed = String.format("%.2f", calculateAverageSpeed(totalDistance, totalTimeMillis!!))
+//
+//        val message =
+//            "총 산책 시간: $formattedTime\n총 산책 거리: $formattedDistance m\n평균 속력: $formattedSpeed m/min"
+//
+//        val dialogBuilder = AlertDialog.Builder(this)
+//            .setTitle("산책 기록")
+//            .setMessage(message)
+//
+//            .setNegativeButton("산책 경로 확인하기") { _, _ ->
+//            }
+//
+//        val alertDialog = dialogBuilder.create()
+//        alertDialog.show()
+//    }
+
+    // km/h version
     private fun showWalkSummaryDialog() {
         val formattedTime = totalTimeMillis?.let { formatMillisToTime(it) }
-        val formattedDistance = String.format("%.2f", totalDistance)
-        val formattedSpeed = String.format("%.2f", calculateAverageSpeed(totalDistance, totalTimeMillis!!))
+        val formattedDistance = String.format("%.2f", totalDistance / 1000.0) // 미터를 킬로미터로 변환
+        val formattedSpeed = String.format("%.2f", calculateAverageSpeed(totalDistance / 1000.0, totalTimeMillis!!)) // 거리를 킬로미터로 변환
 
         val message =
-            "총 산책 시간: $formattedTime\n총 산책 거리: $formattedDistance m\n평균 속력: $formattedSpeed m/min"
+            "총 산책 시간: $formattedTime\n총 산책 거리: $formattedDistance km\n평균 속력: $formattedSpeed km/h"
 
         val dialogBuilder = AlertDialog.Builder(this)
             .setTitle("산책 기록")
             .setMessage(message)
-
             .setNegativeButton("산책 경로 확인하기") { _, _ ->
+                // "산책 경로 확인하기" 버튼 클릭 시 그냥 다이얼로그가 닫히고 경로 확인가능.
             }
-
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
     }
@@ -295,11 +323,13 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
         return formatter.format(Date(millis))
     }
 
+    // 리셋
     private fun resetWalkData() {
         pendingPathPoints.clear()
         totalDistance = 0.0
         startTime = null
         endTime = null
         totalTimeMillis = null
+        pathOverlay.map = null
     }
 }
