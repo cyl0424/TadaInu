@@ -10,6 +10,7 @@
         android:id="@+id/Toolbar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,8 +23,8 @@
             android:layout_gravity="start"
             android:paddingTop="20dp"
             android:paddingEnd="10dp"
-            app:srcCompat="@drawable/icon_arrow_left"
-            android:background="@color/white"/>
+            android:src="@drawable/icon_arrow_left"
+            app:tint="@color/base_black" />
 
         <TextView
             android:id="@+id/toolbarTitle"

@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -21,6 +24,7 @@ import com.google.firebase.storage.StorageReference
 import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.MainActivity
 import com.mobileprogramming.tadainu.R
+import com.mobileprogramming.tadainu.accountFeat.MoreInfoActivity
 import com.mobileprogramming.tadainu.accountFeat.SignInActivity
 import com.mobileprogramming.tadainu.databinding.FragmentHomeBinding
 import java.text.SimpleDateFormat
@@ -37,7 +41,7 @@ class HomeFragment : Fragment() {
     private val binding get() = mBinding!!
 
     private val user = prefs.getString("currentUser", "")
-
+    private var petId = prefs.getString("petId", "")
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +56,6 @@ class HomeFragment : Fragment() {
             binding.loginView.visibility = View.INVISIBLE
 
             val userCollection = db.collection("TB_USER")
-            var petId = ""
             var petName = ""
             var petRelation = ""
 
@@ -60,11 +63,24 @@ class HomeFragment : Fragment() {
             userDocRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        val firstPetMap = document["user_pet"] as MutableList<Map<String, String>>
-                        val firstPetKey = firstPetMap.first().keys.first()
-                        petRelation = firstPetMap.first().values.first()
-                        petId = firstPetKey
-                        prefs.setString("petId", petId)
+                        if(petId == ""){
+                            val firstPetMap = document["user_pet"] as MutableList<Map<String, String>>
+                            val firstPetKey = firstPetMap.first().keys.first()
+                            petRelation = firstPetMap.first().values.first()
+                            petId = firstPetKey
+                            prefs.setString("petId", petId)
+                        }else{
+                            val petList = document["user_pet"] as MutableList<Map<String, String>>
+                            for (petMap in petList) {
+                                val map_value = petMap[petId]
+                                if (map_value != null){
+                                    petRelation = map_value.toString()
+                                    break
+                                }
+
+                            }
+                        }
+
                         Log.d("MP", "DocumentSnapshot data: ${document.data}")
                     } else {
                         Log.d("MP", "No such document")
@@ -73,6 +89,7 @@ class HomeFragment : Fragment() {
                     val petCollection = db.collection("TB_PET")
 
                     val docRef = petCollection.document(petId)
+
                     if(docRef != null){
                         docRef.get()
                             .addOnSuccessListener { document ->
@@ -104,6 +121,7 @@ class HomeFragment : Fragment() {
                                         binding.kinderSubTitle.text = "$petName, $petRelation 다녀올개!"
                                     }
                                     else{
+                                        binding.kinderImg.setImageResource(R.drawable.pet_home_false)
                                         binding.kinderTitle.text= "${petName}은(는) 지금 유치원에서 공부 중,"
                                         binding.kinderSubTitle.text = "$petRelation 안심하고 다녀오개!"
                                     }
@@ -188,6 +206,20 @@ class HomeFragment : Fragment() {
             }
         }
 
+        binding.morePet.setOnClickListener {
+            val intent = Intent(requireContext(), MoreInfoActivity::class.java)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(0, 0)
+        }
+
+        binding.toolbar.menuBtn.setOnClickListener {
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.whole_layout)
+            drawerLayout?.let {
+                if (!it.isDrawerOpen(GravityCompat.END)) {
+                    it.openDrawer(GravityCompat.END)
+                }
+            }
+        }
 
     }
 

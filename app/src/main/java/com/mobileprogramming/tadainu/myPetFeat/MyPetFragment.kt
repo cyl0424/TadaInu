@@ -19,6 +19,8 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -74,6 +76,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMyPetBinding.inflate(inflater, container, false)
+
 
         if(petId != ""){
             val petCollection = db.collection("TB_PET")
@@ -136,6 +139,19 @@ class MyPetFragment : Fragment(), SensorEventListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        binding.mypetToolbar.menuBtn.setOnClickListener {
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.whole_layout)
+            drawerLayout?.let {
+                if (!it.isDrawerOpen(GravityCompat.END)) {
+                    it.openDrawer(GravityCompat.END)
+                }
+            }
+        }
+    }
+
     override fun onSensorChanged(event: SensorEvent?) {
         // 센서 반응 처리
         // 자이로스코프 센서 처리
@@ -151,7 +167,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
             if (angularSpeed > threshold) {
                 Log.d("ITM", "자이로스코프 센서 감지")
                 // JSON형식으로 넘겨주기
-                val jsonData = "{\"pet_id\":\"4Jipcx2xHXmvcKNVc6cO\"}"
+                val jsonData = "{\"pet_id\":\"$petId\"}"
                 // ShakeDialog 닫은 후에 QrDialog 띄움
                 shakeDialog?.dismiss()
                 showQRCodeDialog(jsonData)

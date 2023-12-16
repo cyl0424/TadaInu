@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -18,6 +20,8 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.mobileprogramming.tadainu.GlobalApplication
+import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
+import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.accountFeat.SignInActivity
 import com.mobileprogramming.tadainu.databinding.FragmentPartnerMainBinding
 import java.text.SimpleDateFormat
@@ -35,6 +39,7 @@ class PartnerMainFragment : Fragment() {
     private val binding get() = mBinding!!
 
     private val user = GlobalApplication.prefs.getString("currentUser", "")
+    private var petId = GlobalApplication.prefs.getString("petId", "")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -52,20 +57,19 @@ class PartnerMainFragment : Fragment() {
             binding.loginView.visibility = View.INVISIBLE
 
             val userCollection = db.collection("TB_USER")
-            var petId = ""
             var petName = ""
             var petRelation = ""
 
             val userDocRef = userCollection.document(user)
             userDocRef.get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        val firstPetMap = document["user_pet"] as MutableList<Map<String, String>>
+                .addOnSuccessListener { doc ->
+                    if (doc != null && petId == "") {
+                        val firstPetMap = doc["user_pet"] as MutableList<Map<String, String>>
                         val firstPetKey = firstPetMap.first().keys.first()
                         petRelation = firstPetMap.first().values.first()
                         petId = firstPetKey
-                        GlobalApplication.prefs.setString("petId", petId)
-                        Log.d("MP", "DocumentSnapshot data: ${document.data}")
+                        prefs.setString("petId", petId)
+                        Log.d("MP", "DocumentSnapshot data: ${doc.data}")
                     } else {
                         Log.d("MP", "No such document")
                     }
@@ -144,10 +148,49 @@ class PartnerMainFragment : Fragment() {
             requireActivity().overridePendingTransition(0, 0)
         }
 
+
         binding.searchList.setOnClickListener {
             val intent = Intent(requireContext(), PartnersActivity::class.java)
+            intent.putExtra("petId", petId)
             startActivity(intent)
             requireActivity().overridePendingTransition(0, 0)
+        }
+
+        binding.chatList.setOnClickListener {
+            val intent = Intent(requireContext(), ChatListActivity::class.java)
+            intent.putExtra("petId", petId)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(0, 0)
+        }
+
+        binding.reservationList.setOnClickListener {
+            val intent = Intent(requireContext(), ReservationListActivity::class.java)
+            intent.putExtra("petId", petId)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(0, 0)
+        }
+
+        binding.creditList.setOnClickListener {
+            val intent = Intent(requireContext(), PurchaseListActivity::class.java)
+            intent.putExtra("petId", petId)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(0, 0)
+        }
+
+        binding.feedList.setOnClickListener {
+            val intent = Intent(requireContext(), FeedListActivity::class.java)
+            intent.putExtra("petId", petId)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(0, 0)
+        }
+
+        binding.toolbar.menuBtn.setOnClickListener {
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.whole_layout)
+            drawerLayout?.let {
+                if (!it.isDrawerOpen(GravityCompat.END)) {
+                    it.openDrawer(GravityCompat.END)
+                }
+            }
         }
     }
 

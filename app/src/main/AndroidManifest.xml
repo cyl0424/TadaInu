@@ -42,6 +42,31 @@
             android:name=".myPetFeat.TrackWalkActivity"
             android:exported="false" />
         <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".partnersFeat.ChatListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".partnersFeat.PurchaseListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".partnersFeat.ReservationListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".partnersFeat.FeedListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".accountFeat.QRScanActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".accountFeat.MoreInfoActivity"
             android:exported="false" />
         <activity
@@ -62,13 +87,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".accountFeat.SignInActivity"
             android:exported="false" />

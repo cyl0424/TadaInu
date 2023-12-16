@@ -50,8 +50,8 @@ class CameraPreviewActivity : AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                NotiFragment.REQUIRED_PERMISSIONS,
-                NotiFragment.REQUEST_CODE_PERMISSIONS
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
             )
         }
 
@@ -143,6 +143,7 @@ class CameraPreviewActivity : AppCompatActivity() {
                 // UploadFeedActivity로 넘어감
                 val intent = Intent(this, UploadFeedActivity::class.java)
                 startActivity(intent)
+                overridePendingTransition(0, 0)
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
             val cropError: Throwable? = UCrop.getError(data!!)

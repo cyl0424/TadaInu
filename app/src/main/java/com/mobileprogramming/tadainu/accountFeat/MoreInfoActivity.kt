@@ -17,13 +17,20 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.gson.Gson
+import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentResult
+import com.google.zxing.qrcode.encoder.QRCode
 import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
 import com.mobileprogramming.tadainu.MainActivity
 import com.mobileprogramming.tadainu.R
@@ -33,6 +40,7 @@ import com.mobileprogramming.tadainu.databinding.ActivityMoreInfoBinding
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.*
+
 
 class MoreInfoActivity : AppCompatActivity() {
 
@@ -127,7 +135,11 @@ class MoreInfoActivity : AppCompatActivity() {
         }
 
         binding.completeBtn.setOnClickListener {
-            saveData()
+            saveData(false, null)
+        }
+
+        binding.inviteCheck.setOnClickListener {
+            scanQRCode()
         }
     }
 
@@ -162,11 +174,62 @@ class MoreInfoActivity : AppCompatActivity() {
             roundedBitmapDrawable.isCircular = true
 
             binding.profileImg.setImageDrawable(roundedBitmapDrawable)
-            binding.tempProfile.visibility = View.GONE
+            binding.tempProfile.visibility = View.INVISIBLE
 
             profileImageName = "pet/profile/${UUID.randomUUID()}.png"
             uploadProfileImage(profileImage!!, profileImageName!!)
+        }else{
+            val result: IntentResult =
+                IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+            if(result != null) {
+                if (result.contents == null) {
+                    Log.d("this", "잘못된 QR코드입니다.")
+                } else {
+                    val pet_id = result.contents.toString()
+                    Log.d("this", pet_id)
+                    if(pet_id.contains("pet_id")){
+                        val gson = Gson()
+                        val jsonMap = gson.fromJson(pet_id, Map::class.java) as Map<*, *>
+                        val petId = jsonMap["pet_id"].toString()
+//                        Toast.makeText(this, petId, Toast.LENGTH_SHORT).show()
+                        showRelationshipDialog(petId)
+                    }
+
+                }
+            }
+            else{
+                super.onActivityResult(requestCode, resultCode, data)
+            }
         }
+    }
+
+    private fun showRelationshipDialog(pet_id:String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_relationship_selector, null)
+        val spinnerRelationship = dialogView.findViewById<Spinner>(R.id.spinnerRelationship)
+        val btnCancel = dialogView.findViewById<ConstraintLayout>(R.id.cancel_btn)
+        val btnOK = dialogView.findViewById<ConstraintLayout>(R.id.ok_btn)
+
+        val relationships = arrayOf("엄마", "아빠", "언니", "누나", "오빠", "형", "삼촌", "이모", "할머니", "할아버지")
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, relationships)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerRelationship.adapter = adapter
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        btnCancel.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnOK.setOnClickListener {
+            relation = spinnerRelationship.selectedItem.toString()
+            saveData(true, pet_id)
+            alertDialog.dismiss()
+        }
+
+        alertDialog.show()
     }
 
     private fun uploadProfileImage(bitmap: Bitmap, imageName: String) {
@@ -208,52 +271,82 @@ class MoreInfoActivity : AppCompatActivity() {
         return binding.completeBtn.isEnabled
     }
 
-    private fun saveData() {
-        if (validateInput()) {
-            val userId = UUID.randomUUID().toString()
+    private fun saveData(hasPetId: Boolean, pet_id: String?) {
+        if (validateInput() || hasPetId) {
+            var userId = prefs.getString("currentUser","")
+            if(userId == ""){
+                userId =  UUID.randomUUID().toString()
+            }
             val userData = UserData(
                 user_id = userId,
                 user_email = intent.getStringExtra("user_email").toString(),
             )
 
-            val petId = UUID.randomUUID().toString()
-            userData.user_pet.add(mapOf(petId to relation.toString()))
+            var petId = ""
 
-            val petData = PetData(
-                pet_adopt_day = binding.togetherTxt.text.toString(),
-                pet_img = profileImageName.toString(),
-                pet_id = petId,
-                pet_birthday = binding.birthTxt.text.toString(),
-                pet_gender = gender.toString(),
-                pet_name = binding.nameTxt.text.toString()
-            )
+            if(!hasPetId){
+                petId = UUID.randomUUID().toString()
+                val petData = PetData(
+                    pet_adopt_day = binding.togetherTxt.text.toString(),
+                    pet_img = profileImageName.toString(),
+                    pet_id = petId,
+                    pet_birthday = binding.birthTxt.text.toString(),
+                    pet_gender = gender.toString(),
+                    pet_name = binding.nameTxt.text.toString()
+                )
+                FirebaseFirestore.getInstance()
+                    .collection("TB_PET")
+                    .document(petId)
+                    .set(petData)
+                    .addOnSuccessListener {
+                    }
 
-            FirebaseFirestore.getInstance()
-                .collection("TB_PET")
-                .document(petId)
-                .set(petData)
-                .addOnSuccessListener {
-                }
+                userData.user_pet.add(mapOf(petId to relation.toString()))
 
-            FirebaseFirestore.getInstance()
-                .collection("TB_USER")
-                .document(userId)
-                .set(userData)
-                .addOnSuccessListener {
-                    moveToMainActivity(userId)
-                }
+                FirebaseFirestore.getInstance()
+                    .collection("TB_USER")
+                    .document(userId)
+                    .set(userData)
+                    .addOnSuccessListener {
+                        moveToMainActivity(userId, petId)
+                    }
+            }else{
+                petId = pet_id.toString()
+                userData.user_pet.add(mapOf(petId to relation.toString()))
+
+                FirebaseFirestore.getInstance()
+                    .collection("TB_USER")
+                    .document(userId)
+                    .update("user_pet", FieldValue.arrayUnion(mapOf(petId to relation.toString())))
+                    .addOnSuccessListener {
+                        moveToMainActivity(userId, petId)
+                    }
+
+            }
         }
     }
 
-    private fun moveToMainActivity(userId : String) {
+    private fun moveToMainActivity(userId : String, petId: String) {
         val intent = Intent(this, MainActivity::class.java)
         prefs.setString("currentUser", userId)
+        prefs.setString("petId", petId)
         startActivity(intent)
         Toast.makeText(this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
+
+
     companion object {
         private const val REQUEST_CODE_CHOOSE_PROFILE_IMAGE = 1
         private const val REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE = 2
+    }
+
+    fun scanQRCode(){
+        val integrator = IntentIntegrator(this)
+        integrator.setPrompt("QR코드를 스캔해주세요")
+        integrator.setOrientationLocked(false)
+        integrator.setBeepEnabled(false)
+        integrator.setCaptureActivity(QRScanActivity::class.java) // 추가된 라인
+        integrator.initiateScan()
     }
 }

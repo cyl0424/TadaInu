@@ -20,7 +20,7 @@ class PartnersActivity : AppCompatActivity() {
         binding.toolbar.toolbarTitle.text = "유치원/호텔 조회하기"
 
         binding.toolbar.backBtn.setOnClickListener {
-            finish()
+            onBackPressed()
         }
 
         val tabLayout = binding.tabLayout
@@ -42,6 +42,11 @@ class PartnersActivity : AppCompatActivity() {
                 else -> throw IllegalArgumentException("Invalid position: $position")
             }
         }.attach()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(0, 0)
     }
 
 }
