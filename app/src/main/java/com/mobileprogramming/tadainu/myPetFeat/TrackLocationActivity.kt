@@ -53,7 +53,7 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var dogLocation: Marker
     private val realtimeDb = FirebaseDatabase.getInstance().getReference()
     private var canTrack = false
-    val petId = GlobalApplication.prefs.getString("petId", "")
+    val petId = "4Jipcx2xHXmvcKNVc6cO" //GlobalApplication.prefs.getString("petId", "")
     private lateinit var infoWindow: InfoWindow
     private val kakaoApiManager = KakaoApiManager(BuildConfig.KAKAO_API_KEY)
 
