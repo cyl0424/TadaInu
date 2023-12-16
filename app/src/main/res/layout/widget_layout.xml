@@ -1,0 +1,111 @@
+<FrameLayout android:id="@+id/widget_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/mvbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </Button>
+
+    </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mypet_beauty_background"
+            android:layout_width="320dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/radius_16dp"
+            android:backgroundTint="#FFEFE4">
+
+            <TextView
+                android:id="@+id/mypet_beauty_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="다음 미용 " />
+
+            <TextView
+                android:id="@+id/mypet_beauty_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="x"
+                android:textColor="#B64A00"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="일 전"
+                android:textColor="#B64A00"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/mypet_beauty_text4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text=" 입니다." />
+
+            <TextView
+                android:id="@+id/mypet_beauty"
+                android:layout_width="76dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="강아지 미용"
+                android:textColor="#B64A00"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="가장 최근 미용 : "
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/mypet_beauty_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="10dp"
+                android:text="TextView"
+                android:textSize="10dp"
+                />
+
+            <ImageView
+                android:id="@+id/mypet_beauty_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="220dp"
+                android:layout_marginEnd="2dp"
+                android:src="@drawable/mypet_first_icon" />
+
+        </RelativeLayout>
+
+</FrameLayout>
