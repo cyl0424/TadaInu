@@ -1,13 +1,13 @@
 package com.mobileprogramming.tadainu.myPetFeat
 
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -22,7 +22,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.mobileprogramming.tadainu.GlobalApplication
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityTrackWalkBinding
 import com.mobileprogramming.tadainu.model.PetLocation
@@ -153,30 +152,32 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
         initMapView()
     }
     private fun calculateTotalDistanceBetweenPoints(points: List<LatLng>): Double {
-        var totalDistance = 0.0
         for (i in 0 until points.size - 1) {
             val lat1 = points[i].latitude
-            val lon1 = points[i].longitude
+            val lng1 = points[i].longitude
             val lat2 = points[i + 1].latitude
-            val lon2 = points[i + 1].longitude
-            totalDistance += calculateDistance(lat1, lon1, lat2, lon2)
+            val lng2 = points[i + 1].longitude
+            totalDistance += calculateDistance(lat1, lng1, lat2, lng2)
+            Log.d("ITM", "위도 경도: $lat1,$lng1/ $lat2,$lng2")
+            Log.d("ITM", "totalDistance: $totalDistance")
         }
         return totalDistance
     }
 
     private fun calculateDistance(
-        lat1: Double, lon1: Double,
-        lat2: Double, lon2: Double
-    ): Double {
-        val R = 6371 * 1000 // Radius of the Earth in meters
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-        val distanceInMeters = R * c
-        return distanceInMeters
+        lat1: Double, lng1: Double,
+        lat2: Double, lng2: Double
+    ): Float {
+
+        val myLoc = Location(LocationManager.NETWORK_PROVIDER)
+        val targetLoc = Location(LocationManager.NETWORK_PROVIDER)
+        myLoc.latitude= lat1
+        myLoc.longitude = lng1
+
+        targetLoc.latitude= lat2
+        targetLoc.longitude = lng2
+
+        return myLoc.distanceTo(targetLoc)
     }
 
 

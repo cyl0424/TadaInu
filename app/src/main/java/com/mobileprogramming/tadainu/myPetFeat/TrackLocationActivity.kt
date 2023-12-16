@@ -102,7 +102,6 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                                     .into(binding.toolbar.petImg)
                             }
                         }
-
                         Log.d("MP", "DocumentSnapshot data: ${document.data}")
                     } else {
                         Log.d("MP", "No such document")
