@@ -167,6 +167,7 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
             true
+        }
         binding.toolbar.backBtn.setOnClickListener {
             onBackPressed()
         }
