@@ -1,5 +1,6 @@
 package com.mobileprogramming.tadainu.myPetFeat
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -17,9 +18,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.mobileprogramming.tadainu.BuildConfig
+import com.mobileprogramming.tadainu.GlobalApplication
 import com.google.firebase.database.database
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
@@ -29,15 +31,22 @@ import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityTrackLocationBinding
 import com.mobileprogramming.tadainu.model.PetLocation
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
-
+import retrofit2.http.GET
+import retrofit2.http.Query
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Header
 
 class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     val db = Firebase.firestore
@@ -54,10 +63,12 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
     private lateinit var dogLocation: Marker
-    val realtimeDb = FirebaseDatabase.getInstance().getReference()
+    private val realtimeDb = FirebaseDatabase.getInstance().getReference()
     private var canTrack = false
-    private val petId = prefs.getString("petId", "")
+    private lateinit var infoWindow: InfoWindow
+    private val kakaoApiManager = KakaoApiManager(BuildConfig.KAKAO_API_KEY)
 
+    private val petId = prefs.getString("petId", "")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTrackLocationBinding.inflate(layoutInflater)
@@ -66,7 +77,6 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
-            // 권한 있을 때
             Log.d("ITM", "권한 있음")
             setCanTrack(true)
             initMapView()
@@ -104,70 +114,71 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
-    // 처음 강아지 위치 값 받아오기
     override fun onMapReady(naverMap: NaverMap) {
-        Log.d("ITM", "onMapRead() Start")
         this.naverMap = naverMap
-
         naverMap.locationSource = locationSource
         naverMap.uiSettings.isLocationButtonEnabled = true
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
-        // 강아지 위치 마커 초기화
         dogLocation = Marker()
         val redCircleBitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(redCircleBitmap)
         val paint = Paint()
-        // 강아지 좌표 디자인
         paint.color = Color.WHITE
         canvas.drawCircle(25f, 25f, 25f, paint)
         paint.color = Color.RED
         canvas.drawCircle(25f, 25f, 20f, paint)
         dogLocation.icon = OverlayImage.fromBitmap(redCircleBitmap)
 
-        // 실시간으로 값 들고오기
         realtimeDb.child("PetLocation").child(petId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val petLocation = dataSnapshot.getValue(PetLocation::class.java)
-                    if (petLocation != null) {
-                        val lat = petLocation.lat
-                        val lng = petLocation.lng
-                        canTrack = petLocation.canTrack
+                    petLocation?.let {
+                        val lat = it.lat
+                        val lng = it.lng
+                        val canTrack = it.canTrack
 
                         Log.d("ITM", "Lat: $lat, Lng: $lng, Can Track: $canTrack")
                         runOnUiThread {
-                            // Update marker position on the main thread
                             dogLocation.position = LatLng(lat, lng)
                             dogLocation.map = naverMap
                         }
-
                     }
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Handle onCancelled if needed
             }
         })
 
+        infoWindow = InfoWindow()
+
+        dogLocation.setOnClickListener { overlay ->
+            val position = (overlay as? Marker)?.position
+            position?.let {
+                kakaoApiManager.getAddressFromCoordinates(it.longitude, it.latitude) { address ->
+                    runOnUiThread {
+                        val content = "현재 주소: $address"
+                        infoWindow.position = it
+                        infoWindow.adapter = CustomInfoWindowAdapter(this, content)
+                        infoWindow.open(dogLocation)
+                    }
+                }
+            }
+            true
         binding.toolbar.backBtn.setOnClickListener {
             onBackPressed()
         }
     }
 
-    // 파이어베이스 초기화
     private fun initFirebase() {
-        Log.d("ITM", "initFirebase() Start")
-        // Initialize the FirebaseApp (if not already initialized)
         if (FirebaseApp.getApps(this).isEmpty()) {
             FirebaseApp.initializeApp(this)
         }
     }
-    // 지도 View 초기화
+
     private fun initMapView() {
-        Log.d("ITM","initMapView() Start")
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -176,29 +187,24 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapFragment.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        Log.d("ITM","initMapView() End")
     }
 
-    // 권한 확인
     private fun hasPermission(): Boolean {
         for (permission in PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 return false
             }
         }
         return true
     }
 
-    // 권한 요청 결과 처리
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            if (!locationSource.isActivated) { // 권한 거부됨
+            if (!locationSource.isActivated) {
                 naverMap.locationTrackingMode = LocationTrackingMode.None
             }
             return
@@ -206,20 +212,83 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    // canTrack값 설정하기
     private fun setCanTrack(value: Boolean) {
         val updates = hashMapOf<String, Any>("canTrack" to value)
         realtimeDb.child("PetLocation").child(petId).updateChildren(updates)
             .addOnSuccessListener {
-                // 성공적으로 업데이트된 경우
-                // 원하는 작업 수행
-                Log.d("ITM", "canTrack 값을 ${value}로 업데이트 성공")
             }
             .addOnFailureListener {
-                // 업데이트 중 오류 발생한 경우
-                // 오류 처리 코드 작성
-                Log.e("ITM", "canTrack 값을 ${value}로 업데이트 실패: ${it.message}")
             }
+    }
+
+    class CustomInfoWindowAdapter(context: Context, private val content: String) : InfoWindow.DefaultTextAdapter(context) {
+        override fun getText(p0: InfoWindow): CharSequence {
+            return content
+        }
+    }
+
+    interface KakaoApiService {
+        @GET("/v2/local/geo/coord2address.json")
+        fun reverseGeocoding(
+            @Header("Authorization") authorization: String,
+            @Query("x") longitude: Double,
+            @Query("y") latitude: Double,
+            @Query("input_coord") inputCoord: String = "WGS84"
+        ): Call<ApiResponse<AddressResponse>>
+    }
+    data class ApiResponse<T>(
+        val documents: List<T>
+    )
+
+    data class AddressResponse(
+        val address: Address
+    )
+
+    data class Address(
+        val address_name: String
+    )
+
+    class KakaoApiManager(private val apiKey: String) {
+        private val retrofit: Retrofit
+        private val kakaoApiService: KakaoApiService
+
+        init {
+            retrofit = Retrofit.Builder()
+                .baseUrl("https://dapi.kakao.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            kakaoApiService = retrofit.create(KakaoApiService::class.java)
+        }
+
+        fun getAddressFromCoordinates(longitude: Double, latitude: Double, callback: (String?) -> Unit) {
+            val authorizationHeader = "KakaoAK $apiKey"
+            val call = kakaoApiService.reverseGeocoding(authorizationHeader, longitude, latitude, "WGS84")
+            call.enqueue(object : Callback<ApiResponse<AddressResponse>> {
+                override fun onResponse(
+                    call: Call<ApiResponse<AddressResponse>>,
+                    response: Response<ApiResponse<AddressResponse>>
+                ) {
+                    if (response.isSuccessful) {
+                        val address = response.body()?.documents?.firstOrNull()?.address?.address_name
+                        callback(address)
+                    } else {
+                        try {
+                            val errorBody = response.errorBody()?.string()
+                            Log.e("ITM", "API 요청 실패: $errorBody")
+                        } catch (e: Exception) {
+                            Log.e("ITM", "API 요청 실패: Unable to parse error body")
+                        }
+                        callback(null)
+                    }
+                }
+
+                override fun onFailure(call: Call<ApiResponse<AddressResponse>>, t: Throwable) {
+                    callback(null)
+                    Log.e("ITM", "API 요청 실패: ${t.message}")
+                }
+            })
+        }
     }
 
     override fun onDestroy() {

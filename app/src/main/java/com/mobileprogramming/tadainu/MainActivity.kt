@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
+       // prefs.setString("petId", "c66910b7-289c-4976-a18f-97ad10619b5f")
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 

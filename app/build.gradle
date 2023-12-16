@@ -9,6 +9,7 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def KakaoNativeKey = properties.getProperty('kakao.native.key')
 def NaverMapApiKey = properties.getProperty('NAVER_API_KEY')
+def KakaoApiKey = properties.getProperty("KAKAO_API_KEY")
 
 android {
     namespace 'com.mobileprogramming.tadainu'
@@ -29,6 +30,7 @@ android {
 
         buildConfigField "String", "KAKAO_NATIVE_KEY", properties['kakao.native.key']
         manifestPlaceholders = [KakaoNativeKey:KakaoNativeKey, NaverMapApiKey:NaverMapApiKey]
+        buildConfigField "String", "KAKAO_API_KEY", properties['KAKAO_API_KEY']
     }
 
     buildTypes {
@@ -128,9 +130,11 @@ dependencies {
     // QR
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 
-
     implementation 'com.airbnb.android:lottie:3.0.7'
 
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.zxing:core:3.4.1'
 
     implementation("com.tbuonomo:dotsindicator:5.0")
