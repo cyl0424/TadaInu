@@ -110,9 +110,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <!--        <receiver> : 앱 위젯에서 사용하는 AppWidgetProvider를 지정-->
+<!--        <receiver> : 앱 위젯에서 사용하는 AppWidgetProvider를 지정-->
         <receiver android:name=".appWidget.MyWidgetProvider"
-            android:exported="true">
+        	android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -120,7 +120,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
-
 
     </application>
 

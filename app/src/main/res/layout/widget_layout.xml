@@ -75,7 +75,8 @@
                 android:text="강아지 미용"
                 android:textColor="#B64A00"
                 android:textSize="14dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck" />
 
             <TextView
                 android:id="@+id/mypet_beauty_recent"
@@ -85,7 +86,8 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/pretendard_medium"
                 android:text="가장 최근 미용 : "
-                android:textSize="10dp" />
+                android:textSize="10dp"
+                tools:ignore="TextSizeCheck" />
 
             <TextView
                 android:id="@+id/mypet_beauty_date"
@@ -95,7 +97,7 @@
                 android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textSize="10dp"
-                />
+                tools:ignore="TextSizeCheck" />
 
             <ImageView
                 android:id="@+id/mypet_beauty_icon"
