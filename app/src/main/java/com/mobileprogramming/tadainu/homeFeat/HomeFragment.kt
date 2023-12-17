@@ -90,50 +90,48 @@ class HomeFragment : Fragment() {
 
                     val docRef = petCollection.document(petId)
 
-                    if(docRef != null){
-                        docRef.get()
-                            .addOnSuccessListener { document ->
-                                if (document != null) {
-                                    petName = document["pet_name"].toString()
-                                    val together = document["pet_adopt_day"].toString()
-                                    binding.petDay.text = "${calculateDDay(together)}일"
-                                    binding.petName.text = petName
-                                    storageRef.child(document["pet_img"].toString()).downloadUrl.addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            if(isAdded){
-                                                Glide.with(binding.root.context)
-                                                    .load(task.result)
-                                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                                    .apply(RequestOptions().circleCrop())
-                                                    .thumbnail(0.1f)
-                                                    .into(binding.profileImg)
-                                            }
-                                        } else {
+                    docRef.get()
+                        .addOnSuccessListener { document ->
+                            if (document != null) {
+                                petName = document["pet_name"].toString()
+                                val together = document["pet_adopt_day"].toString()
+                                binding.petDay.text = "${calculateDDay(together)}일"
+                                binding.petName.text = petName
+                                storageRef.child(document["pet_img"].toString()).downloadUrl.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        if(isAdded){
+                                            Glide.with(binding.root.context)
+                                                .load(task.result)
+                                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .apply(RequestOptions().circleCrop())
+                                                .thumbnail(0.1f)
+                                                .into(binding.profileImg)
                                         }
+                                    } else {
                                     }
-
-                                    binding.profileImg.clipToOutline = true
-
-                                    Log.d("집", document["pet_at_home"].toString())
-
-                                    if(document["pet_at_home"] as Boolean){
-                                        binding.kinderTitle.text= "반려견을 어딘가에 맡겨야할 때,"
-                                        binding.kinderSubTitle.text = "$petName, $petRelation 다녀올개!"
-                                    }
-                                    else{
-                                        binding.kinderImg.setImageResource(R.drawable.pet_home_false)
-                                        binding.kinderTitle.text= "${petName}은(는) 지금 유치원에서 공부 중,"
-                                        binding.kinderSubTitle.text = "$petRelation 안심하고 다녀오개!"
-                                    }
-                                    Log.d("MP", "DocumentSnapshot data: ${document.data}")
-                                } else {
-                                    Log.d("MP", "No such document")
                                 }
+
+                                binding.profileImg.clipToOutline = true
+
+                                Log.d("집", document["pet_at_home"].toString())
+
+                                if(document["pet_at_home"] as Boolean){
+                                    binding.kinderTitle.text= "반려견을 어딘가에 맡겨야할 때,"
+                                    binding.kinderSubTitle.text = "$petName, $petRelation 다녀올개!"
+                                }
+                                else{
+                                    binding.kinderImg.setImageResource(R.drawable.pet_home_false)
+                                    binding.kinderTitle.text= "${petName}은(는) 지금 유치원에서 공부 중,"
+                                    binding.kinderSubTitle.text = "$petRelation 안심하고 다녀오개!"
+                                }
+                                Log.d("MP", "DocumentSnapshot data: ${document.data}")
+                            } else {
+                                Log.d("MP", "No such document")
                             }
-                            .addOnFailureListener { exception ->
-                                Log.d("MP", "get failed with ", exception)
-                            }
-                    }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("MP", "get failed with ", exception)
+                        }
                 }
                 .addOnFailureListener { exception ->
                     Log.d("MP", "get failed with ", exception)

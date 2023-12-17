@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
 }
 
 Properties properties = new Properties()
@@ -138,4 +139,13 @@ dependencies {
     implementation 'com.google.zxing:core:3.4.1'
 
     implementation("com.tbuonomo:dotsindicator:5.0")
+
+    // Room DB
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
+
 }

@@ -2,6 +2,9 @@ package com.mobileprogramming.tadainu.partnersFeat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityChatListBinding
 
@@ -27,4 +30,6 @@ class ChatListActivity : AppCompatActivity() {
         super.onBackPressed()
         overridePendingTransition(0, 0)
     }
+
+
 }

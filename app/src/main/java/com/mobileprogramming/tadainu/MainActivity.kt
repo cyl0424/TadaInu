@@ -1,6 +1,9 @@
 package com.mobileprogramming.tadainu
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -17,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.mobileprogramming.tadainu.GlobalApplication.Companion.prefs
@@ -42,6 +47,10 @@ class MainActivity : AppCompatActivity() {
     private val fragmentNoti by lazy { NotiFragment() }
     private val fragmentSetting by lazy { SettingFragment() }
 
+    val manager = supportFragmentManager
+    val firestore = FirebaseFirestore.getInstance()
+    var uid : String = prefs.getString("currentUser", "")
+
     private var mBinding: ActivityMainBinding? = null
     private val binding get() = mBinding!!
 
@@ -65,7 +74,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        this.onBackPressedDispatcher.addCallback(this, callback)
+        val channelId = R.string.default_notification_channel_id.toString() // 채널 아이디
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId,
+                "PupHe",
+                NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = token.toString()
+            Log.d("FCM", msg)
+
+            if (uid == "") {
+                // 비 로그인 상태 (메시지를 전송할 수 없다.)
+            } else {
+                // 로그인 상태
+                firestore.collection("TB_USER").document(uid).update("fcmToken", msg)
+            }
+        })
+
+            this.onBackPressedDispatcher.addCallback(this, callback)
 
         val currentFragmentType = prefs.getString("currentFragmentType", null)
         val petChange = prefs.getString("petChange", "false")

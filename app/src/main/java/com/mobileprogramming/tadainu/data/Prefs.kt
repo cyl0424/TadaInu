@@ -16,4 +16,10 @@ class Prefs(context: Context) {
         prefs.edit().putString(key, str).apply()
     }
 
+    var Notification:Boolean
+        get() = prefs.getBoolean("Notification",true)
+        set(value){
+            prefs.edit().putBoolean("Notification",value).apply()
+        }
+
 }

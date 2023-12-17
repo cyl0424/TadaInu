@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 추가 - 권한 설정(내 위치 찍기) -->
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 카메라 권한 설정 -->
     <uses-feature
@@ -28,7 +27,6 @@
 
     <application
         android:name=".GlobalApplication"
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -37,7 +35,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TadaInu"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".partnersFeat.ChatRoomActivity"
+            android:exported="false" />
         <activity
             android:name=".myPetFeat.TrackWalkActivity"
             android:exported="false" />
@@ -87,7 +89,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".accountFeat.SignInActivity"
             android:exported="false" />

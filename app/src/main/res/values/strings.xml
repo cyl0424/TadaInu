@@ -15,4 +15,7 @@
     <string name="kakao_login_title">카카오로 시작하기</string>
 
     <string name="kinder_title1_true">반려견을 어딘가에 맡겨야할 때,</string>
+
+    <!--    채널 id-->
+    <string name="default_notification_channel_id">channel</string>
 </resources>
