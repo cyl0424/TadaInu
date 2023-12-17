@@ -185,12 +185,7 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
 //        val timeInMinutes = timeInMillis / (1000.0 * 60.0)
 //        return if (timeInMinutes > 0) distance / timeInMinutes else 0.0
 //    }
-    private fun calculateAverageSpeed(distance: Double, timeInMillis: Long): Double {
-        // Convert time to hours
-        val timeInHours = timeInMillis / (1000.0 * 60.0 * 60.0)
-        // Calculate average speed in km/h
-        return if (timeInHours > 0) distance / timeInHours else 0.0
-    }
+
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
@@ -279,31 +274,11 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
             }
     }
 
-    // 산책 종료 후 통계 Dialog - m/m
-//    private fun showWalkSummaryDialog() {
-//        val formattedTime = totalTimeMillis?.let { formatMillisToTime(it) }
-//        val formattedDistance = String.format("%.2f", totalDistance)
-//        val formattedSpeed = String.format("%.2f", calculateAverageSpeed(totalDistance, totalTimeMillis!!))
-//
-//        val message =
-//            "총 산책 시간: $formattedTime\n총 산책 거리: $formattedDistance m\n평균 속력: $formattedSpeed m/min"
-//
-//        val dialogBuilder = AlertDialog.Builder(this)
-//            .setTitle("산책 기록")
-//            .setMessage(message)
-//
-//            .setNegativeButton("산책 경로 확인하기") { _, _ ->
-//            }
-//
-//        val alertDialog = dialogBuilder.create()
-//        alertDialog.show()
-//    }
-
     // km/h version
     private fun showWalkSummaryDialog() {
         val formattedTime = totalTimeMillis?.let { formatMillisToTime(it) }
-        val formattedDistance = String.format("%.2f", totalDistance / 1000.0) // 미터를 킬로미터로 변환
-        val formattedSpeed = String.format("%.2f", calculateAverageSpeed(totalDistance / 1000.0, totalTimeMillis!!)) // 거리를 킬로미터로 변환
+        val formattedDistance = String.format("%.2f", totalDistance / 1000.0) // Convert meters to kilometers
+        val formattedSpeed = String.format("%.2f", calculateAverageSpeed(totalDistance / 1000.0, totalTimeMillis!!)) // Convert speed to km/h
 
         val message =
             "총 산책 시간: $formattedTime\n총 산책 거리: $formattedDistance km\n평균 속력: $formattedSpeed km/h"
@@ -312,10 +287,16 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
             .setTitle("산책 기록")
             .setMessage(message)
             .setNegativeButton("산책 경로 확인하기") { _, _ ->
-                // "산책 경로 확인하기" 버튼 클릭 시 그냥 다이얼로그가 닫히고 경로 확인가능.
+                // "산책 경로 확인하기" 버튼 클릭 시 그냥 다이얼로그가 닫히고 경로 확인 가능.
             }
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
+    }
+    private fun calculateAverageSpeed(distance: Double, timeInMillis: Long): Double {
+        // Convert time to hours
+        val timeInHours = timeInMillis / (1000.0 * 60.0 * 60.0)
+        // Calculate average speed in km/h
+        return if (timeInHours > 0) distance / timeInHours else 0.0
     }
     private fun formatMillisToTime(millis: Long): String {
         val formatter = SimpleDateFormat("HH:mm:ss")
