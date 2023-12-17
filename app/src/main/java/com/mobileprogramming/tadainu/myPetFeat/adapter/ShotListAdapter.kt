@@ -8,7 +8,7 @@ import com.mobileprogramming.tadainu.model.ShotItem
 
 class ShotListAdapter(
     private val context: Context,
-    private val shotList: List<ShotItem>
+    private var shotList: List<ShotItem>
 ) : RecyclerView.Adapter<ShotListAdapter.ShotViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShotViewHolder {
@@ -25,7 +25,12 @@ class ShotListAdapter(
     override fun getItemCount(): Int {
         return shotList.size
     }
-
+    // Function to update the shotList and sort it by date
+    fun updateShotList(newList: List<ShotItem>) {
+        // Sort the new list by date
+        shotList = newList.sortedBy { it.date }
+        notifyDataSetChanged() // Notify the adapter about the data set change
+    }
     inner class ShotViewHolder(private val binding: ShotItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
