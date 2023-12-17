@@ -353,12 +353,22 @@ class MyPetFragment : Fragment(), SensorEventListener {
             }
     }
 
+    //sehong
+    private val sharedPreferencesName = "MyWidgetPreferences"
+    //sehong
+
     private fun updateUIData(
         field: String,
         date: Timestamp?,
         lastDate: Timestamp?,
         currentDate: Date
     ) {
+
+        //sehong
+        val sharedPreferences = context?.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        //sehong
+
         val calendar = Calendar.getInstance()
         val timeZone = TimeZone.getDefault()
         calendar.timeZone = timeZone
@@ -395,15 +405,37 @@ class MyPetFragment : Fragment(), SensorEventListener {
         Log.d("ITM", "Days remaining ($field): $differenceInDays")
 
         when (field) {
-            "beauty" -> binding.mypetBeautyLeft.text = differenceInDays.toString()
-            "health" -> binding.mypetHealthLeft.text = differenceInDays.toString()
+            "beauty" -> {
+                binding.mypetBeautyLeft.text = differenceInDays.toString()
+                editor?.putString("widget_mypet_beauty_left", differenceInDays.toString())
+                Log.d("ITMwidget", "add: $differenceInDays")
+            }
+            "health" -> {
+                binding.mypetHealthLeft.text = differenceInDays.toString()
+                editor?.putString("widget_mypet_health_left", differenceInDays.toString())
+            }
         }
 
         val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
         val formattedDate = lastDate?.toDate()?.let { sdf.format(it) } ?: ""
         when (field) {
-            "beauty" -> binding.mypetBeautyDate.text = formattedDate
-            "health" -> binding.mypetHealthDate.text = formattedDate
+            "beauty" -> {
+                binding.mypetBeautyDate.text = formattedDate
+                editor?.putString("widget_mypet_beauty_date", formattedDate)
+            }
+            "health" -> {
+                binding.mypetHealthDate.text = formattedDate
+                editor?.putString("widget_mypet_health_date", formattedDate)
+            }
+        }
+
+        // Apply changes to SharedPreferences
+        editor?.apply()
+
+        // Print all entries in SharedPreferences
+        val allEntries: Map<String, *> = sharedPreferences!!.all
+        for ((key, value) in allEntries) {
+            Log.d("ITMwidget", "$key: $value")
         }
     }
 

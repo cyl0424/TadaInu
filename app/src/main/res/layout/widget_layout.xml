@@ -1,0 +1,266 @@
+<!--widget_layout.xml-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<!--    카카오톡 로그인 안돼서 이거 추가해야함 -->
+<!--    prefs.setString("currentUser", "c66910b7-289c-4976-a18f-97ad10619b5f")-->
+
+<!--    버튼은 안보이게 하고 화면 누르면 앱으로 전환되게-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <Button
+            android:id="@+id/mvbutton"
+            android:layout_width="1dp"
+            android:layout_height="1dp">
+
+        </Button>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/widget_mypet_beauty_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/radius_16dp"
+        android:backgroundTint="#FFEFE4"
+        >
+
+        <TextView
+            android:id="@+id/widget_mypet_beauty"
+            android:layout_width="76dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="강아지 미용"
+            android:textColor="#B64A00"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            tools:ignore="TextSizeCheck"
+            />
+
+        <TextView
+            android:id="@+id/widget_mypet_beauty_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:layout_below="@+id/widget_mypet_beauty"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="다음 미용 "
+            />
+
+        <TextView
+            android:id="@+id/widget_mypet_beauty_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_beauty"
+            android:layout_marginStart="5dp"
+            android:textSize="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_beauty_text1"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="x"
+            android:textColor="#B64A00"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/widget_mypet_beauty_text3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_beauty"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_beauty_left"
+            android:fontFamily="@font/pretendard_bold"
+            android:textSize="10dp"
+            android:text="일 전"
+            android:textColor="#B64A00"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/widget_mypet_beauty_text4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_beauty"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_beauty_text3"
+            android:fontFamily="@font/pretendard_medium"
+            android:textSize="10dp"
+            android:text=" 입니다."
+            />
+
+        <TextView
+            android:id="@+id/widget_mypet_beauty_recent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_beauty_text1"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="가장 최근 미용 : "
+            android:textSize="10dp"
+            tools:ignore="TextSizeCheck"
+            />
+
+        <TextView
+            android:id="@+id/widget_mypet_beauty_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_beauty_text1"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_beauty_recent"
+            android:text="TextView"
+            android:layout_marginStart="5dp"
+            android:textSize="10dp"
+            tools:ignore="TextSizeCheck"
+            />
+
+        <ImageView
+            android:id="@+id/widget_mypet_beauty_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/mypet_first_icon"
+            />
+
+    </RelativeLayout>
+
+    <!--두번째 블록-->
+
+    <RelativeLayout
+        android:id="@+id/widget_mypet_health_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/radius_16dp"
+        android:backgroundTint="#F2FFE1"
+        >
+
+        <TextView
+            android:id="@+id/widget_mypet_health"
+            android:layout_width="76dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="정기검진"
+            android:textColor="#004E1F"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            tools:ignore="TextSizeCheck"
+            />
+
+        <TextView
+            android:id="@+id/widget_mypet_health_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_health"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="다음 정기검진 "
+            android:textSize="14dp"
+            tools:ignore="TextSizeCheck,TextSizeCheck"
+            />
+
+        <TextView
+            android:id="@+id/widget_mypet_health_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_health"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_health_text1"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="y"
+            android:textColor="#004E1F"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            tools:ignore="TextSizeCheck" />
+
+        <TextView
+            android:id="@+id/widget_mypet_health_text3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_health"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_health_left"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="일 전"
+            android:textColor="#004E1F"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            tools:ignore="TextSizeCheck" />
+
+        <TextView
+            android:id="@+id/widget_mypet_health_text4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_health"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_health_text3"
+            android:fontFamily="@font/pretendard_medium"
+            android:text=" 입니다."
+            android:textSize="14dp"
+            tools:ignore="TextSizeCheck" />
+
+        <TextView
+            android:id="@+id/widget_mypet_health_recent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_health_text1"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="가장 최근 정기검진:"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/widget_mypet_health_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widget_mypet_health_text1"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/widget_mypet_health_recent"
+            android:text="TextView"
+            android:textSize="10dp"
+            tools:ignore="TextSizeCheck" />
+
+
+        <ImageView
+            android:id="@+id/widget_mypet_health_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/mypet_second_icon"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>

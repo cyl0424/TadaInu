@@ -3,8 +3,6 @@ package com.mobileprogramming.tadainu.partnersFeat
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -13,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.FragmentPartnersListSubBinding
 import com.mobileprogramming.tadainu.model.PetcareItem
 import com.mobileprogramming.tadainu.partnersFeat.adapter.PartnersListAdapter
