@@ -394,47 +394,15 @@
 
                         <TextView
                             android:id="@+id/mypet_walk_text1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="102dp"
+                            android:layout_height="33dp"
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="8dp"
                             android:fontFamily="@font/pretendard_medium"
-                            android:text="최근 산책 : "
+                            android:text="강아지와의\n산책을 기록해보세요!"
                             android:textSize="10dp"
                             app:layout_constraintStart_toStartOf="@+id/mypet_walk_background"
                             app:layout_constraintTop_toBottomOf="@+id/mypet_walk" />
-
-                        <TextView
-                            android:id="@+id/mypet_walk_text2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginTop="3dp"
-                            android:fontFamily="@font/pretendard_medium"
-                            android:text="산책거리 : "
-                            android:textSize="10dp"
-                            app:layout_constraintStart_toStartOf="@+id/mypet_walk_background"
-                            app:layout_constraintTop_toBottomOf="@+id/mypet_walk_text1" />
-
-                        <TextView
-                            android:id="@+id/mypet_walk_recent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="TextView"
-                            android:textSize="10dp"
-                            app:layout_constraintStart_toEndOf="@+id/mypet_walk_text1"
-                            app:layout_constraintTop_toBottomOf="@+id/mypet_walk" />
-
-                        <TextView
-                            android:id="@+id/mypet_walk_distance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="TextView"
-                            android:textSize="10dp"
-                            app:layout_constraintStart_toEndOf="@+id/mypet_walk_text2"
-                            app:layout_constraintTop_toBottomOf="@+id/mypet_walk_text1" />
 
                         <ImageView
                             android:id="@+id/imageView4"

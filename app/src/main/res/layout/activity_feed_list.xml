@@ -15,6 +15,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/circle"
+        android:visibility="gone"
         android:backgroundTint="#ED7D31"
         android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"

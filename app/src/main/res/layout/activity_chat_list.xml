@@ -22,11 +22,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <include
+                android:id="@+id/example"
+                layout="@layout/recycler_chat_list"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/empty_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="120dp"
+                android:visibility="gone"
                 android:fontFamily="@font/pretendard_medium"
                 android:text="문의 내역이 없습니다"
                 android:textColor="@color/gray060"

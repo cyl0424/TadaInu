@@ -1,13 +1,16 @@
 package com.mobileprogramming.tadainu.myPetFeat
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -168,6 +171,20 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             true
         }
+
+        infoWindow.setOnClickListener { overlay ->
+            val position = (overlay as? InfoWindow)?.position
+            position?.let {
+                Toast.makeText(this, "${it.latitude}, ${it.longitude}", Toast.LENGTH_SHORT).show()
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("nmap://route/car?dlat=${it.latitude}&dlng=${it.longitude}&dname=강아지 위치&appname=com.mobileprogramming.tadainu")
+                )
+                startActivity(intent)
+            }
+            true
+        }
+
         binding.toolbar.backBtn.setOnClickListener {
             onBackPressed()
         }
