@@ -329,7 +329,7 @@ class MyPetFragment : Fragment(), SensorEventListener {
                 }
             }
     }
-    // 접종History UI 업데이트
+    // Inside the MyPetFragment class
     private fun updateShotUI(snapshot: DocumentSnapshot) {
         // Fetch shot data from SUBTB_VACCINE subcollection
         db.collection("TB_MYPET").document(petId)
@@ -339,26 +339,17 @@ class MyPetFragment : Fragment(), SensorEventListener {
                     Log.e("ITM", "Error getting documents: ", error)
                     return@addSnapshotListener
                 }
-                shotList.clear()
+                val newShotList = mutableListOf<ShotItem>()
 
-                // Fetch the data from each document in the SUBTB_VACCINE subcollection
                 for (document in value!!) {
                     val shotName = document.getString("shot_name") ?: ""
                     val shotNum = document.getString("shot_num") ?: ""
                     val shotDate = document.getString("shot_date") ?: ""
 
-                    shotList.add(ShotItem(shotName, shotNum, shotDate))
+                    newShotList.add(ShotItem(shotName, shotNum, shotDate))
                 }
-
-                if (!::shotAdapter.isInitialized) {
-                    shotAdapter = ShotListAdapter(requireContext(), shotList as ArrayList<ShotItem>)
-
-                    val layoutManager =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                    binding.shotList.layoutManager = layoutManager
-                    binding.shotList.adapter = shotAdapter
-                }
-                shotAdapter.notifyDataSetChanged()
+                // 날짜 순으로 정렬하여 업데이트
+                shotAdapter.updateShotList(newShotList)
             }
     }
 

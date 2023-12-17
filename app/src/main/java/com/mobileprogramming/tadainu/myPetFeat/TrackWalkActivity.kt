@@ -1,20 +1,27 @@
 package com.mobileprogramming.tadainu.myPetFeat
 
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.databinding.ActivityTrackWalkBinding
 import com.mobileprogramming.tadainu.model.PetLocation
@@ -31,7 +38,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private lateinit var binding: ActivityTrackWalkBinding
-private lateinit var naverMap: NaverMap
 private lateinit var locationSource: FusedLocationSource
 private lateinit var dogLocation: Marker
 private val realtimeDb = FirebaseDatabase.getInstance().getReference()
@@ -46,14 +52,55 @@ private val pendingPathPoints: MutableList<LatLng> = mutableListOf()
 private val petId = "4Jipcx2xHXmvcKNVc6cO"
 
 class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
+    val db = Firebase.firestore
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance("gs://tadainu-2023.appspot.com/")
+    private val storageRef: StorageReference = storage.reference
+
     private lateinit var naverMap: NaverMap
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private lateinit var pathOverlay: PathOverlay
+
+//    private val petId = GlobalApplication.prefs.getString("petId", "")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTrackWalkBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.toolbar.toolbarTitle.text = "산책트래킹"
+
+        val petCollection = db.collection("TB_PET")
+
+        val docRef = petCollection.document(petId)
+
+        binding.toolbar.backBtn.setOnClickListener {
+            onBackPressed()
+        }
+
+        if(docRef != null){
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        storageRef.child(document["pet_img"].toString()).downloadUrl.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Glide.with(binding.root.context)
+                                    .load(task.result)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .apply(RequestOptions().circleCrop())
+                                    .thumbnail(0.1f)
+                                    .into(binding.toolbar.petImg)
+                            }
+                        }
+
+                        Log.d("MP", "DocumentSnapshot data: ${document.data}")
+                    } else {
+                        Log.d("MP", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("MP", "get failed with ", exception)
+                }
+        }
 
         // 시작 or 종료
         binding.controlBtn.setOnClickListener {
@@ -104,38 +151,41 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
         initMapView()
     }
     private fun calculateTotalDistanceBetweenPoints(points: List<LatLng>): Double {
-        var totalDistance = 0.0
         for (i in 0 until points.size - 1) {
             val lat1 = points[i].latitude
-            val lon1 = points[i].longitude
+            val lng1 = points[i].longitude
             val lat2 = points[i + 1].latitude
-            val lon2 = points[i + 1].longitude
-            totalDistance += calculateDistance(lat1, lon1, lat2, lon2)
+            val lng2 = points[i + 1].longitude
+            totalDistance += calculateDistance(lat1, lng1, lat2, lng2)
+            Log.d("ITM", "위도 경도: $lat1,$lng1/ $lat2,$lng2")
+            Log.d("ITM", "totalDistance: $totalDistance")
         }
         return totalDistance
     }
 
     private fun calculateDistance(
-        lat1: Double, lon1: Double,
-        lat2: Double, lon2: Double
-    ): Double {
-        val R = 6371 * 1000 // Radius of the Earth in meters
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-        val distanceInMeters = R * c
-        return distanceInMeters
+        lat1: Double, lng1: Double,
+        lat2: Double, lng2: Double
+    ): Float {
+
+        val myLoc = Location(LocationManager.NETWORK_PROVIDER)
+        val targetLoc = Location(LocationManager.NETWORK_PROVIDER)
+        myLoc.latitude= lat1
+        myLoc.longitude = lng1
+
+        targetLoc.latitude= lat2
+        targetLoc.longitude = lng2
+
+        return myLoc.distanceTo(targetLoc)
     }
 
 
-    private fun calculateAverageSpeed(distance: Double, timeInMillis: Long): Double {
-        // Convert time to minutes
-        val timeInMinutes = timeInMillis / (1000.0 * 60.0)
-        return if (timeInMinutes > 0) distance / timeInMinutes else 0.0
-    }
+//    private fun calculateAverageSpeed(distance: Double, timeInMillis: Long): Double {
+//        // Convert time to minutes
+//        val timeInMinutes = timeInMillis / (1000.0 * 60.0)
+//        return if (timeInMinutes > 0) distance / timeInMinutes else 0.0
+//    }
+
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         naverMap.locationSource = locationSource
@@ -144,9 +194,12 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // PathOverlay 초기화
         pathOverlay = PathOverlay()
+        // R.dimen.path_overlay_width 타고 들어가면 경로 굵기 수정 가능합니다.
         pathOverlay.width = resources.getDimensionPixelSize(R.dimen.path_overlay_width)
-        pathOverlay.color = ContextCompat.getColor(this, R.color.red005)
+        // 앱 칼러 사용
+        pathOverlay.color = ContextCompat.getColor(this, R.color.partners_clicked)
 
+        // 강아지 마커 디자인
         dogLocation = Marker()
         val redCircleBitmap = Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(redCircleBitmap)
@@ -221,24 +274,29 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
             }
     }
 
-    // 산책 종료 후 통계 Dialog
+    // km/h version
     private fun showWalkSummaryDialog() {
         val formattedTime = totalTimeMillis?.let { formatMillisToTime(it) }
-        val formattedDistance = String.format("%.2f", totalDistance)
-        val formattedSpeed = String.format("%.2f", calculateAverageSpeed(totalDistance, totalTimeMillis!!))
+        val formattedDistance = String.format("%.2f", totalDistance / 1000.0) // Convert meters to kilometers
+        val formattedSpeed = String.format("%.2f", calculateAverageSpeed(totalDistance / 1000.0, totalTimeMillis!!)) // Convert speed to km/h
 
         val message =
-            "총 산책 시간: $formattedTime\n총 산책 거리: $formattedDistance m\n평균 속력: $formattedSpeed m/min"
+            "총 산책 시간: $formattedTime\n총 산책 거리: $formattedDistance km\n평균 속력: $formattedSpeed km/h"
 
         val dialogBuilder = AlertDialog.Builder(this)
             .setTitle("산책 기록")
             .setMessage(message)
-
             .setNegativeButton("산책 경로 확인하기") { _, _ ->
+                // "산책 경로 확인하기" 버튼 클릭 시 그냥 다이얼로그가 닫히고 경로 확인 가능.
             }
-
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
+    }
+    private fun calculateAverageSpeed(distance: Double, timeInMillis: Long): Double {
+        // Convert time to hours
+        val timeInHours = timeInMillis / (1000.0 * 60.0 * 60.0)
+        // Calculate average speed in km/h
+        return if (timeInHours > 0) distance / timeInHours else 0.0
     }
     private fun formatMillisToTime(millis: Long): String {
         val formatter = SimpleDateFormat("HH:mm:ss")
@@ -246,11 +304,13 @@ class TrackWalkActivity : AppCompatActivity(), OnMapReadyCallback {
         return formatter.format(Date(millis))
     }
 
+    // 리셋
     private fun resetWalkData() {
         pendingPathPoints.clear()
         totalDistance = 0.0
         startTime = null
         endTime = null
         totalTimeMillis = null
+        pathOverlay.map = null
     }
 }

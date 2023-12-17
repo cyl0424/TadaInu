@@ -64,7 +64,6 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var dogLocation: Marker
     private val realtimeDb = FirebaseDatabase.getInstance().getReference()
-    private var canTrack = false
     private lateinit var infoWindow: InfoWindow
     private val kakaoApiManager = KakaoApiManager(BuildConfig.KAKAO_API_KEY)
 
@@ -102,7 +101,6 @@ class TrackLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                                     .into(binding.toolbar.petImg)
                             }
                         }
-
                         Log.d("MP", "DocumentSnapshot data: ${document.data}")
                     } else {
                         Log.d("MP", "No such document")
