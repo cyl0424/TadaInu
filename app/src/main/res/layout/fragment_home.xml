@@ -255,13 +255,16 @@
                             android:id="@+id/photo_calendar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="12dp"
                             android:orientation="vertical"
-                            android:visibility="visible">
+                            android:visibility="visible"
+                            android:gravity="center">
 
-                            <TextView
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/date_recycler"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="포토캘린더" />
+                                tools:listitem="@layout/recycler_date"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -269,12 +272,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            android:gravity="center">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <ImageView
+                                android:elevation="4dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="다이어리" />
+                                android:adjustViewBounds="true"
+                                android:src="@drawable/diary_contents"/>
                         </LinearLayout>
 
                     </FrameLayout>

@@ -150,4 +150,6 @@ dependencies {
 
     implementation 'com.github.tosspayments:payment-sdk-android:0.1.9'
 
+    implementation 'org.tensorflow:tensorflow-lite-task-vision:0.3.1'
+
 }

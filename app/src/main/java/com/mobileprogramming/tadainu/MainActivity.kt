@@ -33,6 +33,9 @@ import com.mobileprogramming.tadainu.myPetFeat.MyPetFragment
 import com.mobileprogramming.tadainu.notiFeat.NotiFragment
 import com.mobileprogramming.tadainu.settingFeat.SettingFragment
 import com.mobileprogramming.tadainu.partnersFeat.PartnerMainFragment
+import android.content.Intent
+import android.provider.Settings
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -68,15 +71,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
        // prefs.setString("petId", "c66910b7-289c-4976-a18f-97ad10619b5f")
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // 권한이 부여되어 있는지 확인
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (!notificationManager.areNotificationsEnabled()) {
+            // 권한이 없으면 권한 요청
+            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            startActivity(intent)
+        }
+
+
         val channelId = R.string.default_notification_channel_id.toString() // 채널 아이디
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId,
                 "PupHe",

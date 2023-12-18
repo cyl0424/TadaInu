@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -27,6 +28,10 @@ import com.mobileprogramming.tadainu.R
 import com.mobileprogramming.tadainu.accountFeat.MoreInfoActivity
 import com.mobileprogramming.tadainu.accountFeat.SignInActivity
 import com.mobileprogramming.tadainu.databinding.FragmentHomeBinding
+import com.mobileprogramming.tadainu.homeFeat.adpter.CustomAdapter
+import com.mobileprogramming.tadainu.homeFeat.data.AppDatabase
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -42,6 +47,9 @@ class HomeFragment : Fragment() {
 
     private val user = prefs.getString("currentUser", "")
     private var petId = prefs.getString("petId", "")
+
+    val calendarItems = mutableListOf<CalendarItem>()
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -170,6 +178,39 @@ class HomeFragment : Fragment() {
                 // 이미 선택된 탭이 다시 선택됐을 때의 동작
             }
         })
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, 2023)
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER)
+        calendar.set(Calendar.DAY_OF_MONTH, 1) // 월의 첫 날로 설정
+        val startDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) // 해당 월의 시작 요일
+
+
+        val recyclerView = binding.dateRecycler
+        // 어댑터 설정
+        val adapter = CustomAdapter(calendarItems)
+
+        // 리사이클러뷰 레이아웃 매니저 설정 (그리드 형태)
+        val layoutManager = GridLayoutManager(requireContext(), 7) // 7은 한 줄에 표시할 아이템 수
+
+
+        GlobalScope.launch {
+            val dateItemDao = AppDatabase.getInstance(requireContext()).dateItemDao()
+
+            // 데이터베이스에서 모든 DateItem을 가져오기
+            val dateItems = dateItemDao.getAllDateItems()
+
+            // DateItem을 CalendarItem으로 변환하여 리스트에 추가
+            for (dateItem in dateItems) {
+                val calendarItem = CalendarItem(dateItem.date, dateItem.photoPath)
+                calendarItems.add(calendarItem)
+            }
+
+            adapter.updateData(calendarItems)
+        }
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = layoutManager
 
         return view
     }

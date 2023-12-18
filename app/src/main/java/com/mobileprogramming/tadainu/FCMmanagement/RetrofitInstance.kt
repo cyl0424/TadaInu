@@ -57,7 +57,7 @@ object RetrofitInstance {
                 }
 
                 // 원하는 속성 가져오기
-                serverKey = properties.getProperty("serverKsy")
+                serverKey = properties.getProperty("serverKey")
 
                 // 다른 속성 가져오기 예제
                 // val anotherProperty = properties.getProperty("another.property.key")
